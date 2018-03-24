@@ -26,8 +26,27 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # ActionMailer configuration
+  config.action_mailer.default_url_options = {
+    host: ENV["DEV_WEB_CLIENT_HOST"]
+  }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = ENV["DEV_MAILER_PERFORM_DELIV"].to_bool
+  config.action_mailer.perform_caching = false
+  config.action_mailer.raise_delivery_errors = ENV["DEV_MAILER_RAISE_DELIV_ERR"].to_bool
+  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.smtp_settings = {
+    address: ENV["DEV_SMTP_ADDRESS"],
+    port: ENV["DEV_SMTP_PORT"],
+    user_name: ENV["DEV_SMTP_USER"],
+    password: ENV["DEV_SMTP_PASS"],
+    authentication: ENV["DEV_SMTP_AUTH"].try(:to_sym),
+    enable_starttls_auto: ENV["DEV_ENABLE_STARTTLS_AUTO"].to_bool
+  }
+  config.action_mailer.smtp_settings[:domain] = ENV["DEV_SMTP_DOMAIN"] if ENV["DEV_SMTP_DOMAIN"]
+  config.action_mailer.default_options = {
+    from: ENV["DEV_SMTP_SENDER"]
+  }
 
   config.action_mailer.perform_caching = false
 

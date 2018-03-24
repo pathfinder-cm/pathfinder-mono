@@ -60,11 +60,28 @@ Rails.application.configure do
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "dash_#{Rails.env}"
-  config.action_mailer.perform_caching = false
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # ActionMailer configuration
+  config.action_mailer.default_url_options = {
+    host: ENV["PROD_WEB_CLIENT_HOST"]
+  }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = ENV["PROD_MAILER_PERFORM_DELIV"].to_bool
+  config.action_mailer.perform_caching = false
+  config.action_mailer.raise_delivery_errors = ENV["PROD_MAILER_RAISE_DELIV_ERR"].to_bool
+  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.smtp_settings = {
+    address: ENV["PROD_SMTP_ADDRESS"],
+    port: ENV["PROD_SMTP_PORT"],
+    user_name: ENV["PROD_SMTP_USER"],
+    password: ENV["PROD_SMTP_PASS"],
+    authentication: ENV["PROD_SMTP_AUTH"].try(:to_sym),
+    enable_starttls_auto: ENV["PROD_ENABLE_STARTTLS_AUTO"].to_bool
+  }
+  config.action_mailer.smtp_settings[:domain] = ENV["PROD_SMTP_DOMAIN"] if ENV["PROD_SMTP_DOMAIN"]
+  config.action_mailer.default_options = {
+    from: ENV["PROD_SMTP_SENDER"]
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

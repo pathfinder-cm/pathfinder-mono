@@ -30,4 +30,48 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  defaults: &defaults
+    formats:
+      default: "%d-%m-%Y"
+      long: "%d %B %Y"
+  date:
+    <<: *defaults
+  time:
+    <<: *defaults
+
+  notifications:
+    messages:
+      create_success: "Successfully created"
+      update_success: "Successfully updated"
+      delete_success: "Successfully deleted"
+      discard_success: "Successfully discarded"
+      advance_success: "Successfully advanced"
+      reject_success: "Successfully rejected"
+      restart_success: "Successfully restarted"
+      process_success: "Successfully processed"
+      reset_success: "Successfully resetted"
+
+  errors:
+    messages:
+      record_invalid: 'Validation failed: %{errors}'
+      cannot_be_changed: "cannot be changed"
+      invalid_password: "invalid password"
+      inclusion: "is not included in the list"
+      exclusion: "is reserved"
+      invalid: "is invalid"
+      confirmation: "doesn't match confirmation"
+      accepted: "must be accepted"
+      empty: "can't be empty"
+      blank: "can't be blank"
+      too_long: "is too long (maximum is {{count}} characters)"
+      too_short: "is too short (minimum is {{count}} characters)"
+      wrong_length: "is the wrong length (should be {{count}} characters)"
+      taken: "has already been taken. Please use other value"
+      not_a_number: "is not a number"
+      greater_than: "must be greater than {{count}}"
+      greater_than_or_equal_to: "must be greater than or equal to {{count}}"
+      equal_to: "must be equal to {{count}}"
+      less_than: "must be less than {{count}}"
+      less_than_or_equal_to: "must be less than or equal to {{count}}"
+      odd: "must be odd"
+      even: "must be even"
