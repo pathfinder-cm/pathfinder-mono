@@ -1,16 +1,30 @@
 doctype html
-html
+html lang="en"
   head
-    title
-      | Dash
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title= content_for?(:title) ? yield(:title) : "Dash"
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   body
-    - if notice
-      p.alert.alert-success
-        = notice
-    - if alert
-      p.alert.alert-danger
-        = alert
-    = yield
+    nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
+      a.navbar-brand href="/" Dash
+      button.navbar-toggler aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button" 
+        span.navbar-toggler-icon
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item
+        ul.nav.navbar-nav.navbar-right
+          - if current_user
+            li.nav-item.dropdown
+              a#navbarDropdown.nav-link.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button" 
+                = "Hi, #{current_user.username}"
+              .dropdown-menu aria-labelledby="navbarDropdown" 
+                = link_to "Logout", logout_path, method: :post, class: "dropdown-item"
+          - else
+            li.nav-item
+              = link_to "Login", login_path, class: "nav-link"
+    .container-fluid
+      = yield

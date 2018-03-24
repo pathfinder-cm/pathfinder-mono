@@ -6,4 +6,6 @@ Rails.application.routes.draw do
     post 'login', to: 'devise/sessions#create'
     post 'logout', to: 'devise/sessions#destroy'
   end
+
+  root to: 'home#index'
 end
