@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/starqle/gouge.git
+  revision: 278fba905a2d1479fe67cf07ce597f7fd72f73dd
+  specs:
+    gouge (0.9.4)
+      rails (~> 5)
+      spreadsheet (~> 1.1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -154,6 +162,7 @@ GEM
       rspec-mocks (~> 3.7.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
+    ruby-ole (1.2.12.1)
     ruby_dep (1.5.0)
     rubyzip (1.2.1)
     sass (3.5.6)
@@ -172,6 +181,8 @@ GEM
       rubyzip (~> 1.2)
     shoulda-matchers (3.1.2)
       activesupport (>= 4.0.0)
+    spreadsheet (1.1.7)
+      ruby-ole (>= 1.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -218,6 +229,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails (~> 4.8, >= 4.8.2)
   faker (~> 1.8, >= 1.8.7)
+  gouge!
   hirb
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)

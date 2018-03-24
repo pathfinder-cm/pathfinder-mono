@@ -5,6 +5,7 @@ require 'rails/all'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
+require 'gouge/core_ext/boolean_typecast'
 
 # Enable hirb in console
 Class.new Rails::Railtie do
