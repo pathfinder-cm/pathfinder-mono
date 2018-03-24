@@ -22,6 +22,7 @@ group :development, :test do
   gem 'database_cleaner', '~> 1.6', '>= 1.6.2'
   gem 'rspec-rails', '~> 3.7', '>= 3.7.2'
   gem 'selenium-webdriver'
+  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
 end
 
 group :development do
