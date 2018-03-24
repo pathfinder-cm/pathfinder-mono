@@ -8,6 +8,7 @@ end
 gem 'rails', '~> 5.1.5'
 
 gem 'activerecord-jdbcpostgresql-adapter', '~> 50.0', platform: :jruby
+gem 'devise', '~> 4.4', '>= 4.4.3'
 gem 'gouge', :github => 'starqle/gouge', require: false
 gem 'pg', '~> 1.0', platform: :ruby
 gem 'puma', '~> 3.7'
