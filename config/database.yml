@@ -1,25 +1,30 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
-default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-
 development:
-  <<: *default
-  database: db/development.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV['DEV_DB_HOST'] %>
+  port: <%= ENV['DEV_DB_PORT'].to_i %>
+  database: <%= ENV['DEV_DB_NAME'] %>
+  pool: <%= ENV['DEV_DB_POOL'].to_i %>
+  username: <%= ENV['DEV_DB_USER'] %>
+  password: <%= ENV['DEV_DB_PASS'] %>
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: db/test.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV['TEST_DB_HOST'] %>
+  port: <%= ENV['TEST_DB_PORT'].to_i %>
+  database: <%= ENV['TEST_DB_NAME'] %>
+  pool: <%= ENV['TEST_DB_POOL'].to_i %>
+  username: <%= ENV['TEST_DB_USER'] %>
+  password: <%= ENV['TEST_DB_PASS'] %>
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV['PROD_DB_HOST'] %>
+  port: <%= ENV['PROD_DB_PORT'].to_i %>
+  database: <%= ENV['PROD_DB_NAME'] %>
+  pool: <%= ENV['PROD_DB_POOL'].to_i %>
+  username: <%= ENV['PROD_DB_USER'] %>
+  password: <%= ENV['PROD_DB_PASS'] %>
+

@@ -7,7 +7,8 @@ end
 
 gem 'rails', '~> 5.1.5'
 
-gem 'sqlite3'
+gem 'activerecord-jdbcpostgresql-adapter', '~> 50.0', platform: :jruby
+gem 'pg', '~> 1.0', platform: :ruby
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
