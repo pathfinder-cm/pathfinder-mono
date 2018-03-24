@@ -6,6 +6,13 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Enable hirb in console
+Class.new Rails::Railtie do
+  console do |app|
+    Hirb.enable
+  end
+end
+
 module Dash
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
