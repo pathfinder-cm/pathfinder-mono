@@ -35,13 +35,13 @@ RSpec.describe User, type: :model do
   end
 
   describe "methods" do
-    describe "#self.find_first_by_auth_conditions" do
+    describe "#self.find_for_database_authentication" do
       before(:each) do
         @user = ::FactoryBot.create(:user, username: "test_user")
       end
 
       it "should return user given username as login" do
-        expect(User.find_first_by_auth_conditions({login: "test_user"})).to eq @user
+        expect(User.find_for_database_authentication({login: "test_user"})).to eq @user
       end
     end
   end
