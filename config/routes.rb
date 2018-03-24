@@ -7,5 +7,6 @@ Rails.application.routes.draw do
     post 'logout', to: 'devise/sessions#destroy'
   end
 
+  resources :users
   root to: 'home#index'
 end

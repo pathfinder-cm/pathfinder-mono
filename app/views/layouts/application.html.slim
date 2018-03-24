@@ -16,6 +16,7 @@ html lang="en"
       #navbarSupportedContent.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
           li.nav-item
+            = link_to "Users", users_path, class: "nav-link"
         ul.nav.navbar-nav.navbar-right
           - if current_user
             li.nav-item.dropdown
