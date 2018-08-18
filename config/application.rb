@@ -14,7 +14,7 @@ Class.new Rails::Railtie do
   end
 end
 
-module Dash
+module PathfinderMono
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
