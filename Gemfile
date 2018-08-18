@@ -36,6 +36,7 @@ end
 
 group :development do
   gem 'awesome_print'
+  gem 'bootsnap', '~> 1.3.1'
   gem 'hirb'
   gem 'listen', '~> 3.1.5'
   gem 'spring'

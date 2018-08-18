@@ -58,6 +58,8 @@ GEM
     awesome_print (1.8.0)
     bcrypt (3.1.12)
     bindex (0.5.0)
+    bootsnap (1.3.1)
+      msgpack (~> 1.0)
     bootstrap (4.1.3)
       autoprefixer-rails (>= 6.0.3)
       popper_js (>= 1.12.9, < 2)
@@ -144,6 +146,7 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
+    msgpack (1.2.4)
     multi_json (1.13.1)
     nio4r (2.3.1)
     nokogiri (1.8.4)
@@ -270,6 +273,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-jdbcpostgresql-adapter (~> 50.0)
   awesome_print
+  bootsnap (~> 1.3.1)
   bootstrap (~> 4.1.3)
   byebug
   capybara (~> 3.6)
