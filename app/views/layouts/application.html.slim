@@ -4,19 +4,20 @@ html lang="en"
     meta charset="utf-8"
     meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
-    title= content_for?(:title) ? yield(:title) : "Dash"
+    title= content_for?(:title) ? yield(:title) : "GO-METRIC"
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   body
     nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
-      a.navbar-brand href="/" Dash
+      a.navbar-brand href="/" GO-METRIC
       button.navbar-toggler aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button" 
         span.navbar-toggler-icon
       #navbarSupportedContent.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
-          li.nav-item
-            = link_to "Users", users_path, class: "nav-link"
+          - if current_user
+            li.nav-item
+              = link_to "Users", users_path, class: "nav-link"
         ul.nav.navbar-nav.navbar-right
           - if current_user
             li.nav-item.dropdown
