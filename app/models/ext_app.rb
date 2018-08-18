@@ -40,6 +40,7 @@ class ExtApp < ApplicationRecord
   # Setup additional methods
   #
   def self.valid_access_token? challenge_token
+    return false unless challenge_token.present?
     ExtApp.
       where(hashed_access_token: Digest::SHA512.hexdigest(challenge_token)).
       present?
@@ -50,6 +51,7 @@ class ExtApp < ApplicationRecord
       if self.access_token.present?
         self.hashed_access_token = Digest::SHA512.hexdigest self.access_token
         self.access_token_generated_at = DateTime.current
+        self.access_token = nil
       end
     end
 end

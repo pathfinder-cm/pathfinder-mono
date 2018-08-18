@@ -23,6 +23,10 @@ module Dash
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Eager load lib path
+    config.eager_load_paths << Rails.root.join('lib')
+    config.eager_load_paths << Rails.root.join('lib').join('exceptions')
+
     # Configure rails generators
     config.generators do |g|
       g.orm :active_record

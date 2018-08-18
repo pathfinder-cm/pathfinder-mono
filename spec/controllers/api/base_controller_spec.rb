@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe ::Api::BaseController do
   controller do
+    skip_before_action :authenticate_by_access_token!
+
     def index
       render plain: "test", status: 200
     end
@@ -25,6 +27,10 @@ RSpec.describe ::Api::BaseController do
     def record_not_found
       raise ::ActiveRecord::RecordNotFound
     end
+
+    def unauthorized_exception
+      raise UnauthorizedException
+    end
   end
 
   before do
@@ -35,6 +41,7 @@ RSpec.describe ::Api::BaseController do
       get '/anonymous/statement_invalid' => 'api/base#statement_invalid'
       get '/anonymous/record_invalid' => 'api/base#record_invalid'
       get '/anonymous/record_not_found' => 'api/base#record_not_found'
+      get '/anonymous/unauthorized_exception' => 'api/base#unauthorized_exception'
     end
   end
 
@@ -74,6 +81,13 @@ RSpec.describe ::Api::BaseController do
     it "should return 404 if system can't find specified record" do
       get :record_not_found
       expect(response.response_code).to eq 404
+    end
+  end
+
+  describe "raise UnauthorizedException" do
+    it "should return 401 if UnauthorizedException exception is raised" do
+      get :unauthorized_exception
+      expect(response.response_code).to eq 401
     end
   end
 end
