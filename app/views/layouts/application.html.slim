@@ -29,4 +29,5 @@ html lang="en"
             li.nav-item
               = link_to "Login", login_path, class: "nav-link"
     .container-fluid
+      = render partial: "shared/flash_messages", flash: flash
       = yield

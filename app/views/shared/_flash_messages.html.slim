@@ -1,0 +1,4 @@
+- flash.each do |type, message|
+  .alert.fade.show class=("#{bootstrap_class_for(type)}")
+    button.close aria-label="Close" data-dismiss="alert" aria-hidden="true" &times;
+    = message
