@@ -8,5 +8,13 @@ Rails.application.routes.draw do
   end
 
   resources :users
+
+  namespace :api, defaults: {format: 'json'} do
+    namespace :v1 do
+      get '/lookup' => 'lookups#index'
+      get '/ping' => 'lookups#ping'
+    end
+  end
+
   root to: 'home#index'
 end
