@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180324110753) do
+ActiveRecord::Schema.define(version: 20180818224046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ext_apps", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "user_id", null: false
+    t.string "hashed_access_token", null: false
+    t.datetime "access_token_generated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashed_access_token"], name: "index_ext_apps_on_hashed_access_token"
+    t.index ["name"], name: "index_ext_apps_on_name", unique: true
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
@@ -34,4 +46,5 @@ ActiveRecord::Schema.define(version: 20180324110753) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "ext_apps", "users"
 end
