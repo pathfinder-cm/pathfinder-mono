@@ -1,6 +1,10 @@
 h2
   | Editing Cluster
 = render 'form', cluster: @cluster
-= link_to 'Show', @cluster
-|  |  
-= link_to 'List', clusters_path
+form
+  .form-group.row
+    .col-sm-2
+    .col-sm-10
+      = link_to 'Show', @cluster
+      |  |  
+      = link_to 'List', clusters_path

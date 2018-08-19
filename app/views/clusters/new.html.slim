@@ -1,4 +1,8 @@
 h2
   | New Cluster
 = render 'form', cluster: @cluster
-= link_to 'List', clusters_path
+form
+  .form-group.row
+    .col-sm-2
+    .col-sm-10
+      = link_to 'List', clusters_path

@@ -2,12 +2,15 @@ h2
   | Cluster
 form
   .form-group.row
-    label.col-sm-2.col-form-label for="Name" Name
+    label.col-sm-2.col-form-label for="name" Name
     .col-sm-10
       input.form-control type="text" readonly="true" id="cluster_name" placeholder="#{@cluster.name}"
-= link_to 'Edit', edit_cluster_path(@cluster)
-|  |  
-= link_to 'List', clusters_path
+  .form-group.row
+    .col-sm-2
+    .col-sm-10
+      = link_to 'Edit', edit_cluster_path(@cluster)
+      |  |  
+      = link_to 'List', clusters_path
 
 br
 = render 'nodes/index', nodes: @nodes
