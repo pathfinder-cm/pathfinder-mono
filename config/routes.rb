@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   end
 
   resources :users
+  resources :clusters, except: :destroy
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
@@ -16,5 +17,5 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: 'home#index'
+  root to: 'clusters#index'
 end

@@ -17,6 +17,8 @@ html lang="en"
         ul.navbar-nav.mr-auto
           - if current_user
             li.nav-item
+              = link_to "Clusters", root_path, class: "nav-link"
+            li.nav-item
               = link_to "Users", users_path, class: "nav-link"
         ul.nav.navbar-nav.navbar-right
           - if current_user

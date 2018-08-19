@@ -1,0 +1,18 @@
+= form_with(model: cluster, local: true) do |form|
+  - if cluster.errors.any?
+    #error_explanation
+      h2
+        = pluralize(cluster.errors.count, "error")
+        |  prohibited this cluster from being saved:
+      ul
+        - cluster.errors.full_messages.each do |message|
+          li
+            = message
+  .form-group.row
+    = form.label :name, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :name, id: :cluster_name, class: 'form-control'
+  .form-group.row
+    .col-sm-2
+    .col-sm-10
+      = form.submit 'Save', class: 'btn btn-primary'

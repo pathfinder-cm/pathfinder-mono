@@ -1,0 +1,18 @@
+h1
+  | Clusters
+table.table.table-hover
+  thead
+    tr
+      th.col-sm-11 scope="col"
+        | Name
+      th.col-sm-1 scope="col"
+        | Actions
+  tbody
+    - @clusters.each do |cluster|
+      tr
+        td
+          = link_to cluster.name, cluster
+        td
+          = link_to 'Edit', edit_cluster_path(cluster)
+br
+= link_to 'New Cluster', new_cluster_path
