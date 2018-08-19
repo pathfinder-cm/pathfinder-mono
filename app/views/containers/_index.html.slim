@@ -1,0 +1,30 @@
+h4
+  | Containers
+table.table.table-hover
+  thead
+    tr
+      th.col-sm-4 scope="col"
+        | Hostname
+      th.col-sm-2 scope="col"
+        | IP Address
+      th.col-sm-2 scope="col"
+        | Image
+      th.col-sm-2 scope="col"
+        | Node
+      th.col-sm-2 scope="col"
+        | Status
+  tbody
+    - containers.each do |container|
+      tr
+        td
+          = container.hostname
+        td
+          = container.ipaddress
+        td
+          = container.image
+        td
+          = container.node&.hostname
+        td
+          = container.status
+br
+= link_to 'New Container', new_container_path(cluster_id: cluster.id)

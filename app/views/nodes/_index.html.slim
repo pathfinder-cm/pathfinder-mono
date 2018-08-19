@@ -8,7 +8,7 @@ table.table.table-hover
       th.col-sm-4 scope="col"
         | IP Address
   tbody
-    - @nodes.each do |node|
+    - nodes.each do |node|
       tr
         td
           = link_to node.hostname, node

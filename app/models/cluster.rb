@@ -20,6 +20,7 @@ class Cluster < ApplicationRecord
   # has_and_belongs_to_many :users
   # has_many :employees, through: :users
   has_many :nodes
+  has_many :containers
 
   #
   # Setup scopes

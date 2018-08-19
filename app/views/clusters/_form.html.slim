@@ -1,7 +1,7 @@
 = form_with(model: cluster, local: true) do |form|
   - if cluster.errors.any?
     #error_explanation
-      h2
+      strong
         = pluralize(cluster.errors.count, "error")
         |  prohibited this cluster from being saved:
       ul

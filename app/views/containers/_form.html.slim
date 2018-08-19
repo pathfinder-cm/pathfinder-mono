@@ -1,0 +1,23 @@
+= form_with(model: container, local: true) do |form|
+  - if container.errors.any?
+    #error_explanation
+      strong
+        = pluralize(container.errors.count, "error")
+        |  prohibited this container from being saved:
+      ul
+        - container.errors.full_messages.each do |message|
+          li
+            = message
+  .form-group.row
+    = form.label :hostname, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :hostname, id: :container_hostname, class: 'form-control'
+  .form-group.row
+    = form.label :image, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :image, id: :container_image, class: 'form-control'
+  .form-group.row
+    .col-sm-2
+    .col-sm-10
+      = form.hidden_field :cluster_id, id: :container_cluster_id
+      = form.submit 'Save', class: 'btn btn-primary'
