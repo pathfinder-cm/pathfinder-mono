@@ -9,6 +9,7 @@ class ClustersController < ApplicationController
 
   # GET /clusters/1
   def show
+    @nodes = @cluster.nodes
   end
 
   # GET /clusters/new

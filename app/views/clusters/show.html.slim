@@ -8,3 +8,6 @@ form
 = link_to 'Edit', edit_cluster_path(@cluster)
 |  |  
 = link_to 'List', clusters_path
+
+br
+= render 'nodes/index', nodes: @nodes

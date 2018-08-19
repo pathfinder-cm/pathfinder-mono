@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resources :users
   resources :clusters, except: :destroy
+  resources :nodes, only: :show
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
