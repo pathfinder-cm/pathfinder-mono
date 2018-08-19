@@ -15,7 +15,8 @@ class ContainerScheduler
         containers.each do |container|
           node = Node.
             select('nodes.id, nodes.hostname, COUNT(containers) AS containers_count').
-            joins('INNER JOIN containers ON nodes.id = containers.node_id').
+            joins('LEFT OUTER JOIN containers ON nodes.id = containers.node_id').
+            where('nodes.cluster_id = ?', cluster.id).
             group('nodes.id, nodes.hostname').
             order('containers_count ASC').
             first
