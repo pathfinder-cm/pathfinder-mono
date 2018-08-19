@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_19_075200) do
+ActiveRecord::Schema.define(version: 2018_08_19_082500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,19 @@ ActiveRecord::Schema.define(version: 2018_08_19_075200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_clusters_on_name", unique: true
+  end
+
+  create_table "containers", force: :cascade do |t|
+    t.integer "cluster_id", null: false
+    t.string "hostname", null: false
+    t.string "ipaddress"
+    t.string "image", null: false
+    t.integer "node_id"
+    t.string "status", null: false
+    t.datetime "last_status_update_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname", unique: true
   end
 
   create_table "ext_apps", force: :cascade do |t|
@@ -62,6 +75,8 @@ ActiveRecord::Schema.define(version: 2018_08_19_075200) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "containers", "clusters"
+  add_foreign_key "containers", "nodes"
   add_foreign_key "ext_apps", "users"
   add_foreign_key "nodes", "clusters"
 end
