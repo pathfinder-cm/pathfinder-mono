@@ -75,4 +75,11 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Allow console to be accessed from local network on development
+  config.web_console.whitelisted_ips = [
+    '10.0.0.0/8', 
+    '172.16.0.0/12', 
+    '192.168.0.0/16'
+  ]
 end
