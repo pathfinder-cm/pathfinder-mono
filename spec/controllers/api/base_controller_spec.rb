@@ -2,8 +2,6 @@ require 'rails_helper'
 
 RSpec.describe ::Api::BaseController do
   controller do
-    skip_before_action :authenticate_by_access_token!
-
     def index
       render plain: "test", status: 200
     end

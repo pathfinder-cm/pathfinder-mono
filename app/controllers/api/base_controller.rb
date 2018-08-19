@@ -1,6 +1,5 @@
 class ::Api::BaseController < ApplicationController
   protect_from_forgery with: :null_session
-  before_action :authenticate_by_access_token!
 
   def authenticate_by_access_token!
     unless ExtApp.valid_access_token?(fetch_access_token)

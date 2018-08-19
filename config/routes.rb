@@ -16,6 +16,14 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/lookup' => 'lookups#index'
       get '/ping' => 'lookups#ping'
+
+      namespace :node do
+        resources :containers, only: [] do
+          collection do
+            post 'provision' => 'containers#provision'
+          end
+        end
+      end
     end
   end
 

@@ -1,6 +1,4 @@
 class ::Api::V1::LookupsController < ::Api::BaseController
-  skip_before_action :authenticate_by_access_token!, only: [:index, :ping]
-
   # GET /lookup
   # Retrieve all global lookups
   def index
