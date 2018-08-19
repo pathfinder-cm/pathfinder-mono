@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_19_063800) do
+ActiveRecord::Schema.define(version: 2018_08_19_075200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 2018_08_19_063800) do
     t.index ["name"], name: "index_ext_apps_on_name", unique: true
   end
 
+  create_table "nodes", force: :cascade do |t|
+    t.integer "cluster_id", null: false
+    t.string "hostname", null: false
+    t.string "ipaddress"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hostname"], name: "index_nodes_on_hostname", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.string "email", default: "", null: false
@@ -54,4 +63,5 @@ ActiveRecord::Schema.define(version: 2018_08_19_063800) do
   end
 
   add_foreign_key "ext_apps", "users"
+  add_foreign_key "nodes", "clusters"
 end

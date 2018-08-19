@@ -4,6 +4,7 @@
 CODE_FORMAT         = /\A(?![._\-\/])[\p{Alpha}\d._\-\/]+(?<![._\-\/])\z/
 IDENT_NAME_FORMAT   = /\A(?![_])[A-Z\d_]+(?<![_])\z/
 NAME_FORMAT         = /\A(?![._\-\/ ])[\p{Alpha}\d._\-\/ ]+(?<![._\-\/ ])\z/
+HOSTNAME_FORMAT     = /\A(?![-])[a-zA-Z\d-]+(?<![-])\z/
 NUMBER_FORMAT       = /\A(?![.:_\- \/])[a-zA-Z\d.:_\- \/]+(?<![.:_\- \/])\z/
 USERNAME_FORMAT     = /\A(?![._])[a-zA-Z0-9._]{3,24}(?<![._])\z/
 
