@@ -20,6 +20,7 @@ class Node < ApplicationRecord
   # has_and_belongs_to_many :users
   # has_many :employees, through: :users
   belongs_to :cluster
+  has_many :containers
 
   #
   # Setup scopes

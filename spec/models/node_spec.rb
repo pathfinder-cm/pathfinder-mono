@@ -13,6 +13,7 @@ RSpec.describe Node, type: :model do
 
   describe "relations" do
     it { should belong_to(:cluster) }
+    it { should have_many(:containers) }
   end
 
   describe "scopes" do

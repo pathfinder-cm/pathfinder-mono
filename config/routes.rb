@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       namespace :node do
         resources :containers, only: [] do
           collection do
+            get 'scheduled' => 'containers#scheduled'
             post 'provision' => 'containers#provision'
           end
         end
