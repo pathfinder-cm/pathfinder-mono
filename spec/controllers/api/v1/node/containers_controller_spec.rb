@@ -5,11 +5,13 @@ RSpec.describe ::Api::V1::Node::ContainersController do
     before(:each) do
       @cluster = create(:cluster)
       @node = create(:node, cluster: @cluster)
-      c1 = create(:container, node: @node, status: 'SCHEDULED')
+      c1 = create(:container, node: @node)
       c1.update_status(:scheduled)
-      c2 = create(:container, node: @node, status: 'SCHEDULED')
+      c2 = create(:container, node: @node)
       c2.update_status(:scheduled)
-      @containers = [c1, c2]
+      c3 = create(:container, node: @node)
+      c3.update_status(:schedule_deletion)
+      @containers = [c1, c2, c3]
       create(:container, node: @node)
     end
 
