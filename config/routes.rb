@@ -10,7 +10,11 @@ Rails.application.routes.draw do
   resources :users
   resources :clusters, except: :destroy
   resources :nodes, only: :show
-  resources :containers, only: [:new, :create]
+  resources :containers, only: [:new, :create, :destroy] do
+    member do
+      post 'schedule_deletion' => 'containers#schedule_deletion'
+    end
+  end
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do

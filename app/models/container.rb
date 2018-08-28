@@ -9,6 +9,8 @@ class Container < ApplicationRecord
     scheduled: 'SCHEDULED',
     provisioned: 'PROVISIONED',
     provision_error: 'PROVISION_ERROR',
+    schedule_deletion: 'SCHEDULE_DELETION',
+    deleted: 'DELETED',
   }
 
   # Setup validations for your model
@@ -54,6 +56,10 @@ class Container < ApplicationRecord
     else
       false
     end
+  end
+
+  def allow_deletion?
+    %w(PENDING SCHEDULED PROVISIONED PROVISION_ERROR).include? self.status
   end
 
   private

@@ -13,6 +13,8 @@ table.table.table-hover
         | Node
       th.col-sm-2 scope="col"
         | Status
+      th.col-sm-2 scope="col"
+        | Action
   tbody
     - containers.each do |container|
       tr
@@ -26,5 +28,8 @@ table.table.table-hover
           = container.node&.hostname
         td
           = container.status
+        td
+          - if container.allow_deletion?
+            = button_to "Schedule Deletion", schedule_deletion_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
 br
 = link_to 'New Container', new_container_path(cluster_id: cluster.id)

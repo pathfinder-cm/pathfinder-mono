@@ -20,6 +20,19 @@ class ContainersController < ApplicationController
     end
   end
 
+  # POST /schedule_deletion
+  def schedule_deletion
+    @container = Container.find(params[:id])
+
+    respond_to do |format|
+      if @container.update_status('SCHEDULE_DELETION')
+        format.html { redirect_to cluster_path(@container.cluster), notice: 'Container was scheduled for deletion.' }
+      else
+        format.html { redirect_to cluster_path(@container.cluster), notice: 'Error when scheduling container for deletion.' }
+      end
+    end
+  end
+
   private
     def container_params
       params.require(:container).permit(
