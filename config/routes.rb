@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :users
   resources :clusters, except: :destroy
   resources :nodes, only: :show
-  resources :containers, only: [:new, :create, :destroy] do
+  resources :containers, only: [:new, :create] do
     member do
       post 'schedule_deletion' => 'containers#schedule_deletion'
     end
@@ -27,6 +27,7 @@ Rails.application.routes.draw do
             get 'scheduled' => 'containers#scheduled'
             post 'provision' => 'containers#provision'
             post 'provision_error' => 'containers#provision_error'
+            post 'mark_deleted' => 'containers#mark_deleted'
           end
         end
       end
