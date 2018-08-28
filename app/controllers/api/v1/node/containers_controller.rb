@@ -13,9 +13,9 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
     render json: ::Api::V1::Node::ContainerSerializer.new(@containers).to_h
   end
 
-  # POST /provision
+  # POST /mark_provisioned
   # Mark container as provisioned
-  def provision
+  def mark_provisioned
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
     @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @container = @node.containers.find_by(hostname: params[:hostname])
@@ -23,9 +23,9 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
     render json: ::Api::V1::Node::ContainerSerializer.new(@container).to_h
   end
 
-  # POST /provision_error
+  # POST /mark_provision_error
   # Mark container as provision_error
-  def provision_error
+  def mark_provision_error
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
     @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @container = @node.containers.find_by(hostname: params[:hostname])

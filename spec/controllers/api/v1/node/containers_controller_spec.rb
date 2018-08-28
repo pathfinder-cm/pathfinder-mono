@@ -21,7 +21,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
     end
   end
 
-  describe 'responds with provision' do
+  describe 'responds with mark_provisioned' do
     before(:each) do
       @cluster = create(:cluster)
       @node = create(:node, cluster: @cluster)
@@ -34,19 +34,19 @@ RSpec.describe ::Api::V1::Node::ContainersController do
     end
 
     it "mark object as provisioned in the database" do
-      post :provision, params: @params, as: :json
+      post :mark_provisioned, params: @params, as: :json
       @container.reload
       expect(@container.status).to eq 'PROVISIONED'
     end
 
     it "returns appropriate response" do
-      post :provision, params: @params, as: :json
+      post :mark_provisioned, params: @params, as: :json
       @container.reload
       expect(response.body).to eq ::Api::V1::Node::ContainerSerializer.new(@container).to_h.to_json
     end
   end
 
-  describe 'responds with provision_error' do
+  describe 'responds with mark_provision_error' do
     before(:each) do
       @cluster = create(:cluster)
       @node = create(:node, cluster: @cluster)
@@ -59,13 +59,13 @@ RSpec.describe ::Api::V1::Node::ContainersController do
     end
 
     it "mark object as provision_error in the database" do
-      post :provision_error, params: @params, as: :json
+      post :mark_provision_error, params: @params, as: :json
       @container.reload
       expect(@container.status).to eq 'PROVISION_ERROR'
     end
 
     it "returns appropriate response" do
-      post :provision_error, params: @params, as: :json
+      post :mark_provision_error, params: @params, as: :json
       @container.reload
       expect(response.body).to eq ::Api::V1::Node::ContainerSerializer.new(@container).to_h.to_json
     end

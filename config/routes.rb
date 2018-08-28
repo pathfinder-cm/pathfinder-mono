@@ -25,8 +25,8 @@ Rails.application.routes.draw do
         resources :containers, only: [] do
           collection do
             get 'scheduled' => 'containers#scheduled'
-            post 'provision' => 'containers#provision'
-            post 'provision_error' => 'containers#provision_error'
+            post 'mark_provisioned' => 'containers#mark_provisioned'
+            post 'mark_provision_error' => 'containers#mark_provision_error'
             post 'mark_deleted' => 'containers#mark_deleted'
           end
         end
