@@ -2,7 +2,8 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
   # GET /scheduled
   # Get all scheduled containers within a particular node
   def scheduled
-    @node = ::Node.find_by(hostname: params[:node_hostname])
+    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
+    @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @containers = @node.containers.
       where(status: ::Container.statuses[:scheduled]).
       order('last_status_update_at ASC')
@@ -12,7 +13,8 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
   # POST /provision
   # Mark container as provisioned
   def provision
-    @node = ::Node.find_by(hostname: params[:node_hostname])
+    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
+    @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @container = @node.containers.find_by(hostname: params[:hostname])
     @container.update_status('PROVISIONED')
     render json: ::Api::V1::Node::ContainerSerializer.new(@container).to_h
