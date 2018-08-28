@@ -43,4 +43,29 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       expect(response.body).to eq ::Api::V1::Node::ContainerSerializer.new(@container).to_h.to_json
     end
   end
+
+  describe 'responds with provision_error' do
+    before(:each) do
+      @cluster = create(:cluster)
+      @node = create(:node, cluster: @cluster)
+      @container = create(:container, node: @node)
+      @params = {
+        cluster_name: @cluster.name,
+        node_hostname: @container.node.hostname, 
+        hostname: @container.hostname
+      }
+    end
+
+    it "mark object as provision_error in the database" do
+      post :provision_error, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'PROVISION_ERROR'
+    end
+
+    it "returns appropriate response" do
+      post :provision_error, params: @params, as: :json
+      @container.reload
+      expect(response.body).to eq ::Api::V1::Node::ContainerSerializer.new(@container).to_h.to_json
+    end
+  end
 end

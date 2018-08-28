@@ -22,6 +22,7 @@ Rails.application.routes.draw do
           collection do
             get 'scheduled' => 'containers#scheduled'
             post 'provision' => 'containers#provision'
+            post 'provision_error' => 'containers#provision_error'
           end
         end
       end

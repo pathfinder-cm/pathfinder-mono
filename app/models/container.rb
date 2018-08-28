@@ -8,6 +8,7 @@ class Container < ApplicationRecord
     pending: 'PENDING',
     scheduled: 'SCHEDULED',
     provisioned: 'PROVISIONED',
+    provision_error: 'PROVISION_ERROR',
   }
 
   # Setup validations for your model
