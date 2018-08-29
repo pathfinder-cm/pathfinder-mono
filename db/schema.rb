@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_19_082500) do
+ActiveRecord::Schema.define(version: 2018_08_29_072100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2018_08_19_082500) do
     t.datetime "last_status_update_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname", unique: true
+    t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
   end
 
   create_table "ext_apps", force: :cascade do |t|

@@ -19,9 +19,9 @@ class Container < ApplicationRecord
   # validates_uniqueness_of :name, case_sensitive: false
   validates :hostname,
     presence: true,
-    uniqueness: { case_sensitive: false },
     format: { with: HOSTNAME_FORMAT },
     length: { minimum: 1, maximum: 255 }
+  validate :unique_hostname_unless_deleted
   validates :image, presence: true
 
   # Setup relations to other models
@@ -60,6 +60,15 @@ class Container < ApplicationRecord
 
   def allow_deletion?
     %w(PENDING SCHEDULED PROVISIONED PROVISION_ERROR).include? self.status
+  end
+
+  def unique_hostname_unless_deleted
+    exists = Container.
+      where('cluster_id = ?', self.cluster_id).
+      where('hostname LIKE ?', self.hostname).
+      where.not(status: 'DELETED').
+      present?
+    errors.add(:hostname, I18n.t('errors.messages.unique')) if exists
   end
 
   private

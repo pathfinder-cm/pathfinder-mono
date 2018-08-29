@@ -1,15 +1,33 @@
 require 'rails_helper'
 
 RSpec.describe Container, type: :model do
-  let(:container) { build_stubbed(:container) }
+  let(:container) { build(:container) }
 
   describe "validations" do
     it { should validate_presence_of(:hostname) }
-    it { create(:container); is_expected.to validate_uniqueness_of(:hostname).case_insensitive }
     it { should allow_value('ident-name').for(:hostname) }
     it { should_not allow_value('IDENT_NAME').for(:hostname) }
     it { should_not allow_value(' ident name').for(:hostname) }
     it { should validate_presence_of(:image) }
+
+    describe "validate uniqueness of hostname" do
+      before(:each) do
+        @c1 = create(:container, 
+          cluster_id: container.cluster_id, 
+          hostname: container.hostname
+        )
+      end
+
+      it "should reject if hostname is not unique across active containers" do
+        container.save
+        expect(container.errors.messages).to include(hostname: [I18n.t('errors.messages.unique')])
+      end
+
+      it "should accept if hostname is unique across active containers" do
+        @c1.update_status("DELETED")
+        expect(container.errors.messages).to be_empty
+      end
+    end
   end
 
   describe "relations" do
