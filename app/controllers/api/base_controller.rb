@@ -1,12 +1,6 @@
 class ::Api::BaseController < ApplicationController
   protect_from_forgery with: :null_session
 
-  def authenticate_by_access_token!
-    unless ExtApp.valid_access_token?(fetch_access_token)
-      raise ::UnauthorizedException
-    end
-  end
-
   # Handle StandardError
   rescue_from ::StandardError do |e|
     render json: ::Api::V1::Error::StandardErrorSerializer.new(e).to_h,
@@ -43,9 +37,4 @@ class ::Api::BaseController < ApplicationController
     render json: ::Api::V1::Error::BaseSerializer.new(e).to_h,
       status: 401 # unauthorized
   end
-
-  private
-    def fetch_access_token
-      request.headers["X-Auth-Token"]
-    end
 end

@@ -10,6 +10,11 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
     { hostname: "" }
   }
 
+  before(:each) do
+    create(:ext_app, access_token: 'abc')
+    request.headers['X-Auth-Token'] = 'abc'
+  end
+
   describe 'responds with show' do
     before(:each) do
       @container = create(:container, cluster: cluster)

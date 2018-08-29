@@ -26,7 +26,8 @@ Rails.application.routes.draw do
           collection do
             get ':hostname' => 'containers#show'
             post '' => 'containers#create'
-            post ':hostname/schedule_deletion' => 'containers#schedule_deletion'
+            post ':hostname/schedule_deletion' =>
+              'containers#schedule_deletion'
           end
         end
       end

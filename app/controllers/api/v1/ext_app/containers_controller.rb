@@ -1,4 +1,5 @@
-class ::Api::V1::ExtApp::ContainersController < ::Api::BaseController
+class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseController
+
   # GET /:name
   def show
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
