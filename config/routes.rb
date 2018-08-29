@@ -21,6 +21,16 @@ Rails.application.routes.draw do
       get '/lookup' => 'lookups#index'
       get '/ping' => 'lookups#ping'
 
+      namespace :ext_app do
+        resources :containers, only: [] do
+          collection do
+            get ':hostname' => 'containers#show'
+            post '' => 'containers#create'
+            post ':hostname/schedule_deletion' => 'containers#schedule_deletion'
+          end
+        end
+      end
+
       namespace :node do
         resources :containers, only: [] do
           collection do
