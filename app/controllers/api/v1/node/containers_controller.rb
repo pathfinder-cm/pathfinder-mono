@@ -6,9 +6,10 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
     @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @containers = @node.containers.
       where(status: [
-        ::Container.statuses[:scheduled], 
+        ::Container.statuses[:scheduled],
         ::Container.statuses[:schedule_deletion],
       ]).
+      order(Arel.sql 'CASE WHEN status = \'SCHEDULE_DELETION\' THEN 1 WHEN status = \'SCHEDULED\' THEN 2 END').
       order('last_status_update_at ASC')
     render json: ::Api::V1::Node::ContainerSerializer.new(@containers).to_h
   end

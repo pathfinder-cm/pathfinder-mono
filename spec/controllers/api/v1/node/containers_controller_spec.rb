@@ -11,7 +11,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       c2.update_status(:scheduled)
       c3 = create(:container, node: @node)
       c3.update_status(:schedule_deletion)
-      @containers = [c1, c2, c3]
+      @containers = [c3, c1, c2]
       create(:container, node: @node)
     end
 
@@ -29,7 +29,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       @container.update_status('SCHEDULED')
       @params = {
         cluster_name: @cluster.name,
-        node_hostname: @container.node.hostname, 
+        node_hostname: @container.node.hostname,
         hostname: @container.hostname
       }
     end
@@ -55,7 +55,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       @container.update_status('SCHEDULED')
       @params = {
         cluster_name: @cluster.name,
-        node_hostname: @container.node.hostname, 
+        node_hostname: @container.node.hostname,
         hostname: @container.hostname
       }
     end
@@ -81,7 +81,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       @container.update_status('SCHEDULE_DELETION')
       @params = {
         cluster_name: @cluster.name,
-        node_hostname: @container.node.hostname, 
+        node_hostname: @container.node.hostname,
         hostname: @container.hostname
       }
     end
