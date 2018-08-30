@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   end
 
   resources :users
+  resources :ext_apps, except: :destroy
   resources :clusters, except: :destroy
   resources :nodes, only: :show
   resources :containers, only: [:new, :create] do

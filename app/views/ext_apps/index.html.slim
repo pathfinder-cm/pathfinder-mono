@@ -1,0 +1,27 @@
+h1
+  | Ext. Apps
+table.table.table-hover
+  thead
+    tr
+      th.col-sm-2 scope="col"
+        | Name
+      th.col-sm-6 scope="col"
+        | Description
+      th.col-sm-2 scope="col"
+        | Created By
+      th.col-sm-2 scope="col"
+        | Actions
+
+  tbody
+    - @ext_apps.each do |ext_app|
+      tr
+        td
+          = link_to ext_app.name, ext_app
+        td
+          = ext_app.description
+        td
+          = ext_app.user.username
+        td
+          = link_to 'Edit', edit_ext_app_path(ext_app)
+br
+= link_to 'New Ext. App', new_ext_app_path

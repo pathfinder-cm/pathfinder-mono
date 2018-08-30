@@ -1,0 +1,28 @@
+h2
+  | Ext. App
+form
+  .form-group.row
+    label.col-sm-2.col-form-label for="ext_app_name" Name
+    .col-sm-10
+      input.form-control type="text" readonly="true" id="ext_app_name" placeholder="#{@ext_app.name}"
+  .form-group.row
+    label.col-sm-2.col-form-label for="ext_app_description" Description
+    .col-sm-10
+      input.form-control type="text" readonly="true" id="ext_app_description" placeholder="#{@ext_app.description}"
+  - if flash[:access_token]
+    .form-group.row
+      label.col-sm-2.col-form-label for="ext_app_access_token" Access Token
+      .col-sm-10
+        .alert.alert-warning role="alert"
+          | Important! please make note of this access token, you will see it only this once.
+        = text_field_tag :ext_app_access_token, flash[:access_token], class: 'form-control', readonly: ""
+  .form-group.row
+    label.col-sm-2.col-form-label for="ext_app_created_by" Created By
+    .col-sm-10
+      input.form-control type="text" readonly="true" id="ext_app_created_by" placeholder="#{@ext_app.user.username}"
+  .form-group.row
+    .col-sm-2
+    .col-sm-10
+      = link_to 'Edit', edit_ext_app_path(@ext_app)
+      |  |  
+      = link_to 'List', ext_apps_path

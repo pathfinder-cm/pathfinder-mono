@@ -1,0 +1,22 @@
+= form_with(model: ext_app, local: true) do |form|
+  - if ext_app.errors.any?
+    #error_explanation
+      strong
+        = pluralize(ext_app.errors.count, "error")
+        |  prohibited this ext_app from being saved:
+      ul
+        - ext_app.errors.full_messages.each do |message|
+          li
+            = message
+  .form-group.row
+    = form.label :name, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :name, id: :ext_app_name, class: 'form-control'
+  .form-group.row
+    = form.label :description, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :description, id: :ext_app_description, class: 'form-control'
+  .form-group.row
+    .col-sm-2
+    .col-sm-10
+      = form.submit 'Save', class: 'btn btn-primary'
