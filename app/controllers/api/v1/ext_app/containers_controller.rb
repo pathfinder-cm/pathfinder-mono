@@ -23,6 +23,21 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
     render json: ::Api::V1::ExtApp::ContainerSerializer.new(@container).to_h
   end
 
+  def reschedule
+    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
+    @container = @cluster.containers.find_by(
+      hostname: params[:hostname]
+    )
+    @container.update_status('SCHEDULE_DELETION')
+    @new_container = Container.new(
+      cluster_id: @container.cluster_id,
+      hostname:   @container.hostname,
+      image:      @container.image
+    )
+    @new_container.save!
+    render json: ::Api::V1::Node::ContainerSerializer.new(@new_container).to_h
+  end
+
   private
     def container_params
       params.require(:container).permit(

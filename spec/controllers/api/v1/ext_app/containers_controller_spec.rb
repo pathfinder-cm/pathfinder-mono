@@ -85,4 +85,33 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
       expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new(@container).to_h.to_json
     end
   end
+
+  describe 'responds with reschedule' do
+    before(:each) do
+      @container = create(:container, cluster: cluster)
+      @params = {
+        cluster_name: cluster.name,
+        hostname: @container.hostname
+      }
+    end
+
+    it "mark object as schedule_deletion in the database" do
+      post :reschedule, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'SCHEDULE_DELETION'
+      expect(Container.last.status).to eq 'PENDING'
+    end
+
+    it "should create new container with same data from deleted container" do
+      post :reschedule, params: @params, as: :json
+      @container.reload
+      expect(@container.cluster_id).to eq Container.last.cluster_id
+      expect(@container.hostname).to eq Container.last.hostname
+    end
+
+    it "returns appropriate response" do
+      post :reschedule, params: @params, as: :json
+      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new(Container.last).to_h.to_json
+    end
+  end
 end

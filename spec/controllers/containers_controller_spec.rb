@@ -73,4 +73,24 @@ RSpec.describe ContainersController, type: :controller do
       end
     end
   end
+
+  describe "POST #reschedule" do
+    before(:each) do
+      @container = create(:container, cluster: @cluster)
+    end
+
+    context "with valid params" do
+      it "reschedules container" do
+        post :reschedule, params: {id: @container.id}, session: valid_session
+        @container.reload
+        expect(@container.status).to eq "SCHEDULE_DELETION"
+        expect(Container.last.status).to eq "PENDING"
+      end
+
+      it "redirects to to list of containers" do
+        post :reschedule, params: {id: @container.id}, session: valid_session
+        expect(response).to redirect_to(@cluster)
+      end
+    end
+  end
 end
