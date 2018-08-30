@@ -26,6 +26,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       @cluster = create(:cluster)
       @node = create(:node, cluster: @cluster)
       @container = create(:container, node: @node)
+      @container.update_status('SCHEDULED')
       @params = {
         cluster_name: @cluster.name,
         node_hostname: @container.node.hostname, 
@@ -51,6 +52,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       @cluster = create(:cluster)
       @node = create(:node, cluster: @cluster)
       @container = create(:container, node: @node)
+      @container.update_status('SCHEDULED')
       @params = {
         cluster_name: @cluster.name,
         node_hostname: @container.node.hostname, 
@@ -76,6 +78,7 @@ RSpec.describe ::Api::V1::Node::ContainersController do
       @cluster = create(:cluster)
       @node = create(:node, cluster: @cluster)
       @container = create(:container, node: @node)
+      @container.update_status('SCHEDULE_DELETION')
       @params = {
         cluster_name: @cluster.name,
         node_hostname: @container.node.hostname, 
