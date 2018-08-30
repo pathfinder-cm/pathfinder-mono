@@ -29,6 +29,7 @@ Rails.application.routes.draw do
             post '' => 'containers#create'
             post ':hostname/schedule_deletion' =>
               'containers#schedule_deletion'
+            post ':hostname/reschedule' => 'containers#reschedule'
           end
         end
       end
