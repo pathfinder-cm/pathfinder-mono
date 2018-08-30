@@ -62,11 +62,15 @@ class Container < ApplicationRecord
     %w(PENDING SCHEDULED PROVISIONED PROVISION_ERROR).include? self.status
   end
 
+  def allow_reschedule?
+    %w(PROVISIONED PROVISION_ERROR).include? self.status
+  end
+
   def unique_hostname_unless_deleted
     exists = Container.
       where('cluster_id = ?', self.cluster_id).
       where('hostname LIKE ?', self.hostname).
-      where.not(status: 'DELETED').
+      where.not(status: ['DELETED', 'SCHEDULE_DELETION']).
       present?
     errors.add(:hostname, I18n.t('errors.messages.unique')) if exists
   end

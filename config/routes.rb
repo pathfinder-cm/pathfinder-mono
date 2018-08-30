@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :containers, only: [:new, :create] do
     member do
       post 'schedule_deletion' => 'containers#schedule_deletion'
+      post 'reschedule' => 'containers#reschedule'
     end
   end
 

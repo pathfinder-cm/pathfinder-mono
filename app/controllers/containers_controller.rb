@@ -33,6 +33,24 @@ class ContainersController < ApplicationController
     end
   end
 
+  # POST /reschedule
+  def reschedule
+    @container = Container.find(params[:id])
+    @container.update_status('SCHEDULE_DELETION')
+    @new_container = Container.new(
+      cluster_id: @container.cluster_id,
+      hostname:   @container.hostname,
+      image:      @container.image
+    )
+    respond_to do |format|
+      if @new_container.save
+        format.html { redirect_to cluster_path(@new_container.cluster), notice: 'Container was rescheduled.' }
+      else
+        format.html { redirect_to cluster_path(@new_container.cluster), notice: 'Error when rescheduling container.' }
+      end
+    end
+  end
+
   private
     def container_params
       params.require(:container).permit(

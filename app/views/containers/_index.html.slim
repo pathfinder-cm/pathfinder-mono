@@ -29,6 +29,8 @@ table.table.table-hover
         td
           = container.status
         td
+          - if container.allow_reschedule?
+            = button_to "Reschedule", reschedule_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
           - if container.allow_deletion?
             = button_to "Schedule Deletion", schedule_deletion_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
 br
