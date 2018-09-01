@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_29_072100) do
+ActiveRecord::Schema.define(version: 2018_09_01_150800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 2018_08_29_072100) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "hashed_password"
+    t.datetime "password_updated_at"
     t.index ["name"], name: "index_clusters_on_name", unique: true
   end
 
@@ -53,6 +55,9 @@ ActiveRecord::Schema.define(version: 2018_08_29_072100) do
     t.string "ipaddress"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "hashed_authentication_token"
+    t.datetime "authentication_token_generated_at"
+    t.index ["hashed_authentication_token"], name: "index_nodes_on_hashed_authentication_token"
     t.index ["hostname"], name: "index_nodes_on_hostname", unique: true
   end
 
