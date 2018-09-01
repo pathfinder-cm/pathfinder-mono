@@ -1,10 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe ::Api::V1::Node::ContainersController do
+  before(:each) do
+    @cluster = create(:cluster)
+    @node = create(:node, cluster: @cluster, authentication_token: 'abc')
+    request.headers['X-Auth-Token'] = 'abc'
+  end
+
   describe 'responds with scheduled' do
     before(:each) do
-      @cluster = create(:cluster)
-      @node = create(:node, cluster: @cluster)
       c1 = create(:container, node: @node)
       c1.update_status(:scheduled)
       c2 = create(:container, node: @node)
@@ -23,8 +27,6 @@ RSpec.describe ::Api::V1::Node::ContainersController do
 
   describe 'responds with mark_provisioned' do
     before(:each) do
-      @cluster = create(:cluster)
-      @node = create(:node, cluster: @cluster)
       @container = create(:container, node: @node)
       @container.update_status('SCHEDULED')
       @params = {
@@ -49,8 +51,6 @@ RSpec.describe ::Api::V1::Node::ContainersController do
 
   describe 'responds with mark_provision_error' do
     before(:each) do
-      @cluster = create(:cluster)
-      @node = create(:node, cluster: @cluster)
       @container = create(:container, node: @node)
       @container.update_status('SCHEDULED')
       @params = {
@@ -75,8 +75,6 @@ RSpec.describe ::Api::V1::Node::ContainersController do
 
   describe 'responds with mark_deleted' do
     before(:each) do
-      @cluster = create(:cluster)
-      @node = create(:node, cluster: @cluster)
       @container = create(:container, node: @node)
       @container.update_status('SCHEDULE_DELETION')
       @params = {
