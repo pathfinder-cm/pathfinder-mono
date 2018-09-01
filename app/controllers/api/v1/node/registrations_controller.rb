@@ -10,7 +10,7 @@ class ::Api::V1::Node::RegistrationsController < ::Api::V1::Node::BaseController
     # Find or create the node
     @node = @cluster.nodes.find_by(hostname: params[:node_hostname])
     if @node.nil?
-      @cluster.nodes.create!(
+      @node = @cluster.nodes.create!(
         hostname: params[:node_hostname], 
         ipaddress: request.remote_ip
       )

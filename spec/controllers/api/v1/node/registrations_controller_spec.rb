@@ -45,6 +45,11 @@ RSpec.describe ::Api::V1::Node::RegistrationsController do
         post :register, params: @params, as: :json
         expect(Node.last.hostname).to eq 'test-01'
       end
+
+      it 'returns appropriate response' do
+        post :register, params: @params, as: :json
+        expect(response).to be_successful
+      end
     end
   end
 end
