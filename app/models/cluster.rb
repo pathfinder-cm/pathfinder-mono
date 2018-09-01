@@ -52,9 +52,8 @@ class Cluster < ApplicationRecord
 
   private
     def hash_password
-      if password.present? && password == password_confirmation
-        self.hashed_password = BCrypt::Password.create(password).to_s
-        self.password_updated_at = DateTime.current
-      end
+      return unless password.present? && password == password_confirmation
+      self.hashed_password = BCrypt::Password.create(password).to_s
+      self.password_updated_at = DateTime.current
     end
 end
