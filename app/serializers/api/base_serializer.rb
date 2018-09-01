@@ -1,6 +1,7 @@
 class ::Api::BaseSerializer < ApplicationSerializer
-  def initialize(object, total_server_items: 0, notifications: [])
+  def initialize(object, attrs: {}, total_server_items: 0, notifications: [])
     @object = object
+    @attrs = attrs
     @total_server_items = total_server_items
     @notifications = notifications
   end
