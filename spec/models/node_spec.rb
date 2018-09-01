@@ -26,5 +26,13 @@ RSpec.describe Node, type: :model do
   end
 
   describe "methods" do
+    describe "#refresh_authentication_token" do
+      it "should change node authentication token and return it" do
+        node = create(:node)
+        current_token = node.hashed_authentication_token
+        node.refresh_authentication_token
+        expect(current_token).not_to eq node.hashed_authentication_token
+      end
+    end
   end
 end

@@ -53,7 +53,9 @@ class ClustersController < ApplicationController
 
     def cluster_params
       params.require(:cluster).permit(
-        :name
+        :name,
+        :password,
+        :password_confirmation,
       )
     end
 end

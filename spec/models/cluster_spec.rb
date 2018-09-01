@@ -26,5 +26,29 @@ RSpec.describe Cluster, type: :model do
   end
 
   describe "methods" do
+    describe "#authenticate" do
+      it "should return true if supplied password is valid" do
+        cluster = create(:cluster, 
+          password: 'abc', 
+          password_confirmation: 'abc'
+        )
+        expect(cluster.authenticate('abc')).to eq true
+      end
+
+      it "should return false if supplied password is invalid" do
+        cluster = create(:cluster, 
+          password: 'abc', 
+          password_confirmation: 'abc'
+        )
+        expect(cluster.authenticate('123')).to eq false
+      end
+    end
+
+    describe "#get_node_by_authentication_token" do
+      it "should return node based on supplied authentication_token" do
+        node = create(:node, authentication_token: 'abc')
+        expect(node.cluster.get_node_by_authentication_token('abc')).to eq node
+      end
+    end
   end
 end

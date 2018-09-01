@@ -36,6 +36,8 @@ Rails.application.routes.draw do
       end
 
       namespace :node do
+        post 'register' => 'registrations#register'
+
         resources :containers, only: [] do
           collection do
             get 'scheduled' => 'containers#scheduled'

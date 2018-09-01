@@ -2,6 +2,7 @@ class Node < ApplicationRecord
   # Setup transient attributes for your model (attr_accessor)
   # e.g.
   # attr_accessor :temp
+  attr_accessor :authentication_token
 
   # Setup validations for your model
   # e.g.
@@ -33,8 +34,24 @@ class Node < ApplicationRecord
   #
   # Setup callbacks & state machines
   #
+  before_save :hash_authentication_token
 
   #
   # Setup additional methods
   #
+  def refresh_authentication_token
+    authentication_token = SecureRandom.urlsafe_base64(48)
+    self.authentication_token = authentication_token
+    return authentication_token if save
+    return nil
+  end
+
+  private
+    def hash_authentication_token
+      if self.authentication_token.present?
+        self.hashed_authentication_token = Digest::SHA512.hexdigest self.authentication_token
+        self.authentication_token_generated_at = DateTime.current
+        self.authentication_token = nil
+      end
+    end
 end

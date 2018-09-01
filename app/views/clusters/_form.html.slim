@@ -13,6 +13,14 @@
     .col-sm-10
       = form.text_field :name, id: :cluster_name, class: 'form-control'
   .form-group.row
+    = form.label :password, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.password_field :password, id: :cluster_password, class: 'form-control'
+  .form-group.row
+    = form.label :password_confirmation, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.password_field :password_confirmation, id: :cluster_password_confirmation, class: 'form-control'
+  .form-group.row
     .col-sm-2
     .col-sm-10
       = form.submit 'Save', class: 'btn btn-primary'
