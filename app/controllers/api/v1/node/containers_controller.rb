@@ -1,9 +1,9 @@
 class ::Api::V1::Node::ContainersController < ::Api::BaseController
+  before_action :set_cluster_and_node
+
   # GET /scheduled
   # Get all scheduled containers within a particular node
   def scheduled
-    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @containers = @node.containers.
       where(status: [
         ::Container.statuses[:scheduled],
@@ -16,8 +16,6 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
 
   # POST /ipaddress
   def update_ipaddress
-    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @container = @node.containers.find_by(hostname: params[:hostname])
     @container.update!(ipaddress: params[:ipaddress])
     render json: ::Api::V1::Node::ContainerSerializer.new(@container).to_h
@@ -26,8 +24,6 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
   # POST /mark_provisioned
   # Mark container as provisioned
   def mark_provisioned
-    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @container = @node.containers.find_by(
       hostname: params[:hostname],
       status: 'SCHEDULED'
@@ -39,8 +35,6 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
   # POST /mark_provision_error
   # Mark container as provision_error
   def mark_provision_error
-    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @container = @node.containers.find_by(
       hostname: params[:hostname],
       status: 'SCHEDULED'
@@ -52,8 +46,6 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
   # POST /mark_deleted
   # Mark container as deleted
   def mark_deleted
-    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
     @container = @node.containers.find_by(
       hostname: params[:hostname],
       status: 'SCHEDULE_DELETION'
@@ -61,4 +53,10 @@ class ::Api::V1::Node::ContainersController < ::Api::BaseController
     @container.update_status('DELETED')
     render json: ::Api::V1::Node::ContainerSerializer.new(@container).to_h
   end
+
+  private
+    def set_cluster_and_node
+      @cluster = ::Cluster.find_by!(name: params[:cluster_name])
+      @node = @cluster.nodes.find_by!(hostname: params[:node_hostname])
+    end
 end
