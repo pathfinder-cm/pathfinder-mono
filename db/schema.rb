@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_01_150800) do
+ActiveRecord::Schema.define(version: 2018_09_02_143609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,9 @@ ActiveRecord::Schema.define(version: 2018_09_01_150800) do
     t.datetime "updated_at", null: false
     t.string "hashed_authentication_token"
     t.datetime "authentication_token_generated_at"
+    t.bigint "mem_free_mb"
+    t.bigint "mem_used_mb"
+    t.bigint "mem_total_mb"
     t.index ["hashed_authentication_token"], name: "index_nodes_on_hashed_authentication_token"
     t.index ["hostname"], name: "index_nodes_on_hostname", unique: true
   end
