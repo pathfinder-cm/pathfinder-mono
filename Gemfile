@@ -9,7 +9,9 @@ gem 'rails', '~> 5.2.1'
 
 gem 'activerecord-jdbcpostgresql-adapter', '~> 50.0', platform: :jruby
 gem 'bcrypt', '~> 3.1'
+gem 'bootsnap', '~> 1.3.1'
 gem 'devise', '~> 4.5'
+gem 'dotenv-rails'
 gem 'gouge', :github => 'starqle/gouge', require: false
 gem 'pg', '~> 1.0', platform: :ruby
 gem 'puma', '~> 3.12'
@@ -22,13 +24,11 @@ gem 'slim'
 gem 'bootstrap', '~> 4.1.3'
 gem 'jquery-rails'
 gem 'kaminari'
-gem 'bootsnap', '~> 1.3.1'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'capybara', '~> 3.6'
   gem 'database_cleaner', '~> 1.7'
-  gem 'dotenv-rails'
   gem 'factory_bot_rails', '~> 4.11'
   gem 'faker', '~> 1.9.1'
   gem 'rspec-rails', '~> 3.8'
