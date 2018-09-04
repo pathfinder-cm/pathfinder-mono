@@ -22,6 +22,7 @@ gem 'slim'
 gem 'bootstrap', '~> 4.1.3'
 gem 'jquery-rails'
 gem 'kaminari'
+gem 'bootsnap', '~> 1.3.1'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -37,7 +38,6 @@ end
 
 group :development do
   gem 'awesome_print'
-  gem 'bootsnap', '~> 1.3.1'
   gem 'hirb'
   gem 'listen', '~> 3.1.5'
   gem 'spring'
