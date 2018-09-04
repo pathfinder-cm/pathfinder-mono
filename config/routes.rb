@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
       namespace :node do
         post 'register' => 'registrations#register'
+        post 'store_metrics' => 'nodes#store_metrics'
 
         resources :containers, only: [] do
           collection do

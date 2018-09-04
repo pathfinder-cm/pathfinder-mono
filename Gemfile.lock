@@ -75,6 +75,7 @@ GEM
       xpath (~> 3.1)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
+    coderay (1.1.2)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0)
@@ -154,6 +155,9 @@ GEM
     orm_adapter (0.5.0)
     pg (1.0.0)
     popper_js (1.14.3)
+    pry (0.11.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
     public_suffix (3.0.3)
     puma (3.12.0)
     rack (2.0.5)
@@ -291,6 +295,7 @@ DEPENDENCIES
   kaminari
   listen (~> 3.1.5)
   pg (~> 1.0)
+  pry
   puma (~> 3.12)
   rails (~> 5.2.1)
   rspec-rails (~> 3.8)
