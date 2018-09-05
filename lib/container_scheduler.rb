@@ -43,8 +43,10 @@ class ContainerScheduler
     containers.each do |container|
       node = Node.
         select('nodes.id, nodes.hostname, ceil((nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) * 100) AS mem_used_percentage').
+        joins('LEFT OUTER JOIN containers ON nodes.id = containers.node_id AND containers.status IN (\'SCHEDULED\', \'PROVISIONED\')').
         where('nodes.cluster_id = ? AND ceil((nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) * 100) <= ?', cluster.id, node_ram_treshold).
-        order('mem_used_percentage').
+        group('nodes.id, nodes.hostname').
+        order('mem_used_percentage ASC').
         first
       schedule_container!(container, node)
       @counter += 1
