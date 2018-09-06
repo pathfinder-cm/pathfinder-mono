@@ -33,6 +33,12 @@ Rails.application.routes.draw do
             post ':hostname/reschedule' => 'containers#reschedule'
           end
         end
+
+        resources :nodes, only: [:index] do
+          collection do
+            get ':hostname' => 'nodes#show'
+          end
+        end
       end
 
       namespace :node do
