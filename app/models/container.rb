@@ -36,6 +36,9 @@ class Container < ApplicationRecord
   #
   # Setup scopes
   #
+  scope :pending, -> { 
+    where(status: 'PENDING').order(last_status_update_at: :asc)
+  }
 
   #
   # Setup for additional gem-related configuration
