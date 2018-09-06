@@ -42,7 +42,7 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
       image:      @container.image
     )
     @new_container.save!
-    render json: ::Api::V1::Node::ContainerSerializer.new(@new_container).to_h
+    render json: ::Api::V1::ExtApp::ContainerSerializer.new(@new_container).to_h
   end
 
   private

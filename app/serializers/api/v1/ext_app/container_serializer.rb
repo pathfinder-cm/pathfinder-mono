@@ -16,6 +16,7 @@ class ::Api::V1::ExtApp::ContainerSerializer < ::Api::V1::BaseSerializer
       hostname: container.hostname,
       ipaddress: container.ipaddress,
       image: container.image,
+      node_name: container.node&.hostname,
       status: container.status,
       last_status_update_at: container.last_status_update_at,
     }

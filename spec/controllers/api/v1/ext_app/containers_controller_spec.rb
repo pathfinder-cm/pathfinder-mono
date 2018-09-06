@@ -27,7 +27,7 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
 
     it "returns appropriate response" do
       get :index, params: @params, as: :json
-      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new([@container_1, @container_2, @container_3]).to_h.to_json
+      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new([@container_1, @container_2, @container_3].sort{|x,y| x.hostname <=> y.hostname}).to_h.to_json
     end
   end
 
