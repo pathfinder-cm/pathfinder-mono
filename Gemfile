@@ -34,13 +34,13 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
-  gem 'pry'
 end
 
 group :development do
   gem 'awesome_print'
   gem 'hirb'
   gem 'listen', '~> 3.1.5'
+  gem 'pry'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
   gem 'web-console', '~> 3.6.2'
