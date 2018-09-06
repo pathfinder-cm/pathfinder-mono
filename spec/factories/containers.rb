@@ -4,6 +4,5 @@ FactoryBot.define do
     sequence(:hostname) {|n| "cluster-#{n}" }
     sequence(:ipaddress) {|n| "10.0.0.#{n}" }
     image { 'linux' }
-    association :node
   end
 end
