@@ -37,7 +37,6 @@ Rails.application.routes.draw do
 
       namespace :node do
         post 'register' => 'registrations#register'
-        post 'store_metrics' => 'nodes#store_metrics'
 
         resources :containers, only: [] do
           collection do
@@ -46,6 +45,12 @@ Rails.application.routes.draw do
             post 'mark_provisioned' => 'containers#mark_provisioned'
             post 'mark_provision_error' => 'containers#mark_provision_error'
             post 'mark_deleted' => 'containers#mark_deleted'
+          end
+        end
+
+        resources :nodes, only: [] do
+          collection do
+            post 'store_metrics' => 'nodes#store_metrics'
           end
         end
       end

@@ -9,7 +9,14 @@ RSpec.describe ::Api::V1::Node::NodesController do
 
   describe 'store metrics from agent' do
     it 'return appropriate response' do
-      params = { cluster_name: @cluster.name, memory: { used: 10, free: 20, total: 30 } } 
+      params = {
+        cluster_name: @cluster.name, 
+        memory: { 
+          used: 10, 
+          free: 20, 
+          total: 30 
+        }
+      } 
       post :store_metrics, params: params, as: :json
       expect(response.body).to eq ::Api::V1::Node::NodeSerializer.new(@node.reload).to_h.to_json
     end
