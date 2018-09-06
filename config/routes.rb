@@ -24,7 +24,7 @@ Rails.application.routes.draw do
       get '/ping' => 'lookups#ping'
 
       namespace :ext_app do
-        resources :containers, only: [] do
+        resources :containers, only: [:index] do
           collection do
             get ':hostname' => 'containers#show'
             post '' => 'containers#create'

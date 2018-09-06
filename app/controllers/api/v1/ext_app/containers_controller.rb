@@ -1,5 +1,12 @@
 class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseController
 
+  # GET /
+  def index
+    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
+    @containers = @cluster.containers
+    render json: ::Api::V1::ExtApp::ContainerSerializer.new(@containers).to_h
+  end
+
   # GET /:name
   def show
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])

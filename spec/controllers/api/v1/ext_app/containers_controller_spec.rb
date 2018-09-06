@@ -15,6 +15,22 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
     request.headers['X-Auth-Token'] = 'abc'
   end
 
+  describe 'responds with index' do
+    before(:each) do
+      @container_1 = create(:container, cluster: cluster)
+      @container_2 = create(:container, cluster: cluster)
+      @container_3 = create(:container, cluster: cluster)
+      @params = {
+        cluster_name: cluster.name,
+      }
+    end
+
+    it "returns appropriate response" do
+      get :index, params: @params, as: :json
+      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new([@container_1, @container_2, @container_3]).to_h.to_json
+    end
+  end
+
   describe 'responds with show' do
     before(:each) do
       @container = create(:container, cluster: cluster)
