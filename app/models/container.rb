@@ -39,6 +39,9 @@ class Container < ApplicationRecord
   scope :pending, -> { 
     where(status: 'PENDING').order(last_status_update_at: :asc)
   }
+  scope :exists, -> { 
+    where.not(status: 'DELETED').order(hostname: :asc)
+  }
 
   #
   # Setup for additional gem-related configuration

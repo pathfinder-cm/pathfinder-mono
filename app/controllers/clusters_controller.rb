@@ -10,7 +10,7 @@ class ClustersController < ApplicationController
   # GET /clusters/1
   def show
     @nodes = @cluster.nodes.order(hostname: :asc)
-    @containers = @cluster.containers.order(hostname: :asc)
+    @containers = @cluster.containers.exists
   end
 
   # GET /clusters/new

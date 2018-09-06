@@ -3,7 +3,7 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
   # GET /
   def index
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @containers = @cluster.containers
+    @containers = @cluster.containers.exists
     render json: ::Api::V1::ExtApp::ContainerSerializer.new(@containers).to_h
   end
 
