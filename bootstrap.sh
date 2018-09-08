@@ -93,3 +93,22 @@ cat > pathfinder.json << EOF
 EOF
 
 sudo chef-solo -c ./solo.rb -j ./pathfinder.json
+
+echo "Running initial seed"
+cd /opt/pathfinder-mono/pathfinder-mono
+sudo chmod 644 ./.env
+RAILS_ENV=production rake db:seed
+
+echo "Installing PFI"
+sudo cat > /home/vagrant/.pfi/config << EOF
+[profiles]
+  [profiles.default]
+    name = "default"
+    server = "http://127.0.0.1:8080"
+    cluster = "default"
+    token = "pathfinder"
+EOF
+sudo chown vagrant:vagrant /home/vagrant/.pfi/config
+
+sudo wget -O /usr/local/bin/pfi https://github.com/pathfinder-cm/pfi/releases/download/0.1.0/pfi-linux
+sudo chmod +x /usr/local/bin/pfi
