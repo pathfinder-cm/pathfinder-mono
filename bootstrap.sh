@@ -100,7 +100,12 @@ sudo chmod 644 ./.env
 RAILS_ENV=production rake db:seed
 
 echo "Installing PFI"
+sudo mkdir /home/vagrant/.pfi -p
+sudo chown vagrant:vagrant /home/vagrant/pfi
+
 sudo cat > /home/vagrant/.pfi/config << EOF
+current_profile = "default"
+
 [profiles]
   [profiles.default]
     name = "default"
