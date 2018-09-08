@@ -10,4 +10,4 @@ API server and scheduler for Pathfinder container manager.
 
 Now you can either open `http://192.168.33.33:8080` or do `vagrant ssh` and type `pfi get nodes`
 
-> Default username `admin` and password `default`
+> Default username `admin` and password `pathfinder`
