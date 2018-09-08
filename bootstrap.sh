@@ -70,11 +70,23 @@ cat > pathfinder.json << EOF
       "listen_addresses": "*"
     }
   },
+  "pathfinder-node": {
+    "custom_hostname": "node-01",
+    "lxd_cluster_password": "pathfinder"
+  },
+  "pathfinder-agent": {
+    "version": "0.3.1",
+    "env_vars": {
+      "PF_SERVER_ADDR": "http://127.0.0.1:8080",
+      "PF_CLUSTER": "default",
+      "PF_CLUSTER_PASSWORD": "pathfinder"
+    }
+  },
   "run_list": [
           "recipe[pathfinder-mono::db]",
           "recipe[pathfinder-mono::app]",
           "recipe[pathfinder-mono::scheduler]",
-          "recipe[pathfinder-node::install]"
+          "recipe[pathfinder-node::first_node]"
 
     ]
 }

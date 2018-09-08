@@ -10,7 +10,7 @@ require 'gouge/core_ext/boolean_typecast'
 # Enable hirb in console
 Class.new Rails::Railtie do
   console do |app|
-    Hirb.enable
+    Hirb.enable if Rails.env.development?
   end
 end
 
