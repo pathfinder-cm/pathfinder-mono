@@ -5,3 +5,22 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+user = User.create!(
+  username: 'admin',
+  email: 'admin@pathfinder.com', 
+  password: 'pathfinder',
+  password_confirmation: 'pathfinder',
+)
+
+cluster = Cluster.create!(
+  name: 'default',
+  password: 'pathfinder',
+  password_confirmation: 'pathfinder',
+)
+
+ext_app = ExtApp.create!(
+  name: 'Pathfinder Interface',
+  user_id: user.id,
+  access_token: 'pathfinder',
+)
