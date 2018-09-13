@@ -6,13 +6,13 @@ class ::Api::V1::Node::RegistrationsController < ::Api::V1::Node::BaseController
   # Register node into cluster
   def register
     raise UnauthorizedException if !@cluster.authenticate(params[:password])
-    
+
     # Find or create the node
     @node = @cluster.nodes.find_by(hostname: params[:node_hostname])
     if @node.nil?
       @node = @cluster.nodes.create!(
-        hostname: params[:node_hostname], 
-        ipaddress: request.remote_ip
+        hostname: params[:node_hostname],
+        ipaddress: (params[:node_ip_address].blank?) ? request.remote_ip : params[:node_ip_address]
       )
     end
 
