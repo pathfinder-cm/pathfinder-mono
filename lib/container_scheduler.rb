@@ -4,7 +4,11 @@ class ContainerScheduler
 
   def start
     loop do
-      p 'Scheduling Container...'
+      if ENV['SCHEDULER_TYPE'] == 'MEMORY'
+        p 'Scheduling container based on node memory'
+      else
+        p 'Scheduling container based on node container numbers'
+      end
 
       counter = 0
       Cluster.all.each { |cluster| counter += process_cluster(cluster) }
@@ -54,12 +58,22 @@ class ContainerScheduler
     end
 
     def find_based_on_memory(cluster)
-      memory_threshold = ENV['SCHEDULER_MEMORY_THRESHOLD'] || 70
+      memory_threshold = ENV['SCHEDULER_MEMORY_THRESHOLD'] || 50
       Node.
-        select('nodes.id, nodes.hostname, ceil((nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) * 100) AS mem_used_percentage').
-        where('nodes.cluster_id = ? AND ceil(CASE WHEN (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) IS NULL THEN 1 ELSE (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) END * 100) <= ?', cluster.id, memory_threshold).
+        select('nodes.id'\
+          ', nodes.hostname'\
+          ', COUNT(containers) AS containers_count'\
+          ', ceil((nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) * 100) AS mem_used_percentage').
+        joins('LEFT OUTER JOIN containers'\
+          ' ON nodes.id = containers.node_id'\
+          ' AND containers.status IN (\'SCHEDULED\', \'PROVISIONED\')').
+        where('nodes.cluster_id = ?'\
+          ' AND ceil(CASE WHEN (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) IS NULL'\
+          ' THEN 1'\
+          ' ELSE (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) END * 100) <= ?',
+          cluster.id, memory_threshold).
         group('nodes.id, nodes.hostname').
-        order('mem_used_percentage ASC').
+        order('containers_count ASC, mem_used_percentage ASC').
         first
     end
 end
