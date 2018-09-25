@@ -23,7 +23,7 @@ RSpec.describe ContainerScheduler do
         c2.reload
         c3.reload
         expect(c1.node).to eq @node_3
-        expect(c2.node).to eq @node_3
+        expect(c2.node).to eq @node_1
         expect(c3.node).to eq @node_3
       end
     end
