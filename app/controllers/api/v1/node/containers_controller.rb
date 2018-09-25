@@ -14,7 +14,7 @@ class ::Api::V1::Node::ContainersController < ::Api::V1::Node::BaseController
 
   # POST /ipaddress
   def update_ipaddress
-    @container = current_node.containers.find_by(hostname: params[:hostname])
+    @container = current_node.containers.exists.find_by(hostname: params[:hostname])
     @container.update!(ipaddress: params[:ipaddress])
     render json: ::Api::V1::Node::ContainerSerializer.new(@container).to_h
   end
@@ -22,7 +22,7 @@ class ::Api::V1::Node::ContainersController < ::Api::V1::Node::BaseController
   # POST /mark_provisioned
   # Mark container as provisioned
   def mark_provisioned
-    @container = current_node.containers.find_by(
+    @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
       status: 'SCHEDULED'
     )
@@ -33,7 +33,7 @@ class ::Api::V1::Node::ContainersController < ::Api::V1::Node::BaseController
   # POST /mark_provision_error
   # Mark container as provision_error
   def mark_provision_error
-    @container = current_node.containers.find_by(
+    @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
       status: 'SCHEDULED'
     )
@@ -44,7 +44,7 @@ class ::Api::V1::Node::ContainersController < ::Api::V1::Node::BaseController
   # POST /mark_deleted
   # Mark container as deleted
   def mark_deleted
-    @container = current_node.containers.find_by(
+    @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
       status: 'SCHEDULE_DELETION'
     )

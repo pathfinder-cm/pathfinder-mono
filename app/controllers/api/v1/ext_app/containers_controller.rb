@@ -10,7 +10,7 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
   # GET /:name
   def show
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @container = @cluster.containers.find_by(hostname: params[:hostname])
+    @container = @cluster.containers.exists.find_by(hostname: params[:hostname])
     render json: ::Api::V1::ExtApp::ContainerSerializer.new(@container).to_h
   end
 
@@ -25,14 +25,14 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
   # POST /schedule_deletion
   def schedule_deletion
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @container = @cluster.containers.find_by(hostname: params[:hostname])
+    @container = @cluster.containers.exists.find_by(hostname: params[:hostname])
     @container.update_status('SCHEDULE_DELETION')
     render json: ::Api::V1::ExtApp::ContainerSerializer.new(@container).to_h
   end
 
   def reschedule
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @container = @cluster.containers.find_by(
+    @container = @cluster.containers.exists.find_by(
       hostname: params[:hostname]
     )
     @container.update_status('SCHEDULE_DELETION')
