@@ -115,5 +115,5 @@ current_profile = "default"
 EOF
 sudo chown vagrant:vagrant /home/vagrant/.pfi/config
 
-sudo wget -O /usr/local/bin/pfi https://github.com/pathfinder-cm/pfi/releases/download/0.1.0/pfi-linux
+sudo wget -O /usr/local/bin/pfi https://github.com/pathfinder-cm/pfi/releases/download/0.1.1/pfi-linux
 sudo chmod +x /usr/local/bin/pfi
