@@ -25,7 +25,7 @@ Now you can either open `http://192.168.33.33:8080` or do `vagrant ssh` and type
 
 ## Getting Help
 
-If you have any questions or feedback regarding mruby-pathfinder-client:
+If you have any questions or feedback regarding pathfinder-mono:
 
 - [File an issue](https://github.com/pathfinder-cm/pathfinder-mono/issues/new) for bugs, issues and feature suggestions.
 
