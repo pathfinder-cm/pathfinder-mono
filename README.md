@@ -23,6 +23,14 @@ Now you can either open `http://192.168.33.33:8080` or do `vagrant ssh` and type
 5. Run `rails db:setup`
 6. Start the server by typing `rails s`
 
+## Getting Help
+
+If you have any questions or feedback regarding mruby-pathfinder-client:
+
+- [File an issue](https://github.com/pathfinder-cm/pathfinder-mono/issues/new) for bugs, issues and feature suggestions.
+
+Your feedback is always welcome.
+
 ### Running tests
 
 Run `rspec spec`
