@@ -40,7 +40,7 @@ class ContainersController < ApplicationController
     @new_container = Container.new(
       cluster_id: @container.cluster_id,
       hostname:   @container.hostname,
-      image:      @container.image
+      image_alias:      @container.image_alias
     )
     respond_to do |format|
       if @new_container.save
@@ -56,7 +56,7 @@ class ContainersController < ApplicationController
       params.require(:container).permit(
         :cluster_id,
         :hostname,
-        :image
+        :image_alias
       )
     end
 end

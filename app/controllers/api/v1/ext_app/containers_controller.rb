@@ -39,7 +39,7 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
     @new_container = Container.new(
       cluster_id: @container.cluster_id,
       hostname:   @container.hostname,
-      image:      @container.image
+      image_alias:      @container.image_alias
     )
     @new_container.save!
     render json: ::Api::V1::ExtApp::ContainerSerializer.new(@new_container).to_h
@@ -49,7 +49,7 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
     def container_params
       params.require(:container).permit(
         :hostname,
-        :image
+        :image_alias
       )
     end
 end
