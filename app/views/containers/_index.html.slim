@@ -8,7 +8,11 @@ table.table.table-hover
       th.col-sm-2 scope="col"
         | IP Address
       th.col-sm-2 scope="col"
-        | Image
+        | Image Alias
+      th.col-sm-2 scope="col"
+        | Image Server
+      th.col-sm-2 scope="col"
+        | Image Protocol
       th.col-sm-2 scope="col"
         | Node
       th.col-sm-2 scope="col"
@@ -23,7 +27,11 @@ table.table.table-hover
         td
           = container.ipaddress
         td
-          = container.image
+          = container.image_alias
+        td
+          = container.image_server
+        td
+          = container.image_protocol
         td
           = container.node&.hostname
         td

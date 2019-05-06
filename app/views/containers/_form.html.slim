@@ -13,11 +13,20 @@
     .col-sm-10
       = form.text_field :hostname, id: :container_hostname, class: 'form-control'
   .form-group.row
-    = form.label :image, class: 'col-sm-2 col-form-label'
+    = form.label :image_alias, class: 'col-sm-2 col-form-label'
     .col-sm-10
-      = form.text_field :image, id: :container_image, class: 'form-control'
+      = form.text_field :image_alias, id: :container_image_alias, class: 'form-control'
+  .form-group.row
+    = form.label :image_server, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :image_server, id: :container_image_server, class: 'form-control'
+  .form-group.row
+    = form.label :image_protocol, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :image_protocol, id: :container_image_protocol, class: 'form-control'
   .form-group.row
     .col-sm-2
     .col-sm-10
       = form.hidden_field :cluster_id, id: :container_cluster_id
       = form.submit 'Save', class: 'btn btn-primary'
+
