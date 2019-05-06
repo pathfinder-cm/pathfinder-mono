@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_02_143609) do
+ActiveRecord::Schema.define(version: 2019_05_06_142700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,12 +28,14 @@ ActiveRecord::Schema.define(version: 2018_09_02_143609) do
     t.integer "cluster_id", null: false
     t.string "hostname", null: false
     t.string "ipaddress"
-    t.string "image", null: false
+    t.string "image_alias", null: false
     t.integer "node_id"
     t.string "status", null: false
     t.datetime "last_status_update_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image_server"
+    t.string "image_protocol"
     t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
   end
 
