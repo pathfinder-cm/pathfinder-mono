@@ -16,6 +16,8 @@ class ::Api::V1::Node::ContainerSerializer < ::Api::V1::BaseSerializer
       hostname: container.hostname,
       ipaddress: container.ipaddress,
       image_alias: container.image_alias,
+      image_server: container.image_server,
+      image_protocol: container.image_protocol,
       node_hostname: (container.node&.hostname || ""),
       status: container.status,
       last_status_update_at: container.last_status_update_at,
