@@ -4,5 +4,7 @@ FactoryBot.define do
     sequence(:hostname) {|n| "cluster-#{n}" }
     sequence(:ipaddress) {|n| "10.0.0.#{n}" }
     image_alias { 'linux' }
+    image_server { 'barito-registry' }
+    image_protocol { 'lxd' }
   end
 end

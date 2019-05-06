@@ -9,6 +9,8 @@ RSpec.describe Container, type: :model do
     it { should_not allow_value('IDENT_NAME').for(:hostname) }
     it { should_not allow_value(' ident name').for(:hostname) }
     it { should validate_presence_of(:image_alias) }
+    it { should validate_presence_of(:image_server) }
+    it { should validate_presence_of(:image_protocol) }
 
     describe "validate uniqueness of hostname" do
       before(:each) do
