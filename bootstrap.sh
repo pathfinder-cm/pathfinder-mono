@@ -13,7 +13,10 @@ echo "install ruby"
 sudo apt-get install -y ruby-full
 
 echo "Install chef"
-gem install chef
+wget https://packages.chef.io/files/stable/chefdk/3.9.0/ubuntu/18.04/chefdk_3.9.0-1_amd64.deb
+sudo dpkg -i chefdk_3.9.0-1_amd64.deb
+echo 'eval "$(chef shell-init bash)"' >> ~/.profile
+source ~/.profile
 
 cd /opt
 sudo mkdir pathfinder
@@ -92,7 +95,7 @@ cat > pathfinder.json << EOF
 }
 EOF
 
-sudo chef-solo -c ./solo.rb -j ./pathfinder.json
+sudo chef-solo --config /opt/pathfinder/solo.rb -j /opt/pathfinder/pathfinder.json
 
 echo "Running initial seed"
 cd /opt/pathfinder-mono/pathfinder-mono
