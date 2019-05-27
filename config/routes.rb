@@ -74,6 +74,18 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      namespace :node do
+        resources :containers, only: [] do
+          collection do
+            get 'scheduled' => 'containers#scheduled'
+            post 'ipaddress' => 'containers#update_ipaddress'
+            post 'mark_provisioned' => 'containers#mark_provisioned'
+            post 'mark_provision_error' => 'containers#mark_provision_error'
+            post 'mark_deleted' => 'containers#mark_deleted'
+          end
+        end
+      end
     end
   end
 
