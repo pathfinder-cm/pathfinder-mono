@@ -1,4 +1,4 @@
-class ::Api::V1::Node::ContainerSerializer < ::Api::V1::BaseSerializer
+class ::Api::V2::Node::ContainerSerializer < ::Api::V2::BaseSerializer
   def data
     if @object.is_a? Enumerable
       {
@@ -15,7 +15,9 @@ class ::Api::V1::Node::ContainerSerializer < ::Api::V1::BaseSerializer
       id: container.id,
       hostname: container.hostname,
       ipaddress: container.ipaddress,
-      image: container.image_alias,
+      image_alias: container.image_alias,
+      image_server: container.image_server,
+      image_protocol: container.image_protocol,
       node_hostname: (container.node&.hostname || ""),
       status: container.status,
       last_status_update_at: container.last_status_update_at,
