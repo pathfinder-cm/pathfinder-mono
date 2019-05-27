@@ -1,11 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe ::Api::V1::ExtApp::ContainersController do
+RSpec.describe ::Api::V2::ExtApp::ContainersController do
   let(:cluster) { create(:cluster) }
   let(:valid_attributes) {
-    attributes_for(:container, cluster_id: cluster.id).
-      reject{ |k,v| k == :image_alias}.
-      merge({ image: 'linux' })
+    attributes_for(:container, cluster_id: cluster.id)
   }
 
   let(:invalid_attributes) {
@@ -29,7 +27,7 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
 
     it "returns appropriate response" do
       get :index, params: @params, as: :json
-      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new([@container_1, @container_2, @container_3].sort{|x,y| x.hostname <=> y.hostname}).to_h.to_json
+      expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new([@container_1, @container_2, @container_3].sort{|x,y| x.hostname <=> y.hostname}).to_h.to_json
     end
   end
 
@@ -45,7 +43,7 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
     it "returns appropriate response" do
       get :show, params: @params, as: :json
       @container.reload
-      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new(@container).to_h.to_json
+      expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
     end
   end
 
@@ -100,7 +98,7 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
     it "returns appropriate response" do
       post :schedule_deletion, params: @params, as: :json
       @container.reload
-      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new(@container).to_h.to_json
+      expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
     end
   end
 
@@ -129,7 +127,7 @@ RSpec.describe ::Api::V1::ExtApp::ContainersController do
 
     it "returns appropriate response" do
       post :reschedule, params: @params, as: :json
-      expect(response.body).to eq ::Api::V1::ExtApp::ContainerSerializer.new(Container.last).to_h.to_json
+      expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(Container.last).to_h.to_json
     end
   end
 end

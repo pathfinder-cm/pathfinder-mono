@@ -61,6 +61,20 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    namespace :v2 do
+      namespace :ext_app do
+        resources :containers, only: [:index] do
+          collection do
+            get ':hostname' => 'containers#show'
+            post '' => 'containers#create'
+            post ':hostname/schedule_deletion' =>
+              'containers#schedule_deletion'
+            post ':hostname/reschedule' => 'containers#reschedule'
+          end
+        end
+      end
+    end
   end
 
   root to: 'clusters#index'

@@ -39,8 +39,8 @@ class ContainersController < ApplicationController
     @container.update_status('SCHEDULE_DELETION')
     @new_container = Container.new(
       cluster_id: @container.cluster_id,
-      hostname:   @container.hostname,
-      image_alias:      @container.image_alias,
+      hostname: @container.hostname,
+      image_alias: @container.image_alias,
       image_server: @container.image_server,
       image_protocol: @container.image_protocol
     )
