@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_04_072000) do
+ActiveRecord::Schema.define(version: 2019_06_04_072600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,18 @@ ActiveRecord::Schema.define(version: 2019_06_04_072000) do
     t.index ["name"], name: "index_remotes_on_name", unique: true
   end
 
+  create_table "sources", force: :cascade do |t|
+    t.string "type", null: false
+    t.string "mode", null: false
+    t.integer "remote_id"
+    t.string "fingerprint"
+    t.string "alias"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alias"], name: "index_sources_on_alias"
+    t.index ["fingerprint"], name: "index_sources_on_fingerprint"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.string "email", default: "", null: false
@@ -100,4 +112,5 @@ ActiveRecord::Schema.define(version: 2019_06_04_072000) do
   add_foreign_key "containers", "nodes"
   add_foreign_key "ext_apps", "users"
   add_foreign_key "nodes", "clusters"
+  add_foreign_key "sources", "remotes"
 end
