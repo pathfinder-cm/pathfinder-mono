@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_06_142700) do
+ActiveRecord::Schema.define(version: 2019_06_04_072000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,17 @@ ActiveRecord::Schema.define(version: 2019_05_06_142700) do
     t.bigint "mem_total_mb"
     t.index ["hashed_authentication_token"], name: "index_nodes_on_hashed_authentication_token"
     t.index ["hostname"], name: "index_nodes_on_hostname", unique: true
+  end
+
+  create_table "remotes", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "server"
+    t.string "protocol", null: false
+    t.string "auth_type", null: false
+    t.text "certificate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_remotes_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
