@@ -30,7 +30,7 @@ class Source < ApplicationRecord
   # has_many :users
   # has_and_belongs_to_many :users
   # has_many :employees, through: :users
-  belongs_to :remote
+  belongs_to :remote, required: false
 
   #
   # Setup scopes

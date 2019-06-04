@@ -32,6 +32,7 @@ class Container < ApplicationRecord
   # has_many :employees, through: :users
   belongs_to :cluster
   belongs_to :node, required: false
+  belongs_to :source, required: false
 
   #
   # Setup scopes
