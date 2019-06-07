@@ -22,7 +22,6 @@ class Container < ApplicationRecord
     format: { with: HOSTNAME_FORMAT },
     length: { minimum: 1, maximum: 255 }
   validate :unique_hostname_unless_deleted, if: :new_record?
-  validates :image_alias, presence: true
 
   # Setup relations to other models
   # e.g.
