@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_07_004500) do
+ActiveRecord::Schema.define(version: 2019_06_08_001200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 2019_06_07_004500) do
   end
 
   create_table "sources", force: :cascade do |t|
-    t.string "type", null: false
+    t.string "source_type", null: false
     t.string "mode", null: false
     t.integer "remote_id"
     t.string "fingerprint"

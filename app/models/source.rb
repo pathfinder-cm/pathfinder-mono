@@ -2,7 +2,7 @@ class Source < ApplicationRecord
   # Setup transient attributes for your model (attr_accessor)
   # e.g.
   # attr_accessor :temp
-  enum types: {
+  enum source_types: {
     image: 'image',
     migration: 'migration',
     copy: 'copy',
@@ -17,9 +17,9 @@ class Source < ApplicationRecord
   # e.g.
   # validates_presence_of :name
   # validates_uniqueness_of :name, case_sensitive: false
-  validates :type,
+  validates :source_type,
     presence: true,
-    inclusion: { in: types.values }
+    inclusion: { in: source_types.values }
   validates :mode,
     presence: true,
     inclusion: { in: modes.values }

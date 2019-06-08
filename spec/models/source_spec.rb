@@ -4,8 +4,8 @@ RSpec.describe Source, type: :model do
   let(:source) { build(:source) }
 
   describe "validations" do
-    it { should validate_presence_of(:type) }
-    it { should validate_inclusion_of(:type).in_array(Source.types.values) }
+    it { should validate_presence_of(:source_type) }
+    it { should validate_inclusion_of(:source_type).in_array(Source.source_types.values) }
     it { should validate_presence_of(:mode) }
     it { should validate_inclusion_of(:mode).in_array(Source.modes.values) }
   end
