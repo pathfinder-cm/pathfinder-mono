@@ -54,25 +54,31 @@ class Container < ApplicationRecord
   #
   # Setup additional methods
   #
-  def self.create_with_source!(cluster_id, params)
+  def self.create_with_source(cluster_id, params)
     container = Container.new
     unless params[:source].present?
-      container.errors.add(:source, "source must be present.")
-      raise ActiveRecord::RecordInvalid.new(container)
+      container.errors.add(:source, "must be present.")
+      return container
     end
     remote_name = params.dig(:source, :remote, :name)
     remote = Remote.find_by(name: remote_name) if remote_name.present?
-    source = Source.find_or_create_by!(
+    source = Source.find_or_create_by(
       source_type: params.dig(:source, :source_type) || 'image',
       mode: params.dig(:source, :mode) || 'local',
-      remote_id: remote&.id,
+      remote_id: remote&.id || params.dig(:source, :remote_id),
       fingerprint: params.dig(:source, :fingerprint),
       alias: params.dig(:source, :alias)
     )
     container.cluster_id = cluster_id
     container.hostname = params[:hostname]
     container.source = source
-    container.save!
+    container.save
+    container
+  end
+
+  def self.create_with_source!(cluster_id, params)
+    container = create_with_source(cluster_id, params)
+    raise ActiveRecord::RecordInvalid.new(container) if container.errors.any?
     container
   end
 
