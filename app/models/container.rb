@@ -55,7 +55,11 @@ class Container < ApplicationRecord
   # Setup additional methods
   #
   def self.create_with_source!(cluster_id, params)
-    raise 'Source must be present!' unless params[:source].present?
+    container = Container.new
+    unless params[:source].present?
+      container.errors.add(:source, "source must be present.")
+      raise ActiveRecord::RecordInvalid.new(container)
+    end
     remote_name = params.dig(:source, :remote, :name)
     remote = Remote.find_by(name: remote_name) if remote_name.present?
     source = Source.find_or_create_by!(
@@ -65,11 +69,11 @@ class Container < ApplicationRecord
       fingerprint: params.dig(:source, :fingerprint),
       alias: params.dig(:source, :alias)
     )
-    Container.create!(
-      cluster_id: cluster_id,
-      hostname: params[:hostname],
-      source: source
-    )
+    container.cluster_id = cluster_id
+    container.hostname = params[:hostname]
+    container.source = source
+    container.save!
+    container
   end
 
   def duplicate
