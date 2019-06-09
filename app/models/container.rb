@@ -54,6 +54,24 @@ class Container < ApplicationRecord
   #
   # Setup additional methods
   #
+  def self.create_with_source!(cluster_id, params)
+    raise 'Source must be present!' unless params[:source].present?
+    remote_name = params.dig(:source, :remote, :name)
+    remote = Remote.find_by(name: remote_name) if remote_name.present?
+    source = Source.find_or_create_by!(
+      source_type: params.dig(:source, :source_type) || 'image',
+      mode: params.dig(:source, :mode) || 'local',
+      remote_id: remote&.id,
+      fingerprint: params.dig(:source, :fingerprint),
+      alias: params.dig(:source, :alias)
+    )
+    Container.create!(
+      cluster_id: cluster_id,
+      hostname: params[:hostname],
+      source: source
+    )
+  end
+
   def update_status(status)
     status = status.downcase.to_sym
     if Container.statuses.key?(status)

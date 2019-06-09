@@ -45,6 +45,46 @@ RSpec.describe Container, type: :model do
   end
 
   describe "methods" do
+    describe '#create_with_source!' do
+      before(:each) do
+        @cluster = create(:cluster)
+        @remote = create(:remote)
+      end
+
+      it 'should automatically create source if source isn\'t exist yet' do
+        source_params = attributes_for(:source)
+        container_params = attributes_for(:container)
+        valid_params = {
+          hostname: container_params[:hostname],
+          source: source_params.merge({ remote: { name: @remote.name } })
+        }
+        container = Container.create_with_source!(@cluster.id, valid_params)
+        source = Source.last
+        expect(source.source_type).to eq source_params[:source_type]
+        expect(source.mode).to eq source_params[:mode]
+        expect(source.remote_id).to eq @remote.id
+        expect(source.fingerprint).to eq source_params[:fingerprint]
+        expect(source.alias).to eq source_params[:alias]
+      end
+
+      it 'should use existing source if source already exist' do
+        source = create(:source, remote: @remote)
+        container_params = attributes_for(:container)
+        valid_params = {
+          hostname: container_params[:hostname],
+          source: {
+            source_type: source.source_type,
+            mode: source.mode,
+            remote: { name: @remote.name },
+            fingerprint: source.fingerprint,
+            alias: source.alias
+          }
+        }
+        container = Container.create_with_source!(@cluster.id, valid_params)
+        expect(container.source_id).to eq source.id
+      end
+    end
+
     describe '#update_status' do
       let(:container) { create(:container) }
 
