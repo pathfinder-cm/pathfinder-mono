@@ -72,6 +72,15 @@ class Container < ApplicationRecord
     )
   end
 
+  def duplicate
+    Container.create(
+      cluster_id: self.cluster_id,
+      hostname: self.hostname,
+      source: self.source,
+      image_alias: self.image_alias,
+    )
+  end
+
   def update_status(status)
     status = status.downcase.to_sym
     if Container.statuses.key?(status)

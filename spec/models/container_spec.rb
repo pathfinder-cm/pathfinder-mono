@@ -85,6 +85,17 @@ RSpec.describe Container, type: :model do
       end
     end
 
+    describe '#duplicate!' do
+      it 'should be able to duplicate a container with only duplicable attributes set' do
+        container = create(:container)
+        duplicate_container = container.duplicate
+        expect(duplicate_container.cluster_id).to eq container.cluster_id
+        expect(duplicate_container.hostname).to eq container.hostname
+        expect(duplicate_container.source).to eq container.source
+        expect(duplicate_container.image_alias).to eq container.image_alias
+      end
+    end
+
     describe '#update_status' do
       let(:container) { create(:container) }
 
