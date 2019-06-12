@@ -24,7 +24,8 @@ class ::Api::V2::Node::ContainerSerializer < ::Api::V2::BaseSerializer
           name: container.source&.remote&.name,
           server: container.source&.remote&.server,
           protocol: container.source&.remote&.protocol,
-          auth_type: container.source&.remote&.auth_type
+          auth_type: container.source&.remote&.auth_type,
+          certificate: container.source&.remote&.certificate
         },
         fingerprint: container.source&.fingerprint,
         alias: container.source&.alias
