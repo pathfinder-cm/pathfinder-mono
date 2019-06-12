@@ -8,11 +8,11 @@ table.table.table-hover
       th.col-sm-2 scope="col"
         | IP Address
       th.col-sm-2 scope="col"
-        | Image Alias
+        | Source Type
       th.col-sm-2 scope="col"
-        | Image Server
+        | Source Remote
       th.col-sm-2 scope="col"
-        | Image Protocol
+        | Source Fingerprint / Alias
       th.col-sm-2 scope="col"
         | Node
       th.col-sm-2 scope="col"
@@ -27,11 +27,11 @@ table.table.table-hover
         td
           = container.ipaddress
         td
-          = container.image_alias
+          = container.source&.source_type
         td
-          = container.image_server
+          = container.source&.remote&.name
         td
-          = container.image_protocol
+          = "#{container.source&.fingerprint.presence || '-'} / #{container.source&.alias.presence || '-'}"
         td
           = container.node&.hostname
         td

@@ -17,8 +17,7 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
   # POST /
   def create
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @container = @cluster.containers.new(container_params)
-    @container.save!
+    @container = Container.create_with_source!(@cluster.id, container_params)
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
   end
 
@@ -31,19 +30,15 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
   end
 
   def reschedule
-    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
-    @container = @cluster.containers.exists.find_by(
-      hostname: params[:hostname]
-    )
-    @container.update_status('SCHEDULE_DELETION')
-    @new_container = Container.new(
-      cluster_id: @container.cluster_id,
-      hostname: @container.hostname,
-      image_alias: @container.image_alias,
-      image_server: @container.image_server,
-      image_protocol: @container.image_protocol
-    )
-    @new_container.save!
+    ActiveRecord::Base.transaction do
+      @cluster = ::Cluster.find_by!(name: params[:cluster_name])
+      @container = @cluster.containers.exists.find_by(
+        hostname: params[:hostname]
+      )
+      @container.update_status('SCHEDULE_DELETION')
+      @new_container = @container.duplicate
+      @new_container.save!
+    end
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@new_container).to_h
   end
 
@@ -51,9 +46,15 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
     def container_params
       params.require(:container).permit(
         :hostname,
-        :image_alias,
-        :image_server,
-        :image_protocol
+        {source: [
+          :source_type,
+          :mode,
+          {remote: [
+            :name
+          ]},
+          :fingerprint,
+          :alias
+        ]}
       )
     end
 end

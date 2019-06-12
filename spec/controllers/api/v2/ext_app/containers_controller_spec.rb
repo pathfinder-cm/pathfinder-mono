@@ -2,13 +2,6 @@ require 'rails_helper'
 
 RSpec.describe ::Api::V2::ExtApp::ContainersController do
   let(:cluster) { create(:cluster) }
-  let(:valid_attributes) {
-    attributes_for(:container, cluster_id: cluster.id)
-  }
-
-  let(:invalid_attributes) {
-    { hostname: "" }
-  }
 
   before(:each) do
     create(:ext_app, access_token: 'abc')
@@ -50,9 +43,21 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
   describe "POST #create" do
     context "with valid params" do
       before(:each) do
+        remote = create(:remote)
+        source = create(:source, remote: remote)
+        container_params = attributes_for(:container, cluster_id: cluster.id)
         @params = {
           cluster_name: cluster.name,
-          container: valid_attributes
+          container: {
+            hostname: container_params[:hostname],
+            source: {
+              source_type: source.source_type,
+              mode: source.mode,
+              remote: { name: remote.name },
+              fingerprint: source.fingerprint,
+              alias: source.alias
+            }
+          }
         }
       end
 
@@ -62,7 +67,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
         }.to change(Container, :count).by(1)
       end
 
-      it "redirects to list of containers" do
+      it "response should be successful" do
         post :create, params: @params
         expect(response).to be_successful
       end
@@ -72,7 +77,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       it "returns a failed response" do
         @params = {
           cluster_name: cluster.name,
-          container: invalid_attributes
+          container: { hostname: nil }
         }
         post :create, params: @params
         expect(response.status).to eq 406

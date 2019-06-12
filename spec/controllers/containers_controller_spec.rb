@@ -1,18 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe ContainersController, type: :controller do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Container. As you add validations to Container, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    attributes_for(:container, cluster_id: @cluster.id)
-  }
-
-  let(:invalid_attributes) {
-    { hostname: "" }
-  }
-
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # ContainersController. Be sure to keep this updated too.
@@ -35,21 +23,49 @@ RSpec.describe ContainersController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
+      before(:each) do
+        remote = create(:remote)
+        source = create(:source, remote: remote)
+        container_params = attributes_for(:container, cluster_id: @cluster.id)
+        @params = {
+          container: {
+            cluster_id: @cluster.id,
+            hostname: container_params[:hostname],
+            source: {
+              source_type: source.source_type,
+              mode: source.mode,
+              remote: { name: remote.name },
+              fingerprint: source.fingerprint,
+              alias: source.alias
+            }
+          }
+        }
+      end
+
       it "creates a new Container" do
         expect {
-          post :create, params: {container: valid_attributes}, session: valid_session
+          post :create, params: @params, session: valid_session
         }.to change(Container, :count).by(1)
       end
 
       it "redirects to list of containers" do
-        post :create, params: {container: valid_attributes}, session: valid_session
+        post :create, params: @params, session: valid_session
         expect(response).to redirect_to(@cluster)
       end
     end
 
     context "with invalid params" do
+      before(:each) do
+        @params = {
+          container: {
+            cluster_id: @cluster.id,
+            hostname: nil
+          }
+        }
+      end
+
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: {container: invalid_attributes}, session: valid_session
+        post :create, params: @params, session: valid_session
         expect(response).to be_successful
       end
     end

@@ -15,9 +15,21 @@ class ::Api::V2::Node::ContainerSerializer < ::Api::V2::BaseSerializer
       id: container.id,
       hostname: container.hostname,
       ipaddress: container.ipaddress,
-      image_alias: container.image_alias,
-      image_server: container.image_server,
-      image_protocol: container.image_protocol,
+      source: {
+        id: container.source&.id,
+        source_type: container.source&.source_type,
+        mode: container.source&.mode,
+        remote: {
+          id: container.source&.remote&.id,
+          name: container.source&.remote&.name,
+          server: container.source&.remote&.server,
+          protocol: container.source&.remote&.protocol,
+          auth_type: container.source&.remote&.auth_type,
+          certificate: container.source&.remote&.certificate
+        },
+        fingerprint: container.source&.fingerprint,
+        alias: container.source&.alias
+      },
       node_hostname: (container.node&.hostname || ""),
       status: container.status,
       last_status_update_at: container.last_status_update_at,

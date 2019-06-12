@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_06_142700) do
+ActiveRecord::Schema.define(version: 2019_06_08_001200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_142700) do
     t.integer "cluster_id", null: false
     t.string "hostname", null: false
     t.string "ipaddress"
-    t.string "image_alias", null: false
+    t.string "image_alias"
     t.integer "node_id"
     t.string "status", null: false
     t.datetime "last_status_update_at"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2019_05_06_142700) do
     t.datetime "updated_at", null: false
     t.string "image_server"
     t.string "image_protocol"
+    t.integer "source_id"
     t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
   end
 
@@ -66,6 +67,29 @@ ActiveRecord::Schema.define(version: 2019_05_06_142700) do
     t.index ["hostname"], name: "index_nodes_on_hostname", unique: true
   end
 
+  create_table "remotes", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "server"
+    t.string "protocol", null: false
+    t.string "auth_type", null: false
+    t.text "certificate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_remotes_on_name", unique: true
+  end
+
+  create_table "sources", force: :cascade do |t|
+    t.string "source_type", null: false
+    t.string "mode", null: false
+    t.integer "remote_id"
+    t.string "fingerprint"
+    t.string "alias"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alias"], name: "index_sources_on_alias"
+    t.index ["fingerprint"], name: "index_sources_on_fingerprint"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.string "email", default: "", null: false
@@ -87,6 +111,8 @@ ActiveRecord::Schema.define(version: 2019_05_06_142700) do
 
   add_foreign_key "containers", "clusters"
   add_foreign_key "containers", "nodes"
+  add_foreign_key "containers", "sources"
   add_foreign_key "ext_apps", "users"
   add_foreign_key "nodes", "clusters"
+  add_foreign_key "sources", "remotes"
 end
