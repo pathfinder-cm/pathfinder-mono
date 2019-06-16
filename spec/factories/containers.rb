@@ -7,5 +7,8 @@ FactoryBot.define do
     image_alias { 'linux' }
     image_server { 'https://cloud-images.ubuntu.com/releases' }
     image_protocol { 'lxd' }
+    bootstrappers { [
+      { 'bootstrap_type' => 'none' }
+    ] }
   end
 end

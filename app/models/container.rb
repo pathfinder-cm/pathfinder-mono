@@ -72,6 +72,7 @@ class Container < ApplicationRecord
     container.cluster_id = cluster_id
     container.hostname = params[:hostname]
     container.source = source
+    container.bootstrappers = params[:bootstrappers]
     container.save
     container
   end
@@ -88,6 +89,7 @@ class Container < ApplicationRecord
       hostname: self.hostname,
       source: self.source,
       image_alias: self.image_alias,
+      bootstrappers: self.bootstrappers,
     )
   end
 

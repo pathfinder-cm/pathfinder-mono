@@ -56,7 +56,8 @@ RSpec.describe Container, type: :model do
         container_params = attributes_for(:container)
         valid_params = {
           hostname: container_params[:hostname],
-          source: source_params.merge({ remote: { name: @remote.name } })
+          source: source_params.merge({ remote: { name: @remote.name } }),
+          bootstrappers: container_params[:bootstrappers]
         }
         container = Container.create_with_source!(@cluster.id, valid_params)
         source = Source.last
@@ -78,10 +79,29 @@ RSpec.describe Container, type: :model do
             remote: { name: @remote.name },
             fingerprint: source.fingerprint,
             alias: source.alias
-          }
+          },
+          bootstrappers: container_params[:bootstrappers]
         }
         container = Container.create_with_source!(@cluster.id, valid_params)
         expect(container.source_id).to eq source.id
+      end
+
+      it 'should ensure supplied parameters are used correctly' do
+        source = create(:source, remote: @remote)
+        container_params = attributes_for(:container)
+        valid_params = {
+          hostname: container_params[:hostname],
+          source: {
+            source_type: source.source_type,
+            mode: source.mode,
+            remote: { name: @remote.name },
+            fingerprint: source.fingerprint,
+            alias: source.alias
+          },
+          bootstrappers: container_params[:bootstrappers]
+        }
+        container = Container.create_with_source!(@cluster.id, valid_params)
+        expect(container.bootstrappers).to eq valid_params[:bootstrappers]
       end
     end
 
@@ -93,6 +113,7 @@ RSpec.describe Container, type: :model do
         expect(duplicate_container.hostname).to eq container.hostname
         expect(duplicate_container.source).to eq container.source
         expect(duplicate_container.image_alias).to eq container.image_alias
+        expect(duplicate_container.bootstrappers).to eq container.bootstrappers
       end
     end
 
