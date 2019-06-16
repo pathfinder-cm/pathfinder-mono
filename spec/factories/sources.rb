@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :source do
-    source_type { 'image' }
+    source_type { 'lxc-image' }
     mode { 'pull' }
     association :remote
     sequence(:fingerprint) {|n| "fingerprint-#{n}" }

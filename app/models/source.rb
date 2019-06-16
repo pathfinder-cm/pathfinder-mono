@@ -3,9 +3,9 @@ class Source < ApplicationRecord
   # e.g.
   # attr_accessor :temp
   enum source_types: {
-    image: 'image',
-    migration: 'migration',
-    copy: 'copy',
+    lxc_image: 'lxc-image',
+    lxc_migration: 'lxc-migration',
+    lxc_copy: 'lxc-copy',
   }
 
   enum modes: {
