@@ -21,8 +21,7 @@ class Source < ApplicationRecord
     presence: true,
     inclusion: { in: source_types.values }
   validates :mode,
-    presence: true,
-    inclusion: { in: modes.values }
+    inclusion: { in: modes.values, allow_nil: true }
 
   # Setup relations to other models
   # e.g.
@@ -43,8 +42,13 @@ class Source < ApplicationRecord
   #
   # Setup callbacks & state machines
   #
+  before_create :set_default_values
 
   #
   # Setup additional methods
   #
+  private
+    def set_default_values
+      self.mode ||= Source.modes[:local]
+    end
 end
