@@ -31,9 +31,13 @@ If you have any questions or feedback regarding pathfinder-mono:
 
 Your feedback is always welcome.
 
-### Running tests
+### Running Tests
 
 Run `rspec spec`
+
+## Additional Documentations
+
+See `doc` directory.
 
 ## Further Reading
 
