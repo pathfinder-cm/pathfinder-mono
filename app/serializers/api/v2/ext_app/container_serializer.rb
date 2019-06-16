@@ -29,6 +29,7 @@ class ::Api::V2::ExtApp::ContainerSerializer < ::Api::V2::BaseSerializer
         fingerprint: container.source&.fingerprint,
         alias: container.source&.alias
       },
+      bootstrappers: container.bootstrappers,
       node_hostname: (container.node&.hostname || ""),
       status: container.status,
       last_status_update_at: container.last_status_update_at,

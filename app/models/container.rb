@@ -122,6 +122,7 @@ class Container < ApplicationRecord
 
   private
     def set_default_values
+      self.bootstrappers ||= []
       self.status = Container.statuses[:pending]
       self.last_status_update_at = DateTime.current
     end
