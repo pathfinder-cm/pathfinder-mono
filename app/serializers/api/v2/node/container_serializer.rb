@@ -17,6 +17,7 @@ class ::Api::V2::Node::ContainerSerializer < ::Api::V2::BaseSerializer
       ipaddress: container.ipaddress,
       source: {
         id: container.source&.id,
+        # TODO: need to create adapter for different type of agent
         source_type: container.source&.source_type,
         mode: container.source&.mode,
         remote: {

@@ -10,8 +10,8 @@ This is the whole attributes that you can supply to v2 API when creating contain
 {
   "hostname": "p-test-01",
   "source": {
-    "source_type": "lxc-image",       # can be lxc-image, lxc-migration or lxc-copy
-    "mode": "local",                  # can be local or pull. default is pull.
+    "source_type": "image",       # can be image, migration or copy
+    "mode": "local",              # can be local or pull. default is pull.
     "remote": {
       "name": "remote-server-01"
     },
