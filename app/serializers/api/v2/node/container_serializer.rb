@@ -17,6 +17,7 @@ class ::Api::V2::Node::ContainerSerializer < ::Api::V2::BaseSerializer
       ipaddress: container.ipaddress,
       source: {
         id: container.source&.id,
+        # TODO: need to create adapter for different type of agent
         source_type: container.source&.source_type,
         mode: container.source&.mode,
         remote: {
@@ -30,6 +31,7 @@ class ::Api::V2::Node::ContainerSerializer < ::Api::V2::BaseSerializer
         fingerprint: container.source&.fingerprint,
         alias: container.source&.alias
       },
+      bootstrappers: container.bootstrappers,
       node_hostname: (container.node&.hostname || ""),
       status: container.status,
       last_status_update_at: container.last_status_update_at,

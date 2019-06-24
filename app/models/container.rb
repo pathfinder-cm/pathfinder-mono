@@ -63,8 +63,8 @@ class Container < ApplicationRecord
     remote_name = params.dig(:source, :remote, :name)
     remote = Remote.find_by(name: remote_name) if remote_name.present?
     source = Source.find_or_create_by(
-      source_type: params.dig(:source, :source_type) || 'image',
-      mode: params.dig(:source, :mode) || 'local',
+      source_type: params.dig(:source, :source_type),
+      mode: params.dig(:source, :mode),
       remote_id: remote&.id || params.dig(:source, :remote_id),
       fingerprint: params.dig(:source, :fingerprint),
       alias: params.dig(:source, :alias)
@@ -72,6 +72,7 @@ class Container < ApplicationRecord
     container.cluster_id = cluster_id
     container.hostname = params[:hostname]
     container.source = source
+    container.bootstrappers = params[:bootstrappers]
     container.save
     container
   end
@@ -88,6 +89,7 @@ class Container < ApplicationRecord
       hostname: self.hostname,
       source: self.source,
       image_alias: self.image_alias,
+      bootstrappers: self.bootstrappers,
     )
   end
 
@@ -120,6 +122,7 @@ class Container < ApplicationRecord
 
   private
     def set_default_values
+      self.bootstrappers ||= []
       self.status = Container.statuses[:pending]
       self.last_status_update_at = DateTime.current
     end

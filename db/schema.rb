@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_08_001200) do
+ActiveRecord::Schema.define(version: 2019_06_16_023500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2019_06_08_001200) do
     t.string "image_server"
     t.string "image_protocol"
     t.integer "source_id"
+    t.jsonb "bootstrappers", default: [], null: false
     t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
   end
 
