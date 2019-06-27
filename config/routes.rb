@@ -79,9 +79,12 @@ Rails.application.routes.draw do
         resources :containers, only: [] do
           collection do
             get 'scheduled' => 'containers#scheduled'
+            get 'bootstrap_scheduled' => 'containers#bootstrap_scheduled'
             post 'ipaddress' => 'containers#update_ipaddress'
             post 'mark_provisioned' => 'containers#mark_provisioned'
             post 'mark_provision_error' => 'containers#mark_provision_error'
+            post 'mark_bootstrapped' => 'containers#mark_bootstrapped'
+            post 'mark_bootstrap_error' => 'containers#mark_bootstrap_error'
             post 'mark_deleted' => 'containers#mark_deleted'
           end
         end
