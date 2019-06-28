@@ -35,7 +35,7 @@ RSpec.describe ::Api::V2::Node::ContainersController do
       c3.update_status(:bootstrap_error)
       c4 = create(:container, node: @node)
       c4.update_status(:scheduled)
-      @containers = [c1, c2, c3]
+      @containers = [c1, c2]
       create(:container, node: @node)
     end
 

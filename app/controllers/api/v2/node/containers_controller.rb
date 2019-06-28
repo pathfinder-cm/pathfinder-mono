@@ -16,10 +16,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
   # Get all bootstrap scheduled containers within a particular node
   def bootstrap_scheduled
     @containers = current_node.containers.
-      where(status: [
-        ::Container.statuses[:provisioned],
-        ::Container.statuses[:bootstrap_error],
-      ])
+      where(status: ::Container.statuses[:provisioned])
     render json: ::Api::V2::Node::ContainerSerializer.new(@containers).to_h
   end
 
@@ -57,7 +54,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
   def mark_bootstrapped
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
-      status: ['PROVISIONED','BOOTSTRAP_ERROR']
+      status: 'PROVISIONED'
     )
     @container.update_status('BOOTSTRAPPED')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
@@ -68,7 +65,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
   def mark_bootstrap_error
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
-      status: ['PROVISIONED','BOOTSTRAP_ERROR']
+      status: ['PROVISIONED']
     )
     @container.update_status('BOOTSTRAP_ERROR')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
