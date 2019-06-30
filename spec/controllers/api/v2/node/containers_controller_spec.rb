@@ -25,6 +25,26 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
   end
 
+  describe 'responds with bootstrap_scheduled' do
+    before(:each) do
+      c1 = create(:container, node: @node)
+      c1.update_status(:provisioned)
+      c2 = create(:container, node: @node)
+      c2.update_status(:provisioned)
+      c3 = create(:container, node: @node)
+      c3.update_status(:bootstrap_error)
+      c4 = create(:container, node: @node)
+      c4.update_status(:scheduled)
+      @containers = [c1, c2]
+      create(:container, node: @node)
+    end
+
+    it "returns appropriate response" do
+      get :bootstrap_scheduled, params: {cluster_name: @cluster.name, node_hostname: @node.hostname}, as: :json
+      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@containers).to_h.to_json
+    end
+  end
+
   describe 'responds with mark_provisioned' do
     before(:each) do
       @container = create(:container, node: @node)
@@ -68,6 +88,54 @@ RSpec.describe ::Api::V2::Node::ContainersController do
 
     it "returns appropriate response" do
       post :mark_provision_error, params: @params, as: :json
+      @container.reload
+      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+    end
+  end
+
+  describe 'responds with mark_bootstrapped' do
+    before(:each) do
+      @container = create(:container, node: @node)
+      @container.update_status('PROVISIONED')
+      @params = {
+        cluster_name: @cluster.name,
+        node_hostname: @container.node.hostname,
+        hostname: @container.hostname
+      }
+    end
+
+    it "mark object from provisioned to bootstrapped in the database" do
+      post :mark_bootstrapped, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'BOOTSTRAPPED'
+    end
+
+    it "returns appropriate response" do
+      post :mark_bootstrapped, params: @params, as: :json
+      @container.reload
+      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+    end
+  end
+
+  describe 'responds with mark_bootstrap_error' do
+    before(:each) do
+      @container = create(:container, node: @node)
+      @container.update_status('PROVISIONED')
+      @params = {
+        cluster_name: @cluster.name,
+        node_hostname: @container.node.hostname,
+        hostname: @container.hostname
+      }
+    end
+
+    it "mark object from provisioned to bootstrap error in the database" do
+      post :mark_bootstrap_error, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'BOOTSTRAP_ERROR'
+    end
+
+    it "returns appropriate response" do
+      post :mark_bootstrap_error, params: @params, as: :json
       @container.reload
       expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
     end

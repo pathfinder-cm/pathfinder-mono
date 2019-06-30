@@ -24,3 +24,19 @@ ext_app = ExtApp.create!(
   user_id: user.id,
   access_token: 'pathfinder',
 )
+
+remote = Remote.create!(
+  name: 'ubuntu',
+  server: 'https://cloud-images.ubuntu.com/release',
+  protocol: 'simplestreams',
+  auth_type: 'none',
+  certificate: '',
+)
+
+source = Source.create!(
+  source_type: 'image',
+  mode: 'pull',
+  remote_id: remote.id,
+  fingerprint: '',
+  alias: '18.04',
+)
