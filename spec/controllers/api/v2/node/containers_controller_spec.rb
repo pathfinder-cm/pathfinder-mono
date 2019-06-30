@@ -102,25 +102,12 @@ RSpec.describe ::Api::V2::Node::ContainersController do
         node_hostname: @container.node.hostname,
         hostname: @container.hostname
       }
-      @container2 = create(:container, node: @node)
-      @container2.update_status('BOOTSTRAP_ERROR')
-      @params2 = {
-        cluster_name: @cluster.name,
-        node_hostname: @container2.node.hostname,
-        hostname: @container2.hostname
-      }
     end
 
     it "mark object from provisioned to bootstrapped in the database" do
       post :mark_bootstrapped, params: @params, as: :json
       @container.reload
       expect(@container.status).to eq 'BOOTSTRAPPED'
-    end
-
-    it "mark object from bootstrap_error to bootstrapped in database" do
-      post :mark_bootstrapped, params: @params2, as: :json
-      @container2.reload
-      expect(@container2.status).to eq 'BOOTSTRAPPED'
     end
 
     it "returns appropriate response" do
