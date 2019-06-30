@@ -106,11 +106,11 @@ class Container < ApplicationRecord
   end
 
   def allow_deletion?
-    %w(PENDING SCHEDULED PROVISIONED PROVISION_ERROR).include? self.status
+    %w(PENDING SCHEDULED PROVISIONED PROVISION_ERROR BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
   end
 
   def allow_reschedule?
-    %w(PROVISIONED PROVISION_ERROR).include? self.status
+    %w(PROVISIONED PROVISION_ERROR BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
   end
 
   def unique_hostname_unless_deleted
