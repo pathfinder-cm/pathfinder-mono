@@ -33,6 +33,7 @@ RSpec.describe Container, type: :model do
     it { should belong_to(:cluster) }
     it { should belong_to(:node) }
     it { should belong_to(:source) }
+    it { should belong_to(:deployment) }
   end
 
   describe "scopes" do

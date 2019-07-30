@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_16_023500) do
+ActiveRecord::Schema.define(version: 2019_07_30_150800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,7 +38,19 @@ ActiveRecord::Schema.define(version: 2019_06_16_023500) do
     t.string "image_protocol"
     t.integer "source_id"
     t.jsonb "bootstrappers", default: [], null: false
+    t.integer "deployment_id"
     t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
+  end
+
+  create_table "deployments", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "replicas", null: false
+    t.string "label"
+    t.string "status"
+    t.jsonb "strategy", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_deployments_on_name"
   end
 
   create_table "ext_apps", force: :cascade do |t|
@@ -111,6 +123,7 @@ ActiveRecord::Schema.define(version: 2019_06_16_023500) do
   end
 
   add_foreign_key "containers", "clusters"
+  add_foreign_key "containers", "deployments"
   add_foreign_key "containers", "nodes"
   add_foreign_key "containers", "sources"
   add_foreign_key "ext_apps", "users"

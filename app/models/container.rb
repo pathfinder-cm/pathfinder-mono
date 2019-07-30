@@ -34,6 +34,7 @@ class Container < ApplicationRecord
   belongs_to :cluster
   belongs_to :node, required: false
   belongs_to :source, required: false
+  belongs_to :deployment, required: false
 
   #
   # Setup scopes
