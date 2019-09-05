@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       post 'reschedule' => 'containers#reschedule'
     end
   end
+  resources :sources, except: :destroy
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
