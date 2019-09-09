@@ -1,0 +1,41 @@
+.row
+  .col-sm-6
+    .card
+      .h5.card-header Source Details
+      .card-body
+        dl.row
+          dt.col-sm-3 Type:
+          dd.col-sm-9
+            = @source.source_type
+
+          dt.col-sm-3 Mode:
+          dd.col-sm-9
+            pre
+              code
+                = @source.mode
+
+          dt.col-sm-3 Remote:
+          dd.col-sm-9
+            pre
+              code
+                = @source.remote.name
+
+          dt.col-sm-3 Fingerprint:
+          dd.col-sm-9
+            pre
+              code
+                = @source.fingerprint
+
+          dt.col-sm-3 Alias:
+          dd.col-sm-9
+            pre
+              code
+                = @source.alias
+
+      .card-footer.text-right
+        .btn.btn-primary.btn-sm.float-right
+          = link_to 'Back to Source', sources_path, class: 'text-light', style: 'text-decoration:none'
+        .btn.btn-success.btn-sm.mr-2
+          = link_to 'Edit', edit_source_path(@source), class: 'text-light', style: 'text-decoration:none'
+br
+br

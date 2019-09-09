@@ -1,6 +1,5 @@
 .row.justify-content-center
   .col-md-6
-    h3 Edit Source
     - if flash.key?(:messages)
       .alert.alert-danger
         b Issue editing source
@@ -8,5 +7,12 @@
         - flash[:messages].each do |msg|
           = "- #{msg}"
           br
+
+.row.justify-content-center
+  .col-md-6       
+    .card
+      .h5.card-header Edit source
+    br
+    br
     #edit_source
       = render 'form', source: @source

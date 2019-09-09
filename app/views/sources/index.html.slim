@@ -16,7 +16,8 @@
 table.table.table-bordered
   thead.thead-dark
     tr
-      th Name
+      th.text-center Name
+      th.text-center Remote
       th.text-center Actions
   tbody
     - if @sources.empty?
@@ -24,5 +25,6 @@ table.table.table-bordered
         td = 'No source yet'
     - @sources.each do |source|
       tr
-        td.text-center = link_to source.name, source_path(source)
-        td.text-center = link_to 'Delete', source_path(source), data: { method: :delete }
+        td.text-center = link_to source.alias, source_path(source)
+        td.text-center = link_to source.remote.name, remote_path(source.remote)
+        td.text-center = link_to 'Edit', edit_source_path(source)

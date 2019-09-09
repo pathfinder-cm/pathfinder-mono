@@ -8,29 +8,28 @@
         - source.errors.full_messages.each do |message|
           li
             = message
-  = form.fields_for :source do |source_form|
-    .form-group.row
-      = source_form.label :source_type, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.collection_select :source_type, Source.source_types, :first, :second, {}, id: :source_source_source_type, class: 'form-control'
-    .form-group.row
-      = source_form.label :source_mode, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.collection_select :mode, Source.modes, :first, :second, {}, id: :source_source_mode, class: 'form-control'
-    .form-group.row
-      = source_form.label :source_remote, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.collection_select :remote_id, Remote.all, :id, :name, {include_blank: true}, id: :source_source_remote_id, class: 'form-control'
-    .form-group.row
-      = source_form.label :fingerprint, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.text_field :fingerprint, id: :source_source_fingerprint, class: 'form-control'
-    .form-group.row
-      = source_form.label :alias, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.text_field :alias, id: :containe_source_alias, class: 'form-control'
+  .form-group.row
+    = form.label :source_type, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.collection_select :source_type, Source.source_types, :second, :second, {}, id: :source_source_type, class: 'form-control'
+  .form-group.row
+    = form.label :source_mode, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.collection_select :mode, Source.modes, :first, :second, {}, id: :source_mode, class: 'form-control'
+  .form-group.row
+    = form.label :source_remote, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.collection_select :remote_id, Remote.all, :id, :name, {include_blank: true}, id: :source_remote_id, class: 'form-control'
+  .form-group.row
+    = form.label :fingerprint, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :fingerprint, id: :source_fingerprint, class: 'form-control'
+  .form-group.row
+    = form.label :alias, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :alias, id: :source_alias, class: 'form-control'
   .form-group.row
     .col-sm-2
     .col-sm-10
       = form.submit 'Save', class: 'btn btn-primary'
-
+      = link_to 'Back', sources_path, class: 'btn btn-secondary float-left text-light', style: 'margin-right:5px'
