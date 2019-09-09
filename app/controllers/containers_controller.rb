@@ -16,7 +16,7 @@ class ContainersController < ApplicationController
       if @container.errors.none?
         format.html { redirect_to cluster_path(@container.cluster), notice: 'Container was successfully created.' }
       else
-        format.html { render :new }
+        format.html { redirect_to new_container_path(cluster_id: @cluster.id), notice: 'Error when creating container.' }
       end
     end
   end
