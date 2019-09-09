@@ -1,0 +1,17 @@
+.row.justify-content-center
+  .col-md-6
+    - if flash.key?(:messages)
+      .alert.alert-danger
+        b Issue editing remote
+        br
+        - flash[:messages].each do |msg|
+          = "- #{msg}"
+          br
+.row.justify-content-center
+  .col-md-6       
+    .card
+      .h5.card-header Edit remote
+    br
+    br
+    #edit_remote
+      = render 'form', remote: @remote

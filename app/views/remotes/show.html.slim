@@ -1,0 +1,41 @@
+.row
+  .col-sm-6
+    .card
+      .h5.card-header Remote Details
+      .card-body
+        dl.row
+          dt.col-sm-3 Name:
+          dd.col-sm-9
+            = @remote.name
+
+          dt.col-sm-3 Server:
+          dd.col-sm-9
+            pre
+              code
+                = @remote.server
+
+          dt.col-sm-3 Protocol:
+          dd.col-sm-9
+            pre
+              code
+                = @remote.protocol
+
+          dt.col-sm-3 Auth Type:
+          dd.col-sm-9
+            pre
+              code
+                = @remote.auth_type
+
+          dt.col-sm-3 Certificate:
+          dd.col-sm-9
+            pre
+              code
+                = @remote.certificate
+
+      .card-footer.text-right
+        .btn.btn-primary.btn-sm.float-right
+          = link_to 'Back to Remote', remotes_path, class: 'text-light', style: 'text-decoration:none'
+        .btn.btn-success.btn-sm.mr-2
+          = link_to 'Edit', edit_remote_path(@remote), class: 'text-light', style: 'text-decoration:none'
+br
+br

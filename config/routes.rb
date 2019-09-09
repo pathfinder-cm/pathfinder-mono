@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     end
   end
   resources :sources, except: :destroy
+  resources :remotes, except: :destroy
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
