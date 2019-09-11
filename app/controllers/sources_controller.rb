@@ -36,7 +36,7 @@ class SourcesController < ApplicationController
     @source = Source.create(source_params)
 
     respond_to do |format|
-      if @source.errors.none?
+      if @source.save
         format.html { redirect_to source_path(@source.id), notice: 'Source was successfully created.' }
       else
         format.html { render :new }

@@ -36,7 +36,7 @@ class RemotesController < ApplicationController
     @remote = Remote.create(remote_params)
 
     respond_to do |format|
-      if @remote.errors.none?
+      if @remote.save
         format.html { redirect_to remote_path(@remote.id), notice: 'Remote was successfully created.' }
       else
         format.html { render :new }
