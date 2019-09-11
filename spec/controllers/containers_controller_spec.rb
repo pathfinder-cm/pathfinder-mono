@@ -66,7 +66,7 @@ RSpec.describe ContainersController, type: :controller do
 
       it "returns a success response (i.e. to display the 'new' template)" do
         post :create, params: @params, session: valid_session
-        expect(response).to have_http_status(302)
+        expect(response).to be_successful
       end
     end
   end
