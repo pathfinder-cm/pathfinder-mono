@@ -56,7 +56,9 @@ class ContainersController < ApplicationController
         {source: [
           :source_type,
           :mode,
-          :remote_id,
+          {remote: [
+            :name
+          ]},
           :fingerprint,
           :alias
         ]}

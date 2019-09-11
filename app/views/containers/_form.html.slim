@@ -21,10 +21,11 @@
       = source_form.label :source_mode, class: 'col-sm-2 col-form-label'
       .col-sm-10
         = source_form.collection_select :mode, Source.modes, :first, :second, {}, id: :container_source_mode, class: 'form-control'
-    .form-group.row
-      = source_form.label :source_remote, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.collection_select :remote_id, Remote.all, :id, :name, {include_blank: true}, id: :container_source_remote_id, class: 'form-control'
+    = source_form.fields_for :remote do |remote_form|
+      .form-group.row
+        = remote_form.label :source_remote, class: 'col-sm-2 col-form-label'
+        .col-sm-10
+          = remote_form.collection_select :name, Remote.all, :name, :name, {include_blank: true}, id: :container_source_remote_name, class: 'form-control'
     .form-group.row
       = source_form.label :fingerprint, class: 'col-sm-2 col-form-label'
       .col-sm-10
