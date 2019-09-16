@@ -67,7 +67,7 @@ class Container < ApplicationRecord
     source = Source.find_or_create_by(
       source_type: params.dig(:source, :source_type),
       mode: params.dig(:source, :mode),
-      remote_id: remote&.id,
+      remote_id: remote&.id || params.dig(:source, :remote_id),
       fingerprint: params.dig(:source, :fingerprint),
       alias: params.dig(:source, :alias)
     )
