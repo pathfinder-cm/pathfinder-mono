@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe RemotesController, type: :controller do
+  let(:valid_attributes) {
+    attributes_for(:remote)
+  }
+
+  let(:invalid_attributes) {
+    { name: '' }
+  }
+
   let(:valid_session) { {} }
 
   let(:user) { create(:user) }
@@ -9,10 +17,19 @@ RSpec.describe RemotesController, type: :controller do
     sign_in user
   end
 
-  describe 'GET #index' do
-    it 'returns http success' do
-      get :index
-      expect(response).to have_http_status(:success)
+  describe "GET #index" do
+    it "returns a success response" do
+      remote = Remote.create! valid_attributes
+      get :index, params: {}, session: valid_session
+      expect(response).to be_successful
+    end
+  end
+
+  describe "GET #show" do
+    it "returns a success response" do
+      remote = Remote.create! valid_attributes
+      get :show, params: {id: remote.to_param}, session: valid_session
+      expect(response).to be_successful
     end
   end
 
@@ -25,67 +42,60 @@ RSpec.describe RemotesController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      before(:each) do
-        @params = {
-          remote: {
-            name: 'barito-registry',
-            server: 'https://cloud-images.ubuntu.com/releases',
-            protocol: 'simplestreams',
-            auth_type: 'none',
-            certificate: ''
-          }
-        }
-      end
-
       it "creates a new Remote" do
         expect {
-          post :create, params: @params, session: valid_session
+          post :create, params: {remote: valid_attributes}, session: valid_session
         }.to change(Remote, :count).by(1)
       end
 
-      it "redirects to list of remotes" do
-        post :create, params: @params, session: valid_session
+      it "redirects to the created remote" do
+        post :create, params: {remote: valid_attributes}, session: valid_session
         expect(response).to redirect_to(Remote.last)
       end
     end
 
     context "with invalid params" do
-      before(:each) do
-        remote = create(:remote)
-        @params = {
-          remote: {
-            remote: remote.id
-          }
-        }
-      end
-
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: @params, session: valid_session
+        post :create, params: {remote: invalid_attributes}, session: valid_session
         expect(response).to be_successful
       end
     end
   end
 
-  describe 'GET #show' do
-    it 'fetches remote by id' do
-      remote = create(:remote)
-      get :show, params: { id: remote.id }
-      expect(response).to have_http_status(:success)
+  describe "GET #edit" do
+    it "returns a success response" do
+      remote = Remote.create! valid_attributes
+      get :edit, params: {id: remote.to_param}, session: valid_session
+      expect(response).to be_successful
     end
   end
 
-  describe 'POST #update' do
-    it 'edits remote by id' do
-      remote = create(:remote)
-      remote_params = {
-        name: 'barito-registry',
-        server: 'https://cloud-images.ubuntu.com/releases',
-        protocol: 'simplestreams',
-        auth_type: 'none',
-        certificate: ''
+  describe "PUT #update" do
+    context "with valid params" do
+      let(:new_attributes) {
+        attributes_for(:remote)
       }
-      post :update, params: { id: remote.id, remote: remote_params }
-      expect(response).to have_http_status(302)
+
+      it "updates the requested remote" do
+        remote = Remote.create! valid_attributes
+        put :update, params: {id: remote.to_param, remote: new_attributes}, session: valid_session
+        remote.reload
+        expect(remote.name).to eq new_attributes[:name]
+      end
+
+      it "redirects to the remote" do
+        remote = Remote.create! valid_attributes
+        put :update, params: {id: remote.to_param, remote: valid_attributes}, session: valid_session
+        expect(response).to redirect_to(remote)
+      end
+    end
+
+    context "with invalid params" do
+      it "returns a success response (i.e. to display the 'edit' template)" do
+        remote = Remote.create! valid_attributes
+        put :update, params: {id: remote.to_param, remote: invalid_attributes}, session: valid_session
+        expect(response).to be_successful
+      end
     end
   end
 end

@@ -2,33 +2,18 @@ class SourcesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_source, only: [:show, :edit, :update]
 
-  # GET /ext_apps
+  # GET /sources
   def index
     @sources = Source.all
   end
 
-  # GET /remotes/1
+  # GET /sources/1
   def show
   end
 
   # GET /sources/new
   def new
     @source = Source.new
-  end
-
-  # GET /remotes/1/edit
-  def edit
-  end
-
-  # PATCH/PUT /ext_apps/1
-  def update
-    @source = Source.find(params[:id])
-
-    if @source.update(source_params)
-      redirect_to @source
-    else
-      render 'edit'
-    end
   end
 
   # POST /sources
@@ -40,6 +25,21 @@ class SourcesController < ApplicationController
         format.html { redirect_to source_path(@source.id), notice: 'Source was successfully created.' }
       else
         format.html { render :new }
+      end
+    end
+  end
+
+  # GET /sources/1/edit
+  def edit
+  end
+
+  # PATCH/PUT /sources/1
+  def update
+    respond_to do |format|
+      if @source.update(source_params)
+        format.html { redirect_to @source, notice: 'Source was successfully updated.' }
+      else
+        format.html { render :edit }
       end
     end
   end

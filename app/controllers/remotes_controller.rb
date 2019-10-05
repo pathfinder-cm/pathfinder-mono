@@ -16,21 +16,6 @@ class RemotesController < ApplicationController
     @remote = Remote.new
   end
 
-  # GET /remotes/1/edit
-  def edit
-  end
-
-  # PATCH/PUT /ext_apps/1
-  def update
-    @remote = Remote.find(params[:id])
-
-    if @remote.update(remote_params)
-      redirect_to @remote
-    else
-      render 'edit'
-    end
-  end
-
   # POST /remotes
   def create
     @remote = Remote.create(remote_params)
@@ -40,6 +25,21 @@ class RemotesController < ApplicationController
         format.html { redirect_to remote_path(@remote.id), notice: 'Remote was successfully created.' }
       else
         format.html { render :new }
+      end
+    end
+  end
+
+  # GET /remotes/1/edit
+  def edit
+  end
+
+  # PATCH/PUT /remotes/1
+  def update
+    respond_to do |format|
+      if @remote.update(remote_params)
+        format.html { redirect_to @remote, notice: 'Remote was successfully updated.' }
+      else
+        format.html { render :edit }
       end
     end
   end
