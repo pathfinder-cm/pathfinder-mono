@@ -16,7 +16,7 @@
     .form-group.row
       = source_form.label :source_type, class: 'col-sm-2 col-form-label'
       .col-sm-10
-        = source_form.collection_select :source_type, Source.source_types, :first, :second, {}, id: :container_source_source_type, class: 'form-control'
+        = source_form.collection_select :source_type, Source.source_types, :second, :second, {}, id: :container_source_source_type, class: 'form-control'
     .form-group.row
       = source_form.label :source_mode, class: 'col-sm-2 col-form-label'
       .col-sm-10
@@ -32,10 +32,9 @@
     .form-group.row
       = source_form.label :alias, class: 'col-sm-2 col-form-label'
       .col-sm-10
-        = source_form.text_field :alias, id: :containe_source_alias, class: 'form-control'
+        = source_form.text_field :alias, id: :container_source_alias, class: 'form-control'
   .form-group.row
     .col-sm-2
     .col-sm-10
       = form.hidden_field :cluster_id, id: :container_cluster_id
       = form.submit 'Save', class: 'btn btn-primary'
-

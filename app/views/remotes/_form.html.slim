@@ -1,0 +1,35 @@
+= form_with(model: remote, local: true) do |form|
+  - if remote.errors.any?
+    #error_explanation
+      strong
+        = pluralize(remote.errors.count, "error")
+        |  prohibited this remote from being saved:
+      ul
+        - remote.errors.full_messages.each do |message|
+          li
+            = message
+  .form-group.row
+    = form.label :name, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :name, id: :remote_name, class: 'form-control'
+  .form-group.row
+    = form.label :server, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :server, id: :remote_server, class: 'form-control'
+  .form-group.row
+    = form.label :protocol, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.collection_select :remote_protocol, Remote.protocols, :first, :second, {}, id: :remote_protocol, class: 'form-control'
+  .form-group.row
+    = form.label :auth_type, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.collection_select :auth_type, Remote.auth_types, :first, :second, {}, id: :auth_type, class: 'form-control'
+  .form-group.row
+    = form.label :certificate, class: 'col-sm-2 col-form-label'
+    .col-sm-10
+      = form.text_field :certificate, id: :remote_certificate, class: 'form-control'
+  .form-group.row
+    .col-sm-2
+    .col-sm-8
+      = form.submit 'Save', class: 'btn btn-primary'
+      = link_to 'Back', remotes_path, class: 'btn btn-secondary float-left text-light', style: 'margin-right:5px'
