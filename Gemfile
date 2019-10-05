@@ -16,6 +16,7 @@ gem 'gouge', :github => 'starqle/gouge', require: false
 gem 'nokogiri', '~> 1.10.4'
 gem 'pg', '~> 1.0', platform: :ruby
 gem 'puma', '~> 3.12'
+gem 'rubyzip', '~> 1.3.0'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '~> 4.1.18'
 gem 'coffee-rails', '~> 4.2'
