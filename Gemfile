@@ -10,9 +10,10 @@ gem 'rails', '~> 5.2.2.1'
 gem 'activerecord-jdbcpostgresql-adapter', '~> 50.0', platform: :jruby
 gem 'bcrypt', '~> 3.1'
 gem 'bootsnap', '~> 1.3.1'
-gem 'devise', '~> 4.5'
+gem 'devise', '~> 4.7.1'
 gem 'dotenv-rails'
 gem 'gouge', :github => 'starqle/gouge', require: false
+gem 'nokogiri', '~> 1.10.4'
 gem 'pg', '~> 1.0', platform: :ruby
 gem 'puma', '~> 3.12'
 gem 'sass-rails', '~> 5.0'
