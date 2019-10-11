@@ -27,7 +27,7 @@ ext_app = ExtApp.create!(
 
 remote = Remote.create!(
   name: 'ubuntu',
-  server: 'https://cloud-images.ubuntu.com/release',
+  server: 'https://cloud-images.ubuntu.com/releases',
   protocol: 'simplestreams',
   auth_type: 'none',
   certificate: '',
