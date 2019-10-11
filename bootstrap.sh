@@ -13,9 +13,9 @@ echo "install ruby"
 sudo apt-get install -y ruby-full
 
 echo "Install chef"
-wget https://packages.chef.io/files/stable/chefdk/3.9.0/ubuntu/18.04/chefdk_3.9.0-1_amd64.deb
+wget -q --show-progress --progress=bar:force https://packages.chef.io/files/stable/chefdk/3.9.0/ubuntu/18.04/chefdk_3.9.0-1_amd64.deb
 sudo dpkg -i chefdk_3.9.0-1_amd64.deb
-echo 'eval "$(chef shell-init bash)"' >> ~/.profile
+echo 'eval "$(chef shell-init bash)"' >>~/.profile
 source ~/.profile
 
 cd /opt
@@ -44,7 +44,7 @@ mv pathfinder-node-cookbook pathfinder-node
 cd /opt/pathfinder/
 
 echo "Creating solo.rb file"
-cat > solo.rb << EOF
+cat >solo.rb <<EOF
 root = File.absolute_path(File.dirname(__FILE__))
 
 cookbook_path root + "/cookbooks"
@@ -52,7 +52,7 @@ cookbook_path root + "/cookbooks"
 EOF
 
 echo "Creating pathfinder.json file"
-cat > pathfinder.json << EOF
+cat >pathfinder.json <<EOF
 {
   "pathfinder-mono": {
     "env_vars": {
@@ -90,23 +90,25 @@ cat > pathfinder.json << EOF
           "recipe[pathfinder-mono::app]",
           "recipe[pathfinder-mono::scheduler]",
           "recipe[pathfinder-node::first_node]"
-
     ]
 }
 EOF
 
 sudo chef-solo --config /opt/pathfinder/solo.rb -j /opt/pathfinder/pathfinder.json
 
+gem update --system
+gem install bundler -v 2.0.2
+
 echo "Running initial seed"
 cd /opt/pathfinder-mono/pathfinder-mono
 sudo chmod 644 ./.env
-RAILS_ENV=production rake db:seed
+RAILS_ENV=production bundle exec rake db:seed
 
 echo "Installing PFI"
 sudo mkdir /home/vagrant/.pfi -p
 sudo chown vagrant:vagrant /home/vagrant/.pfi
 
-sudo cat > /home/vagrant/.pfi/config << EOF
+sudo cat >/home/vagrant/.pfi/config <<EOF
 current_profile = "default"
 
 [profiles]
@@ -118,5 +120,7 @@ current_profile = "default"
 EOF
 sudo chown vagrant:vagrant /home/vagrant/.pfi/config
 
-sudo wget -O /usr/local/bin/pfi https://github.com/pathfinder-cm/pfi/releases/download/0.1.1/pfi-linux
+sudo wget -q --show-progress --progress=bar:force -O /usr/local/bin/pfi https://github.com/pathfinder-cm/pfi/releases/download/0.1.1/pfi-linux
 sudo chmod +x /usr/local/bin/pfi
+
+echo "Done"
