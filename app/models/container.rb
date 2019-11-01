@@ -57,6 +57,8 @@ class Container < ApplicationRecord
   # Setup additional methods
   #
   def self.create_with_source(cluster_id, params)
+    param_bootstrappers = params.dig(:bootstrappers)
+    bootstrappers = JSON.parse(param_bootstrappers) if param_bootstrappers.present?
     container = Container.new
     unless params[:source].present?
       container.errors.add(:source, "must be present.")
@@ -74,7 +76,7 @@ class Container < ApplicationRecord
     container.cluster_id = cluster_id
     container.hostname = params[:hostname]
     container.source = source
-    container.bootstrappers = params[:bootstrappers]
+    container.bootstrappers = bootstrappers
     container.save
     container
   end
