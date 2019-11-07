@@ -5,10 +5,8 @@ FactoryBot.define do
     sequence(:ipaddress) {|n| "10.0.0.#{n}" }
     association :source
     image_alias { 'linux' }
-    bootstrappers { "[
-      {\"bootstrap_type\":\"chef-solo\",
-        \"bootstrap_attributes\":{},
-        \"bootstrap_cookbooks_url\":\"\"}
-    ]"}
+    bootstrappers { [
+      { 'bootstrap_type' => 'none' }
+    ] }
   end
 end

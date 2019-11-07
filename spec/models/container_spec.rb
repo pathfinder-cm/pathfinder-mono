@@ -78,8 +78,7 @@ RSpec.describe Container, type: :model do
             remote: { name: @remote.name },
             fingerprint: source.fingerprint,
             alias: source.alias
-          },
-          bootstrappers: container_params[:bootstrappers]
+          }
         }
         container = Container.create_with_source!(@cluster.id, valid_params)
         expect(container.source_id).to eq source.id
@@ -101,7 +100,7 @@ RSpec.describe Container, type: :model do
         }
         container = Container.create_with_source!(@cluster.id, valid_params)
         expect(container.hostname).to eq valid_params[:hostname]
-        expect(container.bootstrappers).to eq JSON.parse(valid_params[:bootstrappers])
+        expect(container.bootstrappers).to eq valid_params[:bootstrappers]
       end
     end
 

@@ -55,7 +55,11 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
           :fingerprint,
           :alias
         ]},
-        :bootstrappers
+        {bootstrappers: [
+          :bootstrap_type,
+          :bootstrap_cookbooks_url,
+          {bootstrap_attributes: {}}
+        ]}
       )
     end
 end
