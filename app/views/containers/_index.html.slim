@@ -3,40 +3,46 @@ h4
 table.table.table-hover
   thead
     tr
-      th.col-sm-4 scope="col"
+      th.col-sm-2 scope="col"
         | Hostname
-      th.col-sm-2 scope="col"
+      th.col-sm-1 scope="col"
         | IP Address
-      th.col-sm-2 scope="col"
+      th.col-sm-3 scope="col"
+        | Bootstrappers
+      th.col-sm-1 scope="col"
         | Source Type
-      th.col-sm-2 scope="col"
+      th.col-sm-1 scope="col"
         | Source Remote
-      th.col-sm-2 scope="col"
+      th.col-sm-1 scope="col"
         | Source Fingerprint / Alias
-      th.col-sm-2 scope="col"
+      th.col-sm-1 scope="col"
         | Node
-      th.col-sm-2 scope="col"
+      th.col-sm-1 scope="col"
         | Status
-      th.col-sm-2 scope="col"
+      th.col-sm-1 scope="col"
         | Action
   tbody
     - containers.each do |container|
       tr
-        td
+        td.col-sm-2
           = container.hostname
-        td
+        td.col-sm-1
           = container.ipaddress
-        td
+        td.col-sm-3
+          pre
+            code
+              = container.bootstrappers
+        td.col-sm-1
           = container.source&.source_type
-        td
+        td.col-sm-1
           = container.source&.remote&.name
-        td
+        td.col-sm-1
           = "#{container.source&.fingerprint.presence || '-'} / #{container.source&.alias.presence || '-'}"
-        td
+        td.col-sm-1
           = container.node&.hostname
-        td
+        td.col-sm-1
           = container.status
-        td
+        td.col-sm-1
           - if container.allow_reschedule?
             = button_to "Reschedule", reschedule_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
           - if container.allow_deletion?

@@ -99,6 +99,7 @@ RSpec.describe Container, type: :model do
           bootstrappers: container_params[:bootstrappers]
         }
         container = Container.create_with_source!(@cluster.id, valid_params)
+        expect(container.hostname).to eq valid_params[:hostname]
         expect(container.bootstrappers).to eq valid_params[:bootstrappers]
       end
     end
