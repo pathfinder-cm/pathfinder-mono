@@ -58,7 +58,7 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
         {bootstrappers: [
           :bootstrap_type,
           :bootstrap_cookbooks_url,
-          {bootstrap_attributes: []}
+          {bootstrap_attributes: {}}
         ]}
       )
     end
