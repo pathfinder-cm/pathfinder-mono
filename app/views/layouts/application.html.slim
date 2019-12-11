@@ -8,6 +8,7 @@ html lang="en"
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    link [rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" crossorigin="anonymous"]
   body
     nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
       a.navbar-brand href="/" Pathfinder
@@ -36,6 +37,13 @@ html lang="en"
           - else
             li.nav-item
               = link_to "Login", login_path, class: "nav-link"
-    .container-fluid
-      = render partial: "shared/flash_messages", flash: flash
-      = yield
+    .container.align-items-center.pt-4.pb-4
+      .row
+        .col-md-12.text
+          - if flash.key?(:alert) && flash[:alert].class == String && !flash[:alert].blank?
+            .alert.alert-danger.text-center
+              = flash[:alert]
+              = button_tag class: 'close', data: { dismiss: 'alert' }, 'aria-label': 'Close' do
+                span [aria-hidden="true"] &times;
+
+          ==yield
