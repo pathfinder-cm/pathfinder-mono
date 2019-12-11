@@ -1,17 +1,14 @@
-h4
-  | Nodes
-table.table.table-hover
-  thead
-    tr
-      th.col-sm-8 scope="col"
-        | Hostname
-      th.col-sm-4 scope="col"
-        | IP Address
-  tbody
-    - nodes.each do |node|
-      tr
-        td
-          = link_to node.hostname, node
-        td
-          = node.ipaddress
-br
+h4.mb-3 Nodes
+
+.table-responsive
+  table.table.table-hover.table-sm
+    thead
+      tr.d-flex
+        th.col-8 Hostname
+        th.col-4 IP Address
+    tbody
+      - nodes.each do |node|
+        tr.d-flex
+          td.col-8= link_to node.hostname, node
+          td.col-4= node.ipaddress
+

@@ -15,5 +15,12 @@
       = link_to 'List', clusters_path, class: 'text-light', style: 'text-decoration: none'
 
 #results
+  br
+  br
+
   = render 'nodes/index', nodes: @nodes
+
+  br
+  br
+
   = render 'containers/index', cluster: @cluster, containers: @containers

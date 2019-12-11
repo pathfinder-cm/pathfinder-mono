@@ -8,7 +8,18 @@ html lang="en"
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    link [rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css' crossorigin='anonymous']
     link [rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" crossorigin="anonymous"]
+
+    = stylesheet_link_tag 'https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css'
+    = stylesheet_link_tag 'application', media: 'all'
+
+    = javascript_include_tag 'application'
+    = javascript_include_tag 'https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js'
+    script [src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js' crossorigin='anonymous']
+
+    meta [name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no']
+    = csrf_meta_tags
   body
     nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark
       a.navbar-brand href="/" Pathfinder
