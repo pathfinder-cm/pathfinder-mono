@@ -45,6 +45,7 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
   def rebootstrap
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
     @container = @cluster.containers.exists.find_by(hostname: params[:hostname])
+    @container.update_bootstrappers(params[:bootstrappers])
     @container.update_status('PROVISIONED')
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
   end

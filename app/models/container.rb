@@ -95,6 +95,14 @@ class Container < ApplicationRecord
     )
   end
 
+  def update_bootstrappers(bootstrappers)
+    if bootstrappers.empty? || bootstrappers.nil?
+      false
+    else
+      update_column(:bootstrappers, bootstrappers)
+    end
+  end
+
   def update_status(status)
     status = status.downcase.to_sym
     if Container.statuses.key?(status)

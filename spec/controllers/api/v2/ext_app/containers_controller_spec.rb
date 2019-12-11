@@ -141,7 +141,10 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       @container = create(:container, cluster: cluster)
       @params = {
         cluster_name: cluster.name,
-        hostname: @container.hostname
+        hostname: @container.hostname,
+        bootstrappers: [
+          { 'bootstrap_type' => 'chef-solo' }
+        ],
       }
     end
 
@@ -149,6 +152,12 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       post :rebootstrap, params: @params, as: :json
       @container.reload
       expect(@container.status).to eq 'PROVISIONED'
+    end
+
+    it "update bootstrappers attribute with new value in the database" do
+      post :rebootstrap, params: @params, as: :json
+      @container.reload
+      expect(@container.bootstrappers).to eq @params[:bootstrappers]
     end
 
     it "returns appropriate response" do
