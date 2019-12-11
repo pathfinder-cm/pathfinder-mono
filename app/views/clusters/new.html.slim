@@ -1,8 +1,5 @@
-h2
-  | New Cluster
-= render 'form', cluster: @cluster
-form
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = link_to 'List', clusters_path
+.row
+  .col-md-12
+    .card
+      h5.card-header Add New Cluster
+      = render 'form', cluster: @cluster
