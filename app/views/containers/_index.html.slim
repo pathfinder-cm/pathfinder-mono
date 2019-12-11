@@ -1,51 +1,37 @@
-h4
-  | Containers
-table.table.table-hover
-  thead
-    tr
-      th.col-sm-2 scope="col"
-        | Hostname
-      th.col-sm-1 scope="col"
-        | IP Address
-      th.col-sm-3 scope="col"
-        | Bootstrappers
-      th.col-sm-1 scope="col"
-        | Source Type
-      th.col-sm-1 scope="col"
-        | Source Remote
-      th.col-sm-1 scope="col"
-        | Source Fingerprint / Alias
-      th.col-sm-1 scope="col"
-        | Node
-      th.col-sm-1 scope="col"
-        | Status
-      th.col-sm-1 scope="col"
-        | Action
-  tbody
-    - containers.each do |container|
-      tr
-        td.col-sm-2
-          = container.hostname
-        td.col-sm-1
-          = container.ipaddress
-        td.col-sm-3
-          pre
-            code
-              = container.bootstrappers
-        td.col-sm-1
-          = container.source&.source_type
-        td.col-sm-1
-          = container.source&.remote&.name
-        td.col-sm-1
-          = "#{container.source&.fingerprint.presence || '-'} / #{container.source&.alias.presence || '-'}"
-        td.col-sm-1
-          = container.node&.hostname
-        td.col-sm-1
-          = container.status
-        td.col-sm-1
-          - if container.allow_reschedule?
-            = button_to "Reschedule", reschedule_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
-          - if container.allow_deletion?
-            = button_to "Schedule Deletion", schedule_deletion_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
-br
-= link_to 'New Container', new_container_path(cluster_id: cluster.id)
+.row
+  .col-md-6
+    h4.mb-3 Containers
+  .col-md-6
+    .btn.btn-success.btn-sm.float-right
+      i.fas.fa-plus.mr-1
+      = link_to 'New Container', new_container_path(cluster_id: cluster.id), class: 'text-light', style: 'text-decoration: none'
+
+.table-responsive
+  table.table.table-hover
+    thead
+      tr.d-flex
+        th.col-1 Hostname
+        th.col-1 IP Address
+        th.col-4 Bootstrappers
+        th.col-1 Source Type
+        th.col-1 Source Remote
+        th.col-1 Source Fingerprint / Alias
+        th.col-1 Node
+        th.col-1 Status
+        th.col-1 Action
+    tbody
+      - containers.each do |container|
+        tr.d-flex
+          td.col-1.word-wrap= container.hostname
+          td.col-1.word-wrap= container.ipaddress
+          td.col-4.word-wrap= container.bootstrappers
+          td.col-1.word-wrap= container.source&.source_type
+          td.col-1.word-wrap= container.source&.remote&.name
+          td.col-1.word-wrap= "#{container.source&.fingerprint.presence || '-'} / #{container.source&.alias.presence || '-'}"
+          td.col-1.word-wrap= container.node&.hostname
+          td.col-1.word-wrap= container.status
+          td.col-1.word-wrap
+            - if container.allow_reschedule?
+              = button_to "Reschedule", reschedule_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
+            - if container.allow_deletion?
+              = button_to "Schedule Deletion", schedule_deletion_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
