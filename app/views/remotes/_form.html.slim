@@ -8,28 +8,33 @@
         - remote.errors.full_messages.each do |message|
           li
             = message
-  .form-group.row
-    = form.label :name, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.text_field :name, id: :remote_name, class: 'form-control'
-  .form-group.row
-    = form.label :server, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.text_field :server, id: :remote_server, class: 'form-control'
-  .form-group.row
-    = form.label :protocol, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.collection_select :remote_protocol, Remote.protocols, :first, :second, {}, id: :remote_protocol, class: 'form-control'
-  .form-group.row
-    = form.label :auth_type, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.collection_select :auth_type, Remote.auth_types, :first, :second, {}, id: :auth_type, class: 'form-control'
-  .form-group.row
-    = form.label :certificate, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.text_field :certificate, id: :remote_certificate, class: 'form-control'
-  .form-group.row
-    .col-sm-2
-    .col-sm-8
-      = form.submit 'Save', class: 'btn btn-primary'
-      = link_to 'Back', remotes_path, class: 'btn btn-secondary float-left text-light', style: 'margin-right:5px'
+  .card-body
+    .dl.row
+      dt.col-sm-2 
+        = form.label :name
+      dd.col-sm-10
+        = form.text_field :name, id: :remote_name, class: 'form-control'
+    .dl.row
+      dt.col-sm-2 
+        = form.label :server
+      dd.col-sm-10
+        = form.password_field :server, id: :remote_server, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :protocol
+      dd.col-sm-10
+        = form.collection_select :remote_protocol, Remote.protocols, :first, :second, {}, id: :remote_protocol, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :auth_type
+      dd.col-sm-10
+        = form.collection_select :auth_type, Remote.auth_types, :first, :second, {}, id: :auth_type, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :certificate
+      dd.col-sm-10
+        = form.text_field :certificate, id: :remote_certificate, class: 'form-control'
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      = link_to 'Back to Remote', remotes_path, class: 'text-light', style: 'text-decoration:none'
+    = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
