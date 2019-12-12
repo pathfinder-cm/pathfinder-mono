@@ -1,15 +1,19 @@
-h2
-  | Node
-form
-  .form-group.row
-    label.col-sm-2.col-form-label for="hostname" Hostname
-    .col-sm-10
-      input.form-control type="text" readonly="true" id="node_hostname" placeholder="#{@node.hostname}"
-  .form-group.row
-    label.col-sm-2.col-form-label for="ipaddress" IP Address
-    .col-sm-10
-      input.form-control type="text" readonly="true" id="node_ipaddress" placeholder="#{@node.ipaddress}"
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = link_to 'List', cluster_path(@node.cluster)
+.row.justify-content-center
+  .col-sm-6
+    .card
+      .h5.card-header Node Details
+      .card-body
+        dl.row
+          dt.col-sm-3 Hostname:
+          dd.col-sm-9
+            = @node.hostname
+
+          dt.col-sm-3 IP Address:
+          dd.col-sm-9
+            = @node.ipaddress
+
+      .card-footer.text-right
+        .btn.btn-primary.btn-sm.float-right
+          = link_to 'Back to Cluster', cluster_path(@node.cluster), class: 'text-light', style: 'text-decoration:none'
+br
+br
