@@ -1,27 +1,23 @@
-h1
-  | Ext. Apps
-table.table.table-hover
-  thead
-    tr
-      th.col-sm-2 scope="col"
-        | Name
-      th.col-sm-6 scope="col"
-        | Description
-      th.col-sm-2 scope="col"
-        | Created By
-      th.col-sm-2 scope="col"
-        | Actions
+.row
+  .col-md-6
+    h4.mb-3 Ext. Apps
+  .col-md-6
+    .btn.btn-success.btn-sm.float-right
+      i.fas.fa-plus.mr-1
+      = link_to 'New Ext. App', new_ext_app_path, class: 'text-light', style: 'text-decoration: none'
 
-  tbody
-    - @ext_apps.each do |ext_app|
-      tr
-        td
-          = link_to ext_app.name, ext_app
-        td
-          = ext_app.description
-        td
-          = ext_app.user.username
-        td
-          = link_to 'Edit', edit_ext_app_path(ext_app)
-br
-= link_to 'New Ext. App', new_ext_app_path
+.table-responsive
+  table.table.table-hover
+    thead
+      tr.d-flex
+        th.col-2 Name
+        th.col-6 Description
+        th.col-2 Created By
+        th.col-2 Actions
+    tbody
+      - @ext_apps.each do |ext_app|
+        tr.d-flex
+          td.col-2= link_to ext_app.name, ext_app
+          td.col-6= ext_app.description
+          td.col-2= ext_app.user.username
+          td.col-2= link_to 'Edit', edit_ext_app_path(ext_app)
