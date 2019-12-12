@@ -8,17 +8,28 @@
         - user.errors.full_messages.each do |message|
           li
             = message
-  .field
-    = form.label :username
-    = form.text_field :username, id: :user_username
-  .field
-    = form.label :email
-    = form.email_field :email, id: :user_email
-  .field
-    = form.label :password
-    = form.password_field :password, id: :user_password
-  .field
-    = form.label :password_confirmation
-    = form.password_field :password_confirmation, id: :user_password_confirmation
-  .actions
-    = form.submit
+  .card-body
+    .dl.row
+      dt.col-sm-2
+        = form.label :username
+      dd.col-sm-10
+        = form.text_field :username, id: :user_username, class: 'form-control'
+    .dl.row  
+      dt.col-sm-2
+        = form.label :email
+      dd.col-sm-10
+        = form.email_field :email, id: :user_email, class: 'form-control'
+    .dl.row  
+      dt.col-sm-2
+        = form.label :password
+      dd.col-sm-10
+        = form.password_field :password, id: :user_password, class: 'form-control'
+    .dl.row  
+      dt.col-sm-2
+        = form.label :password_confirmation
+      dd.col-sm-10
+        = form.password_field :password_confirmation, id: :user_password_confirmation, class: 'form-control'
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      = link_to 'Back to User', users_path, class: 'text-light', style: 'text-decoration:none'
+    = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'

@@ -1,4 +1,5 @@
-h1
-  | New User
-= render 'form', user: @user
-= link_to 'Back', users_path
+.row.justify-content-center
+  .col-md-6       
+    .card
+      h5.card-header Add new user
+      = render 'form', user: @user

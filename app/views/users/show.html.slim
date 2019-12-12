@@ -1,13 +1,20 @@
-p#notice
-  = notice
-p
-  strong
-    | Username:
-  = @user.username
-p
-  strong
-    | Email:
-  = @user.email
-= link_to 'Edit', edit_user_path(@user)
-|  | 
-= link_to 'Back', users_path
+.row.justify-content-center
+  .col-sm-6
+    .card
+      .h5.card-header User Details
+      .card-body
+        dl.row
+          dt.col-sm-3 Username:
+          dd.col-sm-9
+            = @user.username
+
+          dt.col-sm-3 Email:
+          dd.col-sm-9
+            pre
+              code
+                = @user.email
+      .card-footer.text-right
+        .btn.btn-primary.btn-sm.float-right
+          = link_to 'Back to User', users_path, class: 'text-light', style: 'text-decoration:none'
+        .btn.btn-success.btn-sm.mr-2
+          = link_to 'Edit', edit_user_path(@user), class: 'text-light', style: 'text-decoration:none'
