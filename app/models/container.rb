@@ -9,6 +9,7 @@ class Container < ApplicationRecord
     scheduled: 'SCHEDULED',
     provisioned: 'PROVISIONED',
     provision_error: 'PROVISION_ERROR',
+    bootstrap_started: 'BOOTSTRAP_STARTED',
     bootstrapped: 'BOOTSTRAPPED',
     bootstrap_error: 'BOOTSTRAP_ERROR',
     schedule_deletion: 'SCHEDULE_DELETION',
