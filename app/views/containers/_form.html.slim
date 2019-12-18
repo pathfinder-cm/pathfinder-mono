@@ -8,33 +8,41 @@
         - container.errors.full_messages.each do |message|
           li
             = message
-  .form-group.row
-    = form.label :hostname, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.text_field :hostname, id: :container_hostname, class: 'form-control'
-  = form.fields_for :source do |source_form|
-    .form-group.row
-      = source_form.label :source_type, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.collection_select :source_type, Source.source_types, :second, :second, {}, id: :container_source_source_type, class: 'form-control'
-    .form-group.row
-      = source_form.label :source_mode, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.collection_select :mode, Source.modes, :first, :second, {}, id: :container_source_mode, class: 'form-control'
-    .form-group.row
-      = source_form.label :source_remote, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.collection_select :remote_id, Remote.all, :id, :name, {include_blank: true}, id: :container_source_remote_id, class: 'form-control'
-    .form-group.row
-      = source_form.label :fingerprint, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.text_field :fingerprint, id: :container_source_fingerprint, class: 'form-control'
-    .form-group.row
-      = source_form.label :alias, class: 'col-sm-2 col-form-label'
-      .col-sm-10
-        = source_form.text_field :alias, id: :container_source_alias, class: 'form-control'
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = form.hidden_field :cluster_id, id: :container_cluster_id
-      = form.submit 'Save', class: 'btn btn-primary'
+  .card-body
+    .dl.row
+      dt.col-sm-2
+        = form.label :hostname
+      dd.col-sm-10
+        = form.text_field :hostname, id: :container_hostname, class: 'form-control'
+    = form.fields_for :source do |source_form|
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :source_type
+        dd.col-sm-10
+          = source_form.collection_select :source_type, Source.source_types, :second, :second, {}, id: :container_source_source_type, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :source_mode
+        dd.col-sm-10
+          = source_form.collection_select :mode, Source.modes, :first, :second, {}, id: :container_source_mode, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :source_remote
+        dd.col-sm-10
+          = source_form.collection_select :remote_id, Remote.all, :id, :name, {include_blank: true}, id: :container_source_remote_id, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :fingerprint
+        dd.col-sm-10
+          = source_form.text_field :fingerprint, id: :container_source_fingerprint, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :alias
+        dd.col-sm-10
+          = source_form.text_field :alias, id: :container_source_alias, class: 'form-control'
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      = link_to 'Back to Cluster', cluster_path(container.cluster), class: 'text-light', style: 'text-decoration:none'
+    = form.hidden_field :cluster_id, id: :container_cluster_id
+    = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
+  

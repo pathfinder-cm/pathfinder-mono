@@ -8,15 +8,19 @@
         - ext_app.errors.full_messages.each do |message|
           li
             = message
-  .form-group.row
-    = form.label :name, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.text_field :name, id: :ext_app_name, class: 'form-control'
-  .form-group.row
-    = form.label :description, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.text_field :description, id: :ext_app_description, class: 'form-control'
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = form.submit 'Save', class: 'btn btn-primary'
+  .card-body
+    .dl.row
+      dt.col-sm-2
+        = form.label :name
+      dd.col-sm-10
+        = form.text_field :name, id: :ext_app_name, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :description
+      dd.col-sm-10
+        = form.text_field :description, id: :ext_app_description, class: 'form-control'
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      = link_to 'Back to Ext. App', ext_apps_path, class: 'text-light', style: 'text-decoration:none'
+    = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
+  

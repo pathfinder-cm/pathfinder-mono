@@ -1,8 +1,5 @@
-h2
-  | New Container
-= render 'form', container: @container
-form
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = link_to 'List', cluster_path(@container.cluster_id)
+.row.justify-content-center
+  .col-md-12  
+    .card
+      .h5.card-header Add new container
+      = render 'form', container: @container

@@ -9,20 +9,23 @@
           br
 .row
   .col-sm-6
-    h3.mb-3 All Remotes
+    h4.mb-3 Remotes
   .col-sm-6
-    .float-right
-      = link_to 'New Remotes', new_remote_path, class: 'btn btn-outline-primary'
-table.table.table-bordered
-  thead.thead-dark
-    tr
-      th.text-center Name
-      th.text-center Actions
-  tbody
-    - if @remotes.empty?
-      tr
-        td = 'No remote yet'
-    - @remotes.each do |remote|
-      tr
-        td.text-center = link_to remote.name, remote_path(remote)
-        td.text-center = link_to 'Edit', edit_remote_path(remote)
+    .btn.btn-success.btn-sm.float-right
+      i.fas.fa-plus.mr-1
+      = link_to 'New Remotes', new_remote_path, class: 'text-light', style: 'text-decoration: none'
+
+.table-responsive
+  table.table.table-hover
+    thead
+      tr.d-flex
+        th.col-11 Name
+        th.col-1 Actions
+    tbody
+      - if @remotes.empty?
+        tr.d-flex
+          td = 'No remote yet'
+      - @remotes.each do |remote|
+        tr.d-flex
+          td.col-11= link_to remote.name, remote_path(remote)
+          td.col-1= link_to 'Edit', edit_remote_path(remote)

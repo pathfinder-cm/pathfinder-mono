@@ -1,10 +1,5 @@
-h2
-  | Editing Ext. App
-= render 'form', ext_app: @ext_app
-form
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = link_to 'Show', @ext_app
-      |  |  
-      = link_to 'List', ext_apps_path
+.row.justify-content-center
+  .col-md-6
+    .card
+      h5.card-header Edit Ext. App
+      = render 'form', ext_app: @ext_app

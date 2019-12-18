@@ -1,6 +1,5 @@
-h1
-  | Editing User
-= render 'form', user: @user
-= link_to 'Show', @user
-|  | 
-= link_to 'Back', users_path
+.row.justify-content-center
+  .col-md-6
+    .card
+      h5.card-header Edit User
+      = render 'form', user: @user

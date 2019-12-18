@@ -15,6 +15,23 @@
 // Custom bootstrap variables must be set or imported *before* bootstrap.
 @import "bootstrap";
 
-body { 
-    padding-top: 65px; 
+body {
+  padding-top: 60px;
+  font-size: 0.75rem;
+}
+
+.btn-default {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #959595;
+}
+
+.btn-sm, .form-control {
+  font-size: 0.75rem;
+}
+
+a.btn-primary { color: white!important;  }
+
+.word-wrap{
+  word-break: break-all;
 }

@@ -1,10 +1,5 @@
-h2
-  | Editing Cluster
-= render 'form', cluster: @cluster
-form
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = link_to 'Show', @cluster
-      |  |  
-      = link_to 'List', clusters_path
+.row.justify-content-center
+  .col-md-6
+    .card
+      h5.card-header Edit Cluster
+      = render 'form', cluster: @cluster

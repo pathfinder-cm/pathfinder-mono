@@ -8,19 +8,24 @@
         - cluster.errors.full_messages.each do |message|
           li
             = message
-  .form-group.row
-    = form.label :name, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.text_field :name, id: :cluster_name, class: 'form-control'
-  .form-group.row
-    = form.label :password, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.password_field :password, id: :cluster_password, class: 'form-control'
-  .form-group.row
-    = form.label :password_confirmation, class: 'col-sm-2 col-form-label'
-    .col-sm-10
-      = form.password_field :password_confirmation, id: :cluster_password_confirmation, class: 'form-control'
-  .form-group.row
-    .col-sm-2
-    .col-sm-10
-      = form.submit 'Save', class: 'btn btn-primary'
+  .card-body    
+    .dl.row
+      dt.col-sm-2 
+        = form.label :name
+      dd.col-sm-10
+        = form.text_field :name, id: :cluster_name, class: 'form-control'
+    .dl.row
+      dt.col-sm-2 
+        = form.label :password
+      dd.col-sm-10
+        = form.password_field :password, id: :cluster_password, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :password_confirmation
+      dd.col-sm-10
+        = form.password_field :password_confirmation, id: :cluster_password_confirmation, class: 'form-control'
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      = link_to 'Back to Cluster', clusters_path, class: 'text-light', style: 'text-decoration:none'
+    = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
+    
