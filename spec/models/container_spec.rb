@@ -131,6 +131,27 @@ RSpec.describe Container, type: :model do
         expect(container.status.downcase).to eq(status)
       end
     end
+
+    describe '#update_bootstrappers' do
+      let(:container) { create(:container) }
+      
+      it 'shouldn\'t update bootstrapper for nil value' do
+        bootstrappers_update = container.update_bootstrappers(nil)
+        expect(bootstrappers_update).to eq(false)
+      end
+
+      it 'shouldn\'t update bootstrapper for empty value' do
+        bootstrappers_update = container.update_bootstrappers("")
+        expect(bootstrappers_update).to eq(false)
+      end
+
+      it 'should update container bootstrapper' do
+        bootstrappers_params = [{ 'bootstrap_type' => 'none', 'bootstrap_url' => 'https://github.com/BaritoLog/chef-repo/archive/master.tar.gz'}]
+        bootstrappers_update = container.update_bootstrappers(bootstrappers_params)
+        expect(bootstrappers_update).to eq(true)
+        expect(container.bootstrappers).to eq(bootstrappers_params)
+      end
+    end
   end
 end
 

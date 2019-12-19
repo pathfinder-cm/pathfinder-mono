@@ -97,7 +97,7 @@ class Container < ApplicationRecord
   end
 
   def update_bootstrappers(bootstrappers)
-    if bootstrappers.empty? || bootstrappers.nil?
+    if bootstrappers.nil? || bootstrappers.empty?
       false
     else
       update_column(:bootstrappers, bootstrappers)
