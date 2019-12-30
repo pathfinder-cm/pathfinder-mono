@@ -49,12 +49,23 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
   end
 
+  # POST /mark_bootstrap_started
+  # Mark container as bootstrap_started
+  def mark_bootstrap_started
+    @container = current_node.containers.exists.find_by(
+      hostname: params[:hostname],
+      status: 'PROVISIONED'
+    )
+    @container.update_status('BOOTSTRAP_STARTED')
+    render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
+  end
+
   # POST /mark_bootstrapped
   # Mark container as bootstrapped
   def mark_bootstrapped
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
-      status: 'PROVISIONED'
+      status: 'BOOTSTRAP_STARTED'
     )
     @container.update_status('BOOTSTRAPPED')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
@@ -65,7 +76,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
   def mark_bootstrap_error
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
-      status: ['PROVISIONED']
+      status: ['PROVISIONED', 'BOOTSTRAP_STARTED']
     )
     @container.update_status('BOOTSTRAP_ERROR')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h

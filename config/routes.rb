@@ -73,6 +73,7 @@ Rails.application.routes.draw do
             post ':hostname/schedule_deletion' =>
               'containers#schedule_deletion'
             post ':hostname/reschedule' => 'containers#reschedule'
+            post ':hostname/rebootstrap' => 'containers#rebootstrap'
           end
         end
       end
@@ -85,6 +86,7 @@ Rails.application.routes.draw do
             post 'ipaddress' => 'containers#update_ipaddress'
             post 'mark_provisioned' => 'containers#mark_provisioned'
             post 'mark_provision_error' => 'containers#mark_provision_error'
+            post 'mark_bootstrap_started' => 'containers#mark_bootstrap_started'
             post 'mark_bootstrapped' => 'containers#mark_bootstrapped'
             post 'mark_bootstrap_error' => 'containers#mark_bootstrap_error'
             post 'mark_deleted' => 'containers#mark_deleted'

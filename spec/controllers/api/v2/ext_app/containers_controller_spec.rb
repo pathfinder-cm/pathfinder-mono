@@ -135,4 +135,35 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(Container.last).to_h.to_json
     end
   end
+
+  describe 'responds with rebootstrap' do
+    before(:each) do
+      @container = create(:container, cluster: cluster)
+      @params = {
+        cluster_name: cluster.name,
+        hostname: @container.hostname,
+        bootstrappers: [
+          { 'bootstrap_type' => 'chef-solo' }
+        ],
+      }
+    end
+
+    it "mark object as provisioned in the database" do
+      post :rebootstrap, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'PROVISIONED'
+    end
+
+    it "update bootstrappers attribute with new value in the database" do
+      post :rebootstrap, params: @params, as: :json
+      @container.reload
+      expect(@container.bootstrappers).to eq @params[:bootstrappers]
+    end
+
+    it "returns appropriate response" do
+      post :rebootstrap, params: @params, as: :json
+      @container.reload
+      expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
+    end
+  end
 end

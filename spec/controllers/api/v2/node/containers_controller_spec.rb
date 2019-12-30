@@ -93,7 +93,7 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
   end
 
-  describe 'responds with mark_bootstrapped' do
+  describe 'responds with mark_bootstrap_started' do
     before(:each) do
       @container = create(:container, node: @node)
       @container.update_status('PROVISIONED')
@@ -104,7 +104,31 @@ RSpec.describe ::Api::V2::Node::ContainersController do
       }
     end
 
-    it "mark object from provisioned to bootstrapped in the database" do
+    it "mark object from provisioned to bootstrap_started in the database" do
+      post :mark_bootstrap_started, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'BOOTSTRAP_STARTED'
+    end
+
+    it "returns appropriate response" do
+      post :mark_bootstrap_started, params: @params, as: :json
+      @container.reload
+      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+    end
+  end
+
+  describe 'responds with mark_bootstrapped' do
+    before(:each) do
+      @container = create(:container, node: @node)
+      @container.update_status('BOOTSTRAP_STARTED')
+      @params = {
+        cluster_name: @cluster.name,
+        node_hostname: @container.node.hostname,
+        hostname: @container.hostname
+      }
+    end
+
+    it "mark object from bootstrap_started to bootstrapped in the database" do
       post :mark_bootstrapped, params: @params, as: :json
       @container.reload
       expect(@container.status).to eq 'BOOTSTRAPPED'

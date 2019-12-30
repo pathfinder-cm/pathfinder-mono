@@ -9,6 +9,7 @@ class Container < ApplicationRecord
     scheduled: 'SCHEDULED',
     provisioned: 'PROVISIONED',
     provision_error: 'PROVISION_ERROR',
+    bootstrap_started: 'BOOTSTRAP_STARTED',
     bootstrapped: 'BOOTSTRAPPED',
     bootstrap_error: 'BOOTSTRAP_ERROR',
     schedule_deletion: 'SCHEDULE_DELETION',
@@ -93,6 +94,14 @@ class Container < ApplicationRecord
       image_alias: self.image_alias,
       bootstrappers: self.bootstrappers,
     )
+  end
+
+  def update_bootstrappers(bootstrappers)
+    if bootstrappers.nil? || bootstrappers.empty?
+      false
+    else
+      update_column(:bootstrappers, bootstrappers)
+    end
   end
 
   def update_status(status)
