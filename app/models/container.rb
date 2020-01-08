@@ -46,6 +46,50 @@ class Container < ApplicationRecord
     where.not(status: 'DELETED').order(hostname: :asc)
   }
 
+  filterrific :default_filter_params => { :sorted_by => 'created_at_desc' },
+              :available_filters => %w[
+                sorted_by
+                search_query
+              ]
+
+  scope :search_query, ->(query) {
+    return nil  if query.blank?
+    # condition query, parse into individual keywords
+    terms = query.downcase.split(/\s+/)
+    # replace "*" with "%" for wildcard searches,
+    # append '%', remove duplicate '%'s
+    terms = terms.map { |e|
+      ('%' + e + '%').gsub(/%+/, '%')
+    }
+    # configure number of OR conditions for provision
+    # of interpolation arguments. Adjust this if you
+    # change the number of OR conditions.
+    num_or_conditions = 2
+    where(
+      terms.map {
+        or_clauses = [
+          "LOWER(containers.hostname) LIKE ?",
+          "LOWER(containers.ipaddress) LIKE ?"
+        ].join(' OR ')
+        "(#{ or_clauses })"
+      }.join(' AND '),
+      *terms.map { |e| [e] * num_or_conditions }.flatten
+    )
+  }
+
+  scope :sorted_by, ->(sort_option) {
+    direction = (sort_option =~ /desc$/) ? 'desc' : 'asc'
+    containers = Container.arel_table
+    case sort_option.to_s
+    when /^created_at_/
+      order(containers[:created_at].send(direction))
+    when /^name_/
+      order(containers[:hostname].lower.send(direction))
+    else
+      raise(ArgumentError, "Invalid sort option: #{sort_option.inspect}")
+    end
+  }
+
   #
   # Setup for additional gem-related configuration
   #

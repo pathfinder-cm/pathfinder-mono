@@ -10,7 +10,18 @@ class ClustersController < ApplicationController
   # GET /clusters/1
   def show
     @nodes = @cluster.nodes.order(hostname: :asc)
-    @containers = @cluster.containers.exists
+    @filterrific = initialize_filterrific(
+      Container,
+      params[:filterrific],
+      sanitize_params: true,
+    ) || return
+
+    @containers = @filterrific.find.page(params[:page])
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   # GET /clusters/new
