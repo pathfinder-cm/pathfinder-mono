@@ -12,6 +12,7 @@ gem 'bcrypt', '~> 3.1'
 gem 'bootsnap', '~> 1.3.1'
 gem 'devise', '~> 4.7.1'
 gem 'dotenv-rails'
+gem 'filterrific'
 gem 'gouge', :github => 'starqle/gouge', require: false
 gem 'nokogiri', '~> 1.10.4'
 gem 'pg', '~> 1.0', platform: :ruby
