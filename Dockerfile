@@ -36,4 +36,4 @@ ENV RAILS_SERVE_STATIC_FILES=true
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --chown=app:app --from=build /app .
 ENTRYPOINT ["bundle", "exec"]
-CMD ["puma", "--port", "3000"]
+CMD ["puma", "-C", "config/puma.rb"]
