@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    environment:
+      - DATABASE_URL=postgres://pathfinder:pathfinder@db:5432/pathfinder
+      - SECRET_KEY_BASE=supersecret
+      - PROD_DB_POOL=5
+    ports:
+      - 3000:3000
+
+  scheduler:
+    build: .
+    command: ["rails", "scheduler:start"]
+    environment:
+      - DATABASE_URL=postgres://pathfinder:pathfinder@db:5432/pathfinder
+      - SECRET_KEY_BASE=supersecret
+      - SCHEDULER_MEMORY_THRESHOLD=50
+      - SCHEDULER_TYPE=MEMORY
+      - PROD_DB_POOL=5
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=pathfinder
+      - POSTGRES_DB=pathfinder
+      - POSTGRES_PASSWORD=pathfinder
