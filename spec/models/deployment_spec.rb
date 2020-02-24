@@ -15,7 +15,13 @@ RSpec.describe Deployment, type: :model do
   describe "methods" do
     describe "#container_names" do
       it "returns empty list if count is 0" do
+        deployment.count = 0
         expect(deployment.container_names).to eq []
+      end
+
+      it "returns list of container names" do
+        deployment.count = 3
+        expect(deployment.container_names).to match_array (1 .. 3).map{ |i| "#{deployment.name}-0#{i}" }
       end
     end
   end

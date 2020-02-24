@@ -8,6 +8,7 @@ class Deployment < ApplicationRecord
   belongs_to :cluster
 
   def container_names
+    return (1..count).map{|i| "#{name}-0#{i}"} if count > 0
     []
   end
 end
