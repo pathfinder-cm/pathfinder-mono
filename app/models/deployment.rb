@@ -6,4 +6,8 @@ class Deployment < ApplicationRecord
     length: { minimum: 1, maximum: 255 }
 
   belongs_to :cluster
+
+  def container_names
+    []
+  end
 end
