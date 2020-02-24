@@ -20,8 +20,10 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      get :scheduled, params: {cluster_name: @cluster.name, node_hostname: @node.hostname}, as: :json
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@containers).to_h.to_json
+      Timecop.freeze do
+        get :scheduled, params: {cluster_name: @cluster.name, node_hostname: @node.hostname}, as: :json
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@containers).to_h.to_json
+      end
     end
   end
 
@@ -40,8 +42,10 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      get :bootstrap_scheduled, params: {cluster_name: @cluster.name, node_hostname: @node.hostname}, as: :json
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@containers).to_h.to_json
+      Timecop.freeze do
+        get :bootstrap_scheduled, params: {cluster_name: @cluster.name, node_hostname: @node.hostname}, as: :json
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@containers).to_h.to_json
+      end
     end
   end
 
@@ -63,9 +67,11 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      post :mark_provisioned, params: @params, as: :json
-      @container.reload
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      Timecop.freeze do
+        post :mark_provisioned, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
     end
   end
 
@@ -87,9 +93,11 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      post :mark_provision_error, params: @params, as: :json
-      @container.reload
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      Timecop.freeze do
+        post :mark_provision_error, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
     end
   end
 
@@ -111,9 +119,11 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      post :mark_bootstrap_started, params: @params, as: :json
-      @container.reload
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      Timecop.freeze do
+        post :mark_bootstrap_started, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
     end
   end
 
@@ -135,9 +145,11 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      post :mark_bootstrapped, params: @params, as: :json
-      @container.reload
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      Timecop.freeze do
+        post :mark_bootstrapped, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
     end
   end
 
@@ -159,9 +171,11 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      post :mark_bootstrap_error, params: @params, as: :json
-      @container.reload
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      Timecop.freeze do
+        post :mark_bootstrap_error, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
     end
   end
 
@@ -183,9 +197,11 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     end
 
     it "returns appropriate response" do
-      post :mark_deleted, params: @params, as: :json
-      @container.reload
-      expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      Timecop.freeze do
+        post :mark_deleted, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
     end
   end
 end

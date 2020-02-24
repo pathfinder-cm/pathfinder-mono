@@ -36,6 +36,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
+  gem 'timecop'
 end
 
 group :development do
