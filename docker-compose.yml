@@ -2,11 +2,16 @@ version: '3'
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+        - RAILS_ENV=development
     environment:
       - DATABASE_URL=postgres://pathfinder:pathfinder@db:5432/pathfinder
       - SECRET_KEY_BASE=supersecret
       - PROD_DB_POOL=5
+    volumes:
+      - .:/app
     ports:
       - 3000:3000
 

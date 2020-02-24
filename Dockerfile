@@ -16,7 +16,7 @@ USER app
 
 COPY --chown=app:app Gemfile* ./
 RUN bundle config --local deployment 'true' && \
-  bundle config --local without 'development test' && \
+  bundle config --local without $(echo 'development test' | sed "s/\\s*$RAILS_ENV\\s*//g") && \
   bundle install && \
   rm -vf /usr/local/bundle/ruby/*/cache/*.gem
 
