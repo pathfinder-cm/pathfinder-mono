@@ -20,8 +20,8 @@ RSpec.describe Deployment, type: :model do
       end
 
       it "returns list of container names" do
-        deployment.count = 3
-        expect(deployment.container_names).to match_array (1 .. 3).map{ |i| "#{deployment.name}-0#{i}" }
+        deployment.count = rand(1..99)
+        expect(deployment.container_names).to match_array (1..deployment.count).map{ |i| "#{deployment.name}-%02d" % i }
       end
     end
   end
