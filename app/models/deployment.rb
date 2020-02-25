@@ -8,7 +8,6 @@ class Deployment < ApplicationRecord
   belongs_to :cluster
 
   def container_names
-    return (1..count).map{|i| "#{name}-0#{i}"} if count > 0
-    []
+    (0..count-1).map{ |i| "#{name}-%02d" % (i+1) }
   end
 end
