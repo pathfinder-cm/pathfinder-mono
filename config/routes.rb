@@ -76,6 +76,12 @@ Rails.application.routes.draw do
             post ':hostname/rebootstrap' => 'containers#rebootstrap'
           end
         end
+
+        resources :deployments, only: [] do
+          collection do
+            post 'bulk_apply' => 'deployments#bulk_apply'
+          end
+        end
       end
 
       namespace :node do
