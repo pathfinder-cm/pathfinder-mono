@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe DeploymentScheduler do
   let(:deployment_scheduler) { DeploymentScheduler.new }
-
+  let(:cluster) {create(:cluster)}
+  
   describe "#schedule_single" do
     context "container doesn't exists" do
       before(:each) do
@@ -19,6 +20,18 @@ RSpec.describe DeploymentScheduler do
         container = Container.find_by(
           cluster: @deployment.cluster, hostname: @deployment.container_names.first)
         expect(container.source).not_to eq(nil)
+      end
+    end
+
+    context "deployment count decrease" do
+      it "delete extra containers" do
+        create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
+        create(:container, cluster: cluster, hostname: 'hitsu-consul-02')
+        deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
+
+        deployment_scheduler.schedule_single(deployment)
+
+        expect(Container.where(status: Container.statuses[:schedule_deletion]).pluck(:hostname)).to include("hitsu-consul-02")
       end
     end
   end
