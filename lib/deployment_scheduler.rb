@@ -1,4 +1,10 @@
 class DeploymentScheduler
+  def schedule
+    Deployment.all.each do |deployment|
+      schedule_single(deployment)
+    end
+  end
+
   def schedule_single(deployment)
     containers = Container.where("hostname ~* ?", "^#{Regexp.escape(deployment.name)}-[0-9]{2}$").where(cluster: deployment.cluster).pluck(:hostname)
     container_names = deployment.container_names
