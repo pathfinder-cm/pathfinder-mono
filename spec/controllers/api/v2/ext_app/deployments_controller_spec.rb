@@ -33,5 +33,50 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
         }.to change(Deployment, :count).by(2)
       end
     end
+
+    context "deployment already exists" do
+      before :each do
+        @deployment_1 = create(
+          :deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
+        @deployment_2 = create(
+          :deployment, cluster: cluster, name: 'hitsu-elasticsearch', definition: {
+            resource: {
+              mem_limit: "256M",
+            },
+          })
+
+        @params = {
+          deployments: [
+            {
+              cluster_name: cluster.name,
+              name: "hitsu-consul",
+              count: 5,
+            },
+            {
+              cluster_name: cluster.name,
+              name: "hitsu-elasticsearch",
+              definition: {
+                resource: {
+                  mem_limit: "512M"
+                }
+              },
+            }
+          ]
+        }
+        post :bulk_apply, params: @params, as: :json
+        @deployment_1.reload
+        @deployment_2.reload
+      end
+
+      it "updates the first deployment" do
+        expect(@deployment_1.count).to eq(@params[:deployments][0][:count])
+      end
+
+      it "updates the second deployment" do
+        expect(@deployment_2.definition).to eq(
+          @params[:deployments][1][:definition].deep_stringify_keys
+        )
+      end
+    end
   end
 end
