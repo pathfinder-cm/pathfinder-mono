@@ -1,13 +1,10 @@
 class DeploymentScheduler
   def schedule_single(deployment)
     deployment.container_names.each do |container_name|
-      Container.create(
-          cluster_id: deployment.cluster_id,
-          hostname: container_name,
-          source: deployment.bootstrapper[:source],
-          image_alias: deployment.bootstrapper[:image],
-          bootstrappers: deployment.bootstrapper[:bootstrapper]
-        )
+      Container.create_with_source(deployment.cluster_id, {
+        **deployment.definition.symbolize_keys,
+        "hostname": container_name,
+      })
     end
   end
 end
