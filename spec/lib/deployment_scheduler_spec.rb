@@ -11,7 +11,14 @@ RSpec.describe DeploymentScheduler do
       end
 
       it "creates containers" do
-        expect(Container.pluck(:hostname)).to include(*@deployment.container_names)
+        hostnames = Container.where(cluster: @deployment.cluster).pluck(:hostname)
+        expect(hostnames).to include(*@deployment.container_names)
+      end
+
+      it "created containers have sources" do
+        container = Container.find_by(
+          cluster: @deployment.cluster, hostname: @deployment.container_names.first)
+        expect(container.source).not_to eq(nil)
       end
     end
   end
