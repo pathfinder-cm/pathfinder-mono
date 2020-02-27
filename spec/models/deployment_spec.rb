@@ -42,6 +42,11 @@ RSpec.describe Deployment, type: :model do
         container.save!
         expect(deployment.managed_containers).not_to include(container)
       end
+
+      it "omits containers in different cluster" do
+        container = create(:container, hostname: "#{deployment.name}-04")
+        expect(deployment.managed_containers).not_to include(container)
+      end
     end
   end
 end
