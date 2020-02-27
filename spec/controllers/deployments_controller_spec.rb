@@ -39,7 +39,7 @@ RSpec.describe DeploymentsController, type: :controller do
               cluster_name: @cluster.name,
               name: deployment_params[:name],
               count: deployment_params[:count],
-              definition: deployment_params[:definition]
+              definition: "#{deployment_params[:definition]}"
             }
           ]
         }

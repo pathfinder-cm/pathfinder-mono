@@ -1,48 +1,36 @@
-= form_with(model: deployment, local: true) do |form|
-  - if deployment.errors.any?
+= form_with(model: deployments, local: true, scope: 'deployments[]') do |form|
+  - if deployments.errors.any?
     #error_explanation
       strong
-        = pluralize(deployment.errors.count, "error")
+        = pluralize(deployments.errors.count, "error")
         |  prohibited this deployment from being saved:
       ul
-        - deployment.errors.full_messages.each do |message|
+        - deployments.errors.full_messages.each do |message|
           li
             = message
   .card-body
     .dl.row
       dt.col-sm-2
-        = form.label :hostname
+        = form.label :name
       dd.col-sm-10
-        = form.text_field :hostname, id: :deployment_hostname, class: 'form-control'
-    = form.fields_for :source do |source_form|
-      .dl.row
-        dt.col-sm-2
-          = source_form.label :source_type
-        dd.col-sm-10
-          = source_form.collection_select :source_type, Source.source_types, :second, :second, {}, id: :deployment_source_source_type, class: 'form-control'
-      .dl.row
-        dt.col-sm-2
-          = source_form.label :source_mode
-        dd.col-sm-10
-          = source_form.collection_select :mode, Source.modes, :first, :second, {}, id: :deployment_source_mode, class: 'form-control'
-      .dl.row
-        dt.col-sm-2
-          = source_form.label :source_remote
-        dd.col-sm-10
-          = source_form.collection_select :remote_id, Remote.all, :id, :name, {include_blank: true}, id: :deployment_source_remote_id, class: 'form-control'
-      .dl.row
-        dt.col-sm-2
-          = source_form.label :fingerprint
-        dd.col-sm-10
-          = source_form.text_field :fingerprint, id: :deployment_source_fingerprint, class: 'form-control'
-      .dl.row
-        dt.col-sm-2
-          = source_form.label :alias
-        dd.col-sm-10
-          = source_form.text_field :alias, id: :deployment_source_alias, class: 'form-control'
+        = form.text_field :name, id: :deployment_name, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :count
+      dd.col-sm-1
+        = form.text_field :count, id: :deployment_count, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :definition
+      dd.col-sm-10
+        = form.text_field :definition, id: :deployment_definition, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :cluster_name
+      dd.col-sm-10
+        = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control'
   .card-footer.text-right
     .btn.btn-primary.btn-sm.float-right
-      = link_to 'Back to Cluster', cluster_path(deployment.cluster), class: 'text-light', style: 'text-decoration:none'
-    = form.hidden_field :cluster_id, id: :deployment_cluster_id
+      = link_to 'Back to Cluster', cluster_path(deployments.cluster), class: 'text-light', style: 'text-decoration:none'
     = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
   

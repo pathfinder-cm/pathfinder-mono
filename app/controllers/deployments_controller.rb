@@ -1,3 +1,5 @@
+require 'json'
+
 class DeploymentsController < ApplicationController
   before_action :authenticate_user!
 
@@ -26,7 +28,7 @@ class DeploymentsController < ApplicationController
     def deployment_params
       params.require(:deployments)
       params.permit(deployments: [
-      :cluster_name, :name, :count, definition: {}
+      :cluster_name, :name, :count, :definition
     ])
     end
 
