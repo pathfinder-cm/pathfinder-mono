@@ -1,0 +1,48 @@
+= form_with(model: deployment, local: true) do |form|
+  - if deployment.errors.any?
+    #error_explanation
+      strong
+        = pluralize(deployment.errors.count, "error")
+        |  prohibited this deployment from being saved:
+      ul
+        - deployment.errors.full_messages.each do |message|
+          li
+            = message
+  .card-body
+    .dl.row
+      dt.col-sm-2
+        = form.label :hostname
+      dd.col-sm-10
+        = form.text_field :hostname, id: :deployment_hostname, class: 'form-control'
+    = form.fields_for :source do |source_form|
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :source_type
+        dd.col-sm-10
+          = source_form.collection_select :source_type, Source.source_types, :second, :second, {}, id: :deployment_source_source_type, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :source_mode
+        dd.col-sm-10
+          = source_form.collection_select :mode, Source.modes, :first, :second, {}, id: :deployment_source_mode, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :source_remote
+        dd.col-sm-10
+          = source_form.collection_select :remote_id, Remote.all, :id, :name, {include_blank: true}, id: :deployment_source_remote_id, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :fingerprint
+        dd.col-sm-10
+          = source_form.text_field :fingerprint, id: :deployment_source_fingerprint, class: 'form-control'
+      .dl.row
+        dt.col-sm-2
+          = source_form.label :alias
+        dd.col-sm-10
+          = source_form.text_field :alias, id: :deployment_source_alias, class: 'form-control'
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      = link_to 'Back to Cluster', cluster_path(deployment.cluster), class: 'text-light', style: 'text-decoration:none'
+    = form.hidden_field :cluster_id, id: :deployment_cluster_id
+    = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
+  
