@@ -6,7 +6,7 @@ class DeploymentScheduler
   end
 
   def schedule_single(deployment)
-    containers = Container.exists.where("hostname ~* ?", "^#{Regexp.escape(deployment.name)}-[0-9]{2}$").where(cluster: deployment.cluster).pluck(:hostname)
+    containers = deployment.managed_containers.pluck(:hostname)
     container_names = deployment.container_names
     to_be_deleted = containers - container_names
     to_be_deleted.each do |container_name|
