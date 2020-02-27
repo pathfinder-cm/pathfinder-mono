@@ -18,4 +18,12 @@ RSpec.describe DeploymentsController, type: :controller do
       expect(response).to be_successful
     end
   end
+
+  describe "GET #show" do
+    it "returns a success response" do
+      deployment = Deployment.create! valid_attributes
+      get :show, params: {id: deployment.to_param}, session: valid_session
+      expect(response).to be_successful
+    end
+  end
 end
