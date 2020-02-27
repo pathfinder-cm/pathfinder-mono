@@ -9,7 +9,17 @@ class DeploymentsController < ApplicationController
 
   #POST /containers/
   def create
+    @cluster = Cluster.find_by(name: deployment_params[:deployments][0][:cluster_name])
+    
     @deployment = bulk_apply
+
+    respond_to do |format|
+      if @deployment
+        format.html { redirect_to cluster_path(@cluster), notice: 'Deployment was successfully created.' }
+      else
+        format.html { render :new }
+      end
+    end
   end
 
   private

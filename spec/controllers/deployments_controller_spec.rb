@@ -31,9 +31,9 @@ RSpec.describe DeploymentsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Deployment" do
+      before(:each) do 
         deployment_params = attributes_for(:deployment, cluster: @cluster)
-        params = {
+        @params = {
           deployments: [
             {
               cluster_name: @cluster.name,
@@ -43,9 +43,17 @@ RSpec.describe DeploymentsController, type: :controller do
             }
           ]
         }
+      end
+
+      it "creates a new Deployment" do
         expect {
-          post :create, params: params, session: valid_session
+          post :create, params: @params, session: valid_session
         }.to change(Deployment, :count).by(1)
+      end
+
+      it "redirects to list of deployments" do
+        post :create, params: @params, session: valid_session
+        expect(response).to redirect_to(@cluster)
       end
     end
   end
