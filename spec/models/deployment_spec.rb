@@ -35,6 +35,13 @@ RSpec.describe Deployment, type: :model do
         ]
         expect(deployment.managed_containers).to match_array(containers)
       end
+
+      it "omits deleted containers" do
+        container = Container.create(cluster: cluster, hostname: "#{deployment.name}-03")
+        container.status = Container.statuses[:deleted]
+        container.save!
+        expect(deployment.managed_containers).not_to include(container)
+      end
     end
   end
 end

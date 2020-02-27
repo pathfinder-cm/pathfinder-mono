@@ -12,7 +12,8 @@ class Deployment < ApplicationRecord
   end
 
   def managed_containers
-    Container.where("hostname ~* ?", managed_containers_hostname_regexp)
+    Container.exists.
+      where("hostname ~* ?", managed_containers_hostname_regexp)
   end
 
   private
