@@ -30,14 +30,14 @@ RSpec.describe Deployment, type: :model do
 
       it "returns list of managed existing containers" do
         containers = [
-          Container.create(cluster: cluster, hostname: "#{deployment.name}-01"),
-          Container.create(cluster: cluster, hostname: "#{deployment.name}-02"),
+          create(:container, cluster: cluster, hostname: "#{deployment.name}-01"),
+          create(:container, cluster: cluster, hostname: "#{deployment.name}-02"),
         ]
         expect(deployment.managed_containers).to match_array(containers)
       end
 
       it "omits deleted containers" do
-        container = Container.create(cluster: cluster, hostname: "#{deployment.name}-03")
+        container = create(:container, cluster: cluster, hostname: "#{deployment.name}-03")
         container.status = Container.statuses[:deleted]
         container.save!
         expect(deployment.managed_containers).not_to include(container)
