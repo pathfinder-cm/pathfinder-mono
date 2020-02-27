@@ -10,10 +10,16 @@
   table.table.table-hover
     thead
       tr.d-flex
-        th.col-11 Name
-        th.col-1 Actions
+        th.col-2 Cluster
+        th.col-3 Name
+        th.col-2 Count
+        th.col-3 Definition
+        th.col-2 Actions
     tbody
       - @deployments.each do |deployment|
         tr.d-flex
-          td.col-11= link_to deployment.name, deployment
+          td.col-2= deployment.cluster_id
+          td.col-3= deployment.name
+          td.col-2= deployment.count
+          td.col-3= deployment.definition
           td.col-1= link_to 'Edit', edit_deployment_path(deployment)
