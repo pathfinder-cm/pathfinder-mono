@@ -55,15 +55,25 @@ RSpec.describe DeploymentScheduler do
       end
     end
 
-    context "deployment count decrease" do
+    context "delete operation" do
       it "delete extra containers" do
         create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
         create(:container, cluster: cluster, hostname: 'hitsu-consul-02')
+
         deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
-
         deployment_scheduler.schedule_single(deployment)
-
         expect(Container.where(status: Container.statuses[:schedule_deletion]).pluck(:hostname)).to include("hitsu-consul-02")
+      end
+
+      it "doesn't delete deleted containers" do
+        container = create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
+        container.status = Container.statuses[:deleted]
+        container.save!
+
+        deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0)
+        deployment_scheduler.schedule_single(deployment)
+        container.reload
+        expect(container.status).not_to eq(Container.statuses[:schedule_deletion])
       end
     end
   end
