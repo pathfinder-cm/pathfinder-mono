@@ -10,6 +10,7 @@ class ClustersController < ApplicationController
   # GET /clusters/1
   def show
     @nodes = @cluster.nodes.order(hostname: :asc)
+    @deployments = @cluster.deployments.order(name: :asc)
     @containers = @cluster.containers.exists
   end
 

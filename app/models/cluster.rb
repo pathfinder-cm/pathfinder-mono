@@ -22,6 +22,7 @@ class Cluster < ApplicationRecord
   # has_many :employees, through: :users
   has_many :nodes
   has_many :containers
+  has_many :deployments
 
   #
   # Setup scopes
