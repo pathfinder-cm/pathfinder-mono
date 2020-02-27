@@ -16,14 +16,12 @@ RSpec.describe DeploymentScheduler do
         |deployment| deployment.container_names
       })
     end
-  end
 
-  describe "#schedule_single" do
     context "create operation" do
       context "no existing container" do
         before(:each) do
           @deployment = create(:deployment, name: 'hitsu-consul', count: 3)
-          deployment_scheduler.schedule_single(@deployment)
+          deployment_scheduler.schedule
         end
 
         it "creates containers" do
@@ -44,8 +42,8 @@ RSpec.describe DeploymentScheduler do
           container.status = Container.statuses[:deleted]
           container.save!
 
-          deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 2)
-          deployment_scheduler.schedule_single(deployment)
+          create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 2)
+          deployment_scheduler.schedule
         end
 
         it "keeps creating containers" do
@@ -60,8 +58,8 @@ RSpec.describe DeploymentScheduler do
         create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
         create(:container, cluster: cluster, hostname: 'hitsu-consul-02')
 
-        deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
-        deployment_scheduler.schedule_single(deployment)
+        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
+        deployment_scheduler.schedule
         expect(Container.where(status: Container.statuses[:schedule_deletion]).pluck(:hostname)).to include("hitsu-consul-02")
       end
 
@@ -70,8 +68,8 @@ RSpec.describe DeploymentScheduler do
         container.status = Container.statuses[:deleted]
         container.save!
 
-        deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0)
-        deployment_scheduler.schedule_single(deployment)
+        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0)
+        deployment_scheduler.schedule
         container.reload
         expect(container.status).not_to eq(Container.statuses[:schedule_deletion])
       end
