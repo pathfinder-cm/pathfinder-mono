@@ -1,23 +1,50 @@
 class DeploymentScheduler
   def schedule
     Deployment.all.each do |deployment|
-      schedule_single(deployment)
+      process(deployment)
     end
   end
 
-  def schedule_single(deployment)
-    containers = deployment.managed_containers.pluck(:hostname)
-    container_names = deployment.container_names
-    to_be_deleted = containers - container_names
-    to_be_deleted.each do |container_name|
-      Container.find_by(hostname: container_name).update(status: Container.statuses[:schedule_deletion])
-    end
+  private
+  def process(deployment)
+    wanted_hostnames = Set.new(deployment.container_names)
 
-    deployment.container_names.each do |container_name|
-      Container.create_with_source(deployment.cluster_id, {
-        **deployment.definition.deep_symbolize_keys,
-        "hostname": container_name,
-      })
+    process_existing_containers(deployment, wanted_hostnames) do |processed_container|
+      wanted_hostnames.delete(processed_container.hostname)
     end
+    process_new_containers(deployment, wanted_hostnames)
+  end
+
+  def process_existing_containers(deployment, wanted_hostnames)
+    deployment.managed_containers.each do |container|
+      hostname = container.hostname
+
+      if wanted_hostnames.include?(hostname) then
+        yield container
+        update_container(deployment, container)
+      else
+        delete_container(container)
+      end
+    end
+  end
+
+  def process_new_containers(deployment, wanted_hostnames)
+    wanted_hostnames.each do |hostname|
+      create_container(deployment, hostname)
+    end
+  end
+
+  def create_container(deployment, hostname)
+    Container.create_with_source(deployment.cluster_id, {
+      **deployment.definition.deep_symbolize_keys,
+      "hostname": hostname,
+    })
+  end
+
+  def update_container(deployment, container)
+  end
+
+  def delete_container(container)
+    container.update!(status: Container.statuses[:schedule_deletion])
   end
 end
