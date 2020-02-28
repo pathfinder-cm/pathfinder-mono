@@ -42,8 +42,12 @@ class DeploymentScheduler
   end
 
   def update_container(deployment, container)
-    container.apply_with_source(container_param(deployment))
+    return unless [
+      Container.statuses[:bootstrapped],
+      Container.statuses[:bootstrap_error],
+    ].include?(container.status)
 
+    container.apply_with_source(container_param(deployment))
     if container.changed?
       container.status = Container.statuses[:provisioned]
       container.save!

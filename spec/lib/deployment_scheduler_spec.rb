@@ -81,35 +81,58 @@ RSpec.describe DeploymentScheduler do
         deployment_scheduler.schedule
 
         @consul_box = Container.find_by(cluster: cluster, hostname: 'haja-consul-01')
+
       end
 
-      context "changed containers" do
+      context "bootstrapped containers" do
         before(:each) do
-          @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
-
-          deployment_scheduler.schedule
-          @consul_box.reload
+          @consul_box.update!(status: Container.statuses[:bootstrapped])
         end
 
-        it "changes the attribute" do
-          expect(@consul_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
+        context "changed containers" do
+          before(:each) do
+            @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
+
+            deployment_scheduler.schedule
+            @consul_box.reload
+          end
+
+          it "changes the attribute" do
+            expect(@consul_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
+          end
+
+          it "changes container status" do
+            expect(@consul_box.status).to eq(Container.statuses[:provisioned])
+          end
         end
 
-        it "changes container status" do
-          expect(@consul_box.status).to eq(Container.statuses[:provisioned])
+        context "unchanged containers" do
+          before(:each) do
+            @old_consul_box_status = @consul_box.status
+
+            deployment_scheduler.schedule
+            @consul_box.reload
+          end
+
+          it "doesn't change status of the container" do
+            expect(@consul_box.status).to eq(@old_consul_box_status)
+          end
         end
       end
 
-      context "unchanged containers" do
-        before(:each) do
-          @old_consul_box_status = @consul_box.status
+      context "containers which aren't bootstrapped" do
+        context "changed containers" do
+          before(:each) do
+            @bootstrappers = [{ 'bootstrap_type' => 'none' }]
+            @consul_box.update!(bootstrappers: @bootstrappers)
 
-          deployment_scheduler.schedule
-          @consul_box.reload
-        end
+            deployment_scheduler.schedule
+            @consul_box.reload
+          end
 
-        it "doesn't change status of the container" do
-          expect(@consul_box.status).to eq(@old_consul_box_status)
+          it "doesn't change attributes" do
+            expect(@consul_box.bootstrappers).to eq(@bootstrappers)
+          end
         end
       end
     end
