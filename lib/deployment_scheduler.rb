@@ -36,15 +36,25 @@ class DeploymentScheduler
 
   def create_container(deployment, hostname)
     Container.create_with_source(deployment.cluster_id, {
-      **deployment.definition.deep_symbolize_keys,
+      **container_param(deployment),
       "hostname": hostname,
     })
   end
 
   def update_container(deployment, container)
+    container.apply_with_source(container_param(deployment))
+
+    if container.changed?
+      container.status = Container.statuses[:provisioned]
+      container.save!
+    end
   end
 
   def delete_container(container)
     container.update!(status: Container.statuses[:schedule_deletion])
+  end
+
+  def container_param(deployment)
+    deployment.definition.deep_symbolize_keys
   end
 end
