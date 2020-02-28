@@ -11,8 +11,8 @@ RSpec.describe Container, type: :model do
 
     describe "validate uniqueness of hostname" do
       before(:each) do
-        @c1 = create(:container, 
-          cluster_id: container.cluster_id, 
+        @c1 = create(:container,
+          cluster_id: container.cluster_id,
           hostname: container.hostname
         )
       end
@@ -104,6 +104,31 @@ RSpec.describe Container, type: :model do
       end
     end
 
+    describe '#update_with_source' do
+      let(:container) { create(:container) }
+      let(:remote) { create(:remote) }
+      let(:source) { create(:source, remote: remote) }
+
+      it 'update container based on params' do
+        container_params = attributes_for(:container)
+        valid_params = {
+          hostname: container_params[:hostname],
+          source: {
+            source_type: source.source_type,
+            mode: source.mode,
+            remote: { name: remote.name },
+            fingerprint: source.fingerprint,
+            alias: source.alias
+          },
+          bootstrappers: container_params[:bootstrappers]
+        }
+        container.update_with_source(container.cluster_id, valid_params)
+
+        expect(container.hostname).to eq valid_params[:hostname]
+        expect(container.bootstrappers).to eq valid_params[:bootstrappers]
+      end
+    end
+
     describe '#duplicate!' do
       it 'should be able to duplicate a container with only duplicable attributes set' do
         container = create(:container)
@@ -134,7 +159,7 @@ RSpec.describe Container, type: :model do
 
     describe '#update_bootstrappers' do
       let(:container) { create(:container) }
-      
+
       it 'shouldn\'t update bootstrapper for nil value' do
         bootstrappers_update = container.update_bootstrappers(nil)
         expect(bootstrappers_update).to eq(false)
@@ -154,6 +179,3 @@ RSpec.describe Container, type: :model do
     end
   end
 end
-
-
-

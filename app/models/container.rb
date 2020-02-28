@@ -39,10 +39,10 @@ class Container < ApplicationRecord
   #
   # Setup scopes
   #
-  scope :pending, -> { 
+  scope :pending, -> {
     where(status: 'PENDING').order(last_status_update_at: :asc)
   }
-  scope :exists, -> { 
+  scope :exists, -> {
     where.not(status: 'DELETED').order(hostname: :asc)
   }
 
@@ -57,12 +57,9 @@ class Container < ApplicationRecord
   #
   # Setup additional methods
   #
-  def self.create_with_source(cluster_id, params)
-    container = Container.new
-    unless params[:source].present?
-      container.errors.add(:source, "must be present.")
-      return container
-    end
+  def update_with_source(cluster_id, params)
+    errors.add(:source, "must be present.") unless params[:source].present?
+
     remote_name = params.dig(:source, :remote, :name)
     remote = Remote.find_by(name: remote_name) if remote_name.present?
     source = Source.find_or_create_by(
@@ -72,11 +69,17 @@ class Container < ApplicationRecord
       fingerprint: params.dig(:source, :fingerprint),
       alias: params.dig(:source, :alias)
     )
-    container.cluster_id = cluster_id
-    container.hostname = params[:hostname]
-    container.source = source
-    container.bootstrappers = params[:bootstrappers]
-    container.save
+
+    self.cluster_id = cluster_id
+    self.hostname = params[:hostname]
+    self.source = source
+    self.bootstrappers = params[:bootstrappers]
+    self.save
+  end
+
+  def self.create_with_source(cluster_id, params)
+    container = Container.new
+    container.update_with_source(cluster_id, params)
     container
   end
 
