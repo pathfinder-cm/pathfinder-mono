@@ -57,7 +57,7 @@ class Container < ApplicationRecord
   #
   # Setup additional methods
   #
-  def update_with_source(cluster_id, params)
+  def update_with_source(params)
     errors.add(:source, "must be present.") unless params[:source].present?
 
     remote_name = params.dig(:source, :remote, :name)
@@ -70,8 +70,6 @@ class Container < ApplicationRecord
       alias: params.dig(:source, :alias)
     )
 
-    self.cluster_id = cluster_id
-    self.hostname = params[:hostname]
     self.source = source
     self.bootstrappers = params[:bootstrappers]
     self.save
@@ -79,7 +77,9 @@ class Container < ApplicationRecord
 
   def self.create_with_source(cluster_id, params)
     container = Container.new
-    container.update_with_source(cluster_id, params)
+    container.cluster_id = cluster_id
+    container.hostname = params[:hostname]
+    container.update_with_source(params)
     container
   end
 

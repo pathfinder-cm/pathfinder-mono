@@ -109,10 +109,9 @@ RSpec.describe Container, type: :model do
       let(:remote) { create(:remote) }
       let(:source) { create(:source, remote: remote) }
 
-      it 'update container based on params' do
+      before(:each) do
         container_params = attributes_for(:container)
-        valid_params = {
-          hostname: container_params[:hostname],
+        @valid_params = {
           source: {
             source_type: source.source_type,
             mode: source.mode,
@@ -122,10 +121,18 @@ RSpec.describe Container, type: :model do
           },
           bootstrappers: container_params[:bootstrappers]
         }
-        container.update_with_source(container.cluster_id, valid_params)
+      end
 
-        expect(container.hostname).to eq valid_params[:hostname]
-        expect(container.bootstrappers).to eq valid_params[:bootstrappers]
+      it 'update container based on params' do
+        container.update_with_source(@valid_params)
+        expect(container.bootstrappers).to eq @valid_params[:bootstrappers]
+      end
+
+      it "doesn't update hostname" do
+        previous_hostname = container.hostname
+        @valid_params[:hostname] = "#{previous_hostname}-update"
+
+        expect(container.hostname).to eq(previous_hostname)
       end
     end
 
