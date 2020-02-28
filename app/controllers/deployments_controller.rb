@@ -3,6 +3,11 @@ require 'json'
 class DeploymentsController < ApplicationController
   before_action :authenticate_user!
 
+  # GET /deployments
+  def index
+    @deployments = Deployment.all
+  end
+
   # GET /containers/new
   def new
     @cluster = Cluster.find(params[:cluster_id])

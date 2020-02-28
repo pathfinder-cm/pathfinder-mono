@@ -22,6 +22,13 @@ RSpec.describe DeploymentsController, type: :controller do
     sign_in user
   end
 
+  describe "GET #index" do
+    it "returns a success response" do
+      get :index, params: {}, session: valid_session
+      expect(response).to be_successful
+    end
+  end
+
   describe "GET #new" do
     it "return a success response" do
       get :new, params: {cluster_id: @cluster.id}, session: valid_session
