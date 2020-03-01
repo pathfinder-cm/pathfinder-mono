@@ -13,7 +13,7 @@ gem 'bootsnap', '~> 1.3.1'
 gem 'devise', '~> 4.7.1'
 gem 'dotenv-rails'
 gem 'gouge', :github => 'starqle/gouge', require: false
-gem 'nokogiri', '~> 1.10.4'
+gem 'nokogiri', '~> 1.10.8'
 gem 'pg', '~> 1.0', platform: :ruby
 gem 'puma', '~> 3.12'
 gem 'rubyzip', '~> 1.3.0'
