@@ -63,4 +63,43 @@ RSpec.describe DeploymentsController, type: :controller do
       end
     end
   end
+
+  describe "GET #edit" do
+    it "returns a success response" do
+      deployment = create(:deployment, cluster: @cluster)
+      get :edit, params: {id: deployment.to_param}, session: valid_session
+      expect(response).to be_successful
+    end
+  end
+
+  describe "PUT #update" do
+    context "with valid params" do
+      before(:each) do 
+        deployment_params = attributes_for(:deployment, cluster: @cluster)
+        @params = {
+          deployments:
+          {
+            cluster_name: @cluster.name,
+            name: deployment_params[:name],
+            count: deployment_params[:count],
+            definition: "#{deployment_params[:definition]}"
+          }
+        }
+      end
+
+      it "update Deployment" do
+        deployment = create(:deployment, cluster: @cluster)
+        put :update, params: {id: deployment.to_param, deployments: @params[:deployments]}, session: valid_session
+        deployment.reload
+        expect(deployment.name).to eq @params[:deployments][:name]
+      end
+
+      it "redirects to list of deployments" do
+        deployment = create(:deployment, cluster: @cluster)
+        put :update, params: {id: deployment.to_param, deployments: @params[:deployments]}, session: valid_session
+        
+        expect(response).to redirect_to(@cluster)
+      end
+    end
+  end
 end
