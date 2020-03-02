@@ -22,14 +22,12 @@ class DeploymentsController < ApplicationController
   #POST /deployments/
   def create
     deployment_create_params = deployment_params
-    cluster = Cluster.find_by!(name: deployment_create_params.delete(:cluster_name))
+    cluster = Cluster.find_by(name: deployment_create_params.delete(:cluster_name))
+    deployment_create_params[:cluster] = cluster
 
-    deployment = Deployment.find_or_initialize_by(cluster: cluster, name: deployment_create_params[:name])
-    deployment.assign_attributes(deployment_create_params)
-    deployment.save!
-
+    @deployment = Deployment.create(deployment_create_params)
     respond_to do |format|
-      if deployment
+      if @deployment.id.present?
         format.html { redirect_to cluster_path(cluster), notice: 'Deployment was successfully created.' }
       else
         format.html { render :new }
@@ -44,14 +42,11 @@ class DeploymentsController < ApplicationController
   # PATCH/PUT /deployments/1
   def update
     deployment_update_params = deployment_params
-    cluster = Cluster.find_by!(name: deployment_update_params.delete(:cluster_name))
-    
-    deployment = Deployment.find_by(cluster: @deployments.cluster, name: @deployments.name)
-    deployment.assign_attributes(deployment_update_params)
-    deployment.save!
+    cluster = Cluster.find_by(name: deployment_update_params.delete(:cluster_name))
+    deployment_update_params[:cluster] = cluster
 
     respond_to do |format|
-      if deployment
+      if @deployments.update(deployment_update_params)
         format.html { redirect_to cluster_path(cluster), notice: 'Deployment was successfully updated.' }
       else
         format.html { render :edit }

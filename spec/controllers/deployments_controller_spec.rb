@@ -1,14 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe DeploymentsController, type: :controller do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Cluster. As you add validations to Cluster, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    attributes_for(:deployment)
-  }
-
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # DeploymentsController. Be sure to keep this updated too.
@@ -62,6 +54,23 @@ RSpec.describe DeploymentsController, type: :controller do
         expect(response).to redirect_to(@cluster)
       end
     end
+
+    context "with invalid params" do
+      before(:each) do 
+        @params = {
+          deployments:
+          {
+            cluster_name: @cluster.name,
+            name: "",
+          }
+        }
+      end
+
+      it "returns a success response (i.e. to display the 'new' template)" do
+        post :create, params: @params, session: valid_session
+        expect(response).to be_successful
+      end
+    end
   end
 
   describe "GET #edit" do
@@ -97,8 +106,28 @@ RSpec.describe DeploymentsController, type: :controller do
       it "redirects to list of deployments" do
         deployment = create(:deployment, cluster: @cluster)
         put :update, params: {id: deployment.to_param, deployments: @params[:deployments]}, session: valid_session
-        
+
         expect(response).to redirect_to(@cluster)
+      end
+    end
+
+    context "with invalid params" do
+      before(:each) do 
+        deployment_params = attributes_for(:deployment, cluster: @cluster)
+        @params = {
+          deployments:
+          {
+            cluster_name: @cluster.name,
+            name: ""
+          }
+        }
+      end
+
+      it "returns a success response (i.e. to display the 'new' template)" do
+        deployment = create(:deployment, cluster: @cluster)
+        put :update, params: {id: deployment.to_param, deployments: @params[:deployments]}, session: valid_session
+        deployment.reload
+        expect(response).to be_successful
       end
     end
   end
