@@ -1,4 +1,4 @@
-= form_with(model: deployments, local: true, scope: 'deployments[]') do |form|
+= form_with(model: deployments, local: true, scope: 'deployments') do |form|
   - if deployments.errors.any?
     #error_explanation
       strong
@@ -16,6 +16,11 @@
         = form.text_field :name, id: :deployment_name, class: 'form-control'
     .dl.row
       dt.col-sm-2
+        = form.label :cluster_name
+      dd.col-sm-10
+        = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
         = form.label :count
       dd.col-sm-1
         = form.text_field :count, id: :deployment_count, class: 'form-control'
@@ -24,13 +29,11 @@
         = form.label :definition
       dd.col-sm-10
         = form.text_field :definition, id: :deployment_definition, class: 'form-control'
-    .dl.row
-      dt.col-sm-2
-        = form.label :cluster_name
-      dd.col-sm-10
-        = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control'
   .card-footer.text-right
     .btn.btn-primary.btn-sm.float-right
-      = link_to 'Back to Cluster', cluster_path(deployments.cluster), class: 'text-light', style: 'text-decoration:none'
+      - if defined?(deployments.cluster.id)
+        = link_to 'Back to Cluster', cluster_path(deployments.cluster), class: 'text-light', style: 'text-decoration:none'
+      - else
+        = link_to 'Back to Deployments', deployments_path, class: 'text-light', style: 'text-decoration:none'
     = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
   

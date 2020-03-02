@@ -41,14 +41,13 @@ RSpec.describe DeploymentsController, type: :controller do
       before(:each) do 
         deployment_params = attributes_for(:deployment, cluster: @cluster)
         @params = {
-          deployments: [
-            {
-              cluster_name: @cluster.name,
-              name: deployment_params[:name],
-              count: deployment_params[:count],
-              definition: "#{deployment_params[:definition]}"
-            }
-          ]
+          deployments:
+          {
+            cluster_name: @cluster.name,
+            name: deployment_params[:name],
+            count: deployment_params[:count],
+            definition: "#{deployment_params[:definition]}"
+          }
         }
       end
 

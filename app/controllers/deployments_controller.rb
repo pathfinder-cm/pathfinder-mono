@@ -8,21 +8,27 @@ class DeploymentsController < ApplicationController
     @deployments = Deployment.all
   end
 
-  # GET /containers/new
+  # GET /deployments/new
   def new
-    @cluster = Cluster.find(params[:cluster_id])
-    @deployment = Deployment.new(cluster_id: @cluster.id)
+    if params[:cluster_id]
+      @cluster = Cluster.find(params[:cluster_id])
+      @deployment = Deployment.new(cluster_id: @cluster.id)
+    else
+      @deployment = Deployment.new
+    end
   end
 
-  #POST /containers/
+  #POST /deployments/
   def create
-    @cluster = Cluster.find_by(name: deployment_params[:deployments][0][:cluster_name])
-    
-    @deployment = bulk_apply
+    deployment_create_params = deployment_params
+    cluster = Cluster.find_by!(name: deployment_create_params.delete(:cluster_name))
+    deployment = Deployment.find_or_initialize_by(cluster: cluster, name: deployment_create_params[:name])
+    deployment.assign_attributes(deployment_create_params)
+    deployment.save!
 
     respond_to do |format|
-      if @deployment
-        format.html { redirect_to cluster_path(@cluster), notice: 'Deployment was successfully created.' }
+      if deployment
+        format.html { redirect_to cluster_path(cluster), notice: 'Deployment was successfully created.' }
       else
         format.html { render :new }
       end
@@ -31,20 +37,6 @@ class DeploymentsController < ApplicationController
 
   private
     def deployment_params
-      params.require(:deployments)
-      params.permit(deployments: [
-      :cluster_name, :name, :count, :definition
-    ])
-    end
-
-    def bulk_apply
-      ActiveRecord::Base.transaction do
-        deployment_params[:deployments].each do |bulk_params|
-          cluster = Cluster.find_by!(name: bulk_params.delete(:cluster_name))
-          deployment = Deployment.find_or_initialize_by(cluster: cluster, name: bulk_params[:name])
-          deployment.assign_attributes(bulk_params)
-          deployment.save!
-        end
-      end
+      params.require(:deployments).permit(:cluster_name, :name, :count, :definition)
     end
 end
