@@ -126,6 +126,10 @@ class Container < ApplicationRecord
     %w(PROVISIONED PROVISION_ERROR BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
   end
 
+  def ready?
+    status == self.class.statuses[:bootstrapped]
+  end
+
   def unique_hostname_unless_deleted
     exists = Container.
       where('cluster_id = ?', self.cluster_id).

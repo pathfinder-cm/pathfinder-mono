@@ -184,5 +184,21 @@ RSpec.describe Container, type: :model do
         expect(container.bootstrappers).to eq(bootstrappers_params)
       end
     end
+
+    describe '#ready?' do
+      before(:each) do
+        Container.statuses.each do |_, status|
+          container = create(:container)
+          container.update!(status: status)
+        end
+      end
+
+      it "returns true only if container is in bootstrapped state" do
+        containers = Container.all.select { |container| container.ready? }
+        expect(containers.all? { |container|
+          container.status == Container.statuses[:bootstrapped]
+        }).to be true
+      end
+    end
   end
 end
