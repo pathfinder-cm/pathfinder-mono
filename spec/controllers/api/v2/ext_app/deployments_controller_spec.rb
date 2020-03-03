@@ -79,4 +79,31 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
       end
     end
   end
+
+  describe "#GET containers" do
+    it "returns an empty list if container doesn't exists" do
+      deployment = create(:deployment, cluster: cluster, name: 'hitsu-redis', count: 0)
+      params = {
+        name: deployment.name
+      }
+      get :list_containers, params: params, as: :json
+      response_hash = JSON.parse(response.body)
+      resp = JSON.parse(::Api::V2::ExtApp::DeploymentSerializer.new(deployment).to_h.to_json)
+      expect(response_hash).to eq resp
+    end
+
+    it "returns a list of containers created by the deployment" do
+
+      deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
+      container_1 = create(:container, hostname: "#{deployment.name}-01", cluster: cluster)
+      container_2 = create(:container, hostname: "#{deployment.name}-02", cluster: cluster)
+      params = {
+        name: deployment.name
+      }
+      get :list_containers, params: params, as: :json
+      response_hash = JSON.parse(response.body)
+      resp = JSON.parse(::Api::V2::ExtApp::DeploymentSerializer.new(deployment).to_h.to_json)
+      expect(response_hash).to eq resp
+    end
+  end
 end

@@ -10,6 +10,11 @@ class Api::V2::ExtApp::DeploymentsController < Api::V2::ExtApp::BaseController
     end
   end
 
+  def list_containers
+    deployment = Deployment.find_by(name: params[:name])
+    render json: ::Api::V2::ExtApp::DeploymentSerializer.new(deployment).to_h
+  end
+
   private
   def bulk_apply_params
     params.require(:deployments)
