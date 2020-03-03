@@ -18,7 +18,10 @@
       dt.col-sm-2
         = form.label :cluster_name
       dd.col-sm-10
-        = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control'
+        - if defined?(deployments.cluster.name)
+          = form.collection_select :cluster_name, Cluster.all, :name, :name, {:selected=>deployments.cluster.name}, id: :deployment_cluster_name, class: 'form-control'
+        - else
+          = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control' 
     .dl.row
       dt.col-sm-2
         = form.label :count
