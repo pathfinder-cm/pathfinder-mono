@@ -60,7 +60,9 @@ RSpec.describe DeploymentScheduler do
 
         create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
         deployment_scheduler.schedule
-        expect(Container.where(status: Container.statuses[:schedule_deletion]).pluck(:hostname)).to include("hitsu-consul-02")
+        expect(
+          Container.where(status: Container.statuses[:schedule_deletion]).pluck(:hostname)
+        ).to include("hitsu-consul-02")
       end
 
       it "doesn't delete deleted containers" do
@@ -68,7 +70,19 @@ RSpec.describe DeploymentScheduler do
         container.status = Container.statuses[:deleted]
         container.save!
 
-        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0)
+        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0,
+                            min_available_count: 0)
+        deployment_scheduler.schedule
+        container.reload
+        expect(container.status).not_to eq(Container.statuses[:schedule_deletion])
+      end
+
+      it "doesn't delete if available count <= min. allowed available count" do
+        container = create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
+        container.update!(status: Container.statuses[:bootstrapped])
+
+        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0,
+                            min_available_count: 1)
         deployment_scheduler.schedule
         container.reload
         expect(container.status).not_to eq(Container.statuses[:schedule_deletion])
@@ -77,11 +91,11 @@ RSpec.describe DeploymentScheduler do
 
     context "update operation" do
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', count: 1)
+        @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', count: 1,
+                                          min_available_count: 0)
         deployment_scheduler.schedule
 
         @consul_box = Container.find_by(cluster: cluster, hostname: 'haja-consul-01')
-
       end
 
       context "bootstrapped containers" do
@@ -103,6 +117,21 @@ RSpec.describe DeploymentScheduler do
 
           it "changes container status" do
             expect(@consul_box.status).to eq(Container.statuses[:provisioned])
+          end
+        end
+
+        context "changed containers but restricted by min. available count" do
+          before(:each) do
+            @old_consul_box_status = @consul_box.status
+            @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
+            @deployment.update!(min_available_count: 1)
+
+            deployment_scheduler.schedule
+            @consul_box.reload
+          end
+
+          it "doesn't change status of the container" do
+            expect(@consul_box.status).to eq(@old_consul_box_status)
           end
         end
 

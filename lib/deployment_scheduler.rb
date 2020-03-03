@@ -16,10 +16,15 @@ class DeploymentScheduler
   end
 
   def process_existing_containers(deployment, wanted_hostnames)
-    deployment.managed_containers.each do |container|
-      hostname = container.hostname
+    disruption_quota = calculate_disruption_quota(deployment)
 
-      if wanted_hostnames.include?(hostname) then
+    deployment.managed_containers.each do |container|
+      if container.ready?
+        next unless disruption_quota > 0
+        disruption_quota -= 1
+      end
+
+      if wanted_hostnames.include?(container.hostname) then
         yield container
         update_container(deployment, container)
       else
@@ -60,5 +65,10 @@ class DeploymentScheduler
 
   def container_param(deployment)
     deployment.definition.deep_symbolize_keys
+  end
+
+  def calculate_disruption_quota(deployment)
+    available_count = deployment.managed_containers.count(&:ready?)
+    available_count - deployment.min_available_count
   end
 end
