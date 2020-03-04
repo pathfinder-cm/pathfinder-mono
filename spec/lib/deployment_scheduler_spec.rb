@@ -77,7 +77,7 @@ RSpec.describe DeploymentScheduler do
         expect(container.status).not_to eq(Container.statuses[:schedule_deletion])
       end
 
-      it "doesn't delete if available count <= min. allowed available count" do
+      it "doesn't delete available container if container disruption quota is reached" do
         container = create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
         container.update!(status: Container.statuses[:bootstrapped])
 
@@ -120,7 +120,7 @@ RSpec.describe DeploymentScheduler do
           end
         end
 
-        context "changed containers but restricted by min. available count" do
+        context "changed containers with hit of container disruption quota" do
           before(:each) do
             @old_consul_box_status = @consul_box.status
             @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
