@@ -165,5 +165,26 @@ RSpec.describe DeploymentScheduler do
         end
       end
     end
+
+    context "container disruption quota" do
+      before(:each) do
+        @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', count: 2,
+                                          min_available_count: 1)
+        deployment_scheduler.schedule
+
+        @consul_1_box = Container.find_by(cluster: cluster, hostname: 'haja-consul-01')
+        @consul_1_box.update!(status: Container.statuses[:bootstrapped])
+        @consul_2_box = Container.find_by(cluster: cluster, hostname: 'haja-consul-02')
+        @consul_2_box.update!(status: Container.statuses[:bootstrapped], bootstrappers: [{ 'bootstrap_type' => 'none' }])
+        deployment_scheduler.schedule
+
+        @consul_1_box.reload
+        @consul_2_box.reload
+      end
+
+      it "still updates 2nd box" do
+        expect(@consul_2_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
+      end
+    end
   end
 end

@@ -19,16 +19,17 @@ class DeploymentScheduler
     disruption_quota = calculate_disruption_quota(deployment)
 
     deployment.managed_containers.each do |container|
+      disruption_quota_in_effect = false
       if container.ready?
         next unless disruption_quota > 0
-        disruption_quota -= 1
+        disruption_quota_in_effect = true
       end
 
-      if wanted_hostnames.include?(container.hostname) then
+      result = process_container(deployment, wanted_hostnames, container) do
         yield container
-        update_container(deployment, container)
-      else
-        delete_container(container)
+      end
+      if result and disruption_quota_in_effect
+        disruption_quota -= 1
       end
     end
   end
@@ -36,6 +37,15 @@ class DeploymentScheduler
   def process_new_containers(deployment, wanted_hostnames)
     wanted_hostnames.each do |hostname|
       create_container(deployment, hostname)
+    end
+  end
+
+  def process_container(deployment, wanted_hostnames, container)
+    if wanted_hostnames.include?(container.hostname) then
+      yield container
+      update_container(deployment, container)
+    else
+      delete_container(container)
     end
   end
 
@@ -53,14 +63,16 @@ class DeploymentScheduler
     ].include?(container.status)
 
     container.apply_with_source(container_param(deployment))
-    if container.changed?
-      container.status = Container.statuses[:provisioned]
-      container.save!
-    end
+    return false unless container.changed?
+
+    container.status = Container.statuses[:provisioned]
+    container.save!
+    true
   end
 
   def delete_container(container)
     container.update!(status: Container.statuses[:schedule_deletion])
+    true
   end
 
   def container_param(deployment)
