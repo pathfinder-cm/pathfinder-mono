@@ -25,9 +25,9 @@ class DeploymentsController < ApplicationController
     cluster = Cluster.find_by(name: deployment_create_params.delete(:cluster_name))
     deployment_create_params[:cluster] = cluster
 
-    @deployment = Deployment.create(deployment_create_params)
+    @deployment = Deployment.new(deployment_create_params)
     respond_to do |format|
-      if @deployment.id.present?
+      if @deployment.save
         format.html { redirect_to cluster_path(cluster), notice: 'Deployment was successfully created.' }
       else
         format.html { render :new }
@@ -44,9 +44,9 @@ class DeploymentsController < ApplicationController
     deployment_update_params = deployment_params
     cluster = Cluster.find_by(name: deployment_update_params.delete(:cluster_name))
     deployment_update_params[:cluster] = cluster
-
+    @deployments.assign_attributes(deployment_update_params)
     respond_to do |format|
-      if @deployments.update(deployment_update_params)
+      if @deployments.save
         format.html { redirect_to cluster_path(cluster), notice: 'Deployment was successfully updated.' }
       else
         format.html { render :edit }
