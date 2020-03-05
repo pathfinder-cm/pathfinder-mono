@@ -29,7 +29,8 @@ class DeploymentsController < ApplicationController
     begin
       deployment_create_params[:definition] = JSON.parse(deployment_create_params[:definition])
     rescue JSON::ParserError
-        render :new, notice: "invalid json"
+        @deployment.errors.add(:definition, "Should be valid JSON")
+        render :new
         return
     end
     
@@ -57,8 +58,8 @@ class DeploymentsController < ApplicationController
     begin
       deployment_update_params[:definition] = JSON.parse(deployment_update_params[:definition])
     rescue JSON::ParserError
-      flash[:error] = "Invalid JSON"
-      render :edit, notice: "invalid json"
+      @deployments.errors.add(:definition, "Should be valid JSON")
+      render :edit
       return
     end
 
