@@ -46,7 +46,7 @@ class DeploymentsController < ApplicationController
 
   # GET /deployments/1/edit
   def edit
-    @definition = @deployments[:definition].to_json
+    @definition = JSON.pretty_generate(@deployments[:definition])
   end
 
   # PATCH/PUT /deployments/1
