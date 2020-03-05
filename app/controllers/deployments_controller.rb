@@ -24,9 +24,16 @@ class DeploymentsController < ApplicationController
     deployment_create_params = deployment_params
     cluster = Cluster.find_by(name: deployment_create_params.delete(:cluster_name))
     deployment_create_params[:cluster] = cluster
-    deployment_create_params[:definition] = JSON.parse(deployment_create_params[:definition])
 
-    @deployment = Deployment.new(deployment_create_params)
+    @deployment = Deployment.new
+    begin
+      deployment_create_params[:definition] = JSON.parse(deployment_create_params[:definition])
+    rescue JSON::ParserError
+        render :new, notice: "invalid json"
+        return
+    end
+    
+    @deployment.assign_attributes(deployment_create_params)
     respond_to do |format|
       if @deployment.save
         format.html { redirect_to cluster_path(cluster), notice: 'Deployment was successfully created.' }
@@ -38,14 +45,22 @@ class DeploymentsController < ApplicationController
 
   # GET /deployments/1/edit
   def edit
+    @definition = @deployments[:definition].to_json
   end
 
   # PATCH/PUT /deployments/1
   def update
     deployment_update_params = deployment_params
     cluster = Cluster.find_by(name: deployment_update_params.delete(:cluster_name))
+
     deployment_update_params[:cluster] = cluster
-    deployment_update_params[:definition] = JSON.parse(deployment_update_params[:definition])
+    begin
+      deployment_update_params[:definition] = JSON.parse(deployment_update_params[:definition])
+    rescue JSON::ParserError
+      flash[:error] = "Invalid JSON"
+      render :edit, notice: "invalid json"
+      return
+    end
 
     @deployments.assign_attributes(deployment_update_params)
     respond_to do |format|

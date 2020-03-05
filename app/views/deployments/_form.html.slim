@@ -31,7 +31,7 @@
       dt.col-sm-2
         = form.label :definition
       dd.col-sm-10
-        = form.text_field :definition, id: :deployment_definition, class: 'form-control'
+        = form.text_area :definition, id: :deployment_definition, class: 'form-control', cols: 15, rows: 15, value: @definition
   .card-footer.text-right
     .btn.btn-primary.btn-sm.float-right
       - if defined?(deployments.cluster.id)
