@@ -38,7 +38,7 @@ RSpec.describe DeploymentsController, type: :controller do
             cluster_name: @cluster.name,
             name: deployment_params[:name],
             count: deployment_params[:count],
-            definition: "#{deployment_params[:definition]}"
+            definition: "#{deployment_params[:definition].to_json}"
           }
         }
       end
@@ -62,6 +62,7 @@ RSpec.describe DeploymentsController, type: :controller do
           {
             cluster_name: @cluster.name,
             name: "",
+            definition: "{}"
           }
         }
       end
@@ -91,7 +92,7 @@ RSpec.describe DeploymentsController, type: :controller do
             cluster_name: @cluster.name,
             name: deployment_params[:name],
             count: deployment_params[:count],
-            definition: "#{deployment_params[:definition]}"
+            definition: "#{deployment_params[:definition].to_json}"
           }
         }
       end
@@ -118,7 +119,8 @@ RSpec.describe DeploymentsController, type: :controller do
           deployments:
           {
             cluster_name: @cluster.name,
-            name: ""
+            name: "",
+            definition: "{}"
           }
         }
       end

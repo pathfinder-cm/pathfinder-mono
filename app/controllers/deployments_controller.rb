@@ -24,6 +24,7 @@ class DeploymentsController < ApplicationController
     deployment_create_params = deployment_params
     cluster = Cluster.find_by(name: deployment_create_params.delete(:cluster_name))
     deployment_create_params[:cluster] = cluster
+    deployment_create_params[:definition] = JSON.parse(deployment_create_params[:definition])
 
     @deployment = Deployment.new(deployment_create_params)
     respond_to do |format|
@@ -44,6 +45,8 @@ class DeploymentsController < ApplicationController
     deployment_update_params = deployment_params
     cluster = Cluster.find_by(name: deployment_update_params.delete(:cluster_name))
     deployment_update_params[:cluster] = cluster
+    deployment_update_params[:definition] = JSON.parse(deployment_update_params[:definition])
+
     @deployments.assign_attributes(deployment_update_params)
     respond_to do |format|
       if @deployments.save
