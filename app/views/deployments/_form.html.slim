@@ -29,6 +29,11 @@
         = form.text_field :count, id: :deployment_count, class: 'form-control'
     .dl.row
       dt.col-sm-2
+        = form.label :min_available_count
+      dd.col-sm-1
+        = form.text_field :min_available_count, id: :deployment_min_available_count, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
         = form.label :definition
       dd.col-sm-10
         = form.text_area :definition, id: :deployment_definition, class: 'form-control', cols: 15, rows: 15, value: @definition

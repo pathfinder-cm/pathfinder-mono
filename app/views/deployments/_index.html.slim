@@ -10,14 +10,16 @@
   table.table.table-hover
     thead
       tr.d-flex
-        th.col-2 Name
+        th.col-1 Name
         th.col-1 Count
+        th.col-1 Min. Available Count
         th.col-8 Definition
         th.col-1 Actions
     tbody
       - @deployments.each do |deployment|
         tr.d-flex
-          td.col-2.word-wrap= deployment.name
+          td.col-1.word-wrap= deployment.name
           td.col-1.word-wrap= deployment.count
+          td.col-1.word-wrap= deployment.min_available_count
           td.col-8.word-wrap= deployment.definition
           td.col-1.word-wrap= link_to 'Edit', edit_deployment_path(deployment)

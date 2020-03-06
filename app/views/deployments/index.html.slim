@@ -17,7 +17,8 @@
     tbody
       - @deployments.each do |deployment|
         tr.d-flex
-          td.col-2.word-wrap= deployment.name
+          td.col-1.word-wrap= deployment.name
           td.col-1.word-wrap= deployment.count
+          td.col-1.word-wrap= deployment.min_available_count
           td.col-8.word-wrap= deployment.definition
           td.col-1.word-wrap= link_to 'Edit', edit_deployment_path(deployment)
