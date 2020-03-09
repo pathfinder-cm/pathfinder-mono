@@ -48,5 +48,32 @@ RSpec.describe Deployment, type: :model do
         expect(deployment.managed_containers).not_to include(container)
       end
     end
+
+    describe "#wanted_existing_containers" do
+      let(:cluster) { deployment.cluster }
+
+      it "omits out-of-count container" do
+        containers = [
+          create(:container, cluster: cluster, hostname: "#{deployment.name}-01"),
+          create(:container, cluster: cluster, hostname: "#{deployment.name}-02"),
+        ]
+        create(:container, cluster: cluster, hostname: "#{deployment.name}-03")
+        deployment.update!(count: 2)
+
+        expect(deployment.wanted_existing_containers).to match_array(containers)
+      end
+
+      it "omits deleted containers" do
+        container = create(:container, cluster: cluster, hostname: "#{deployment.name}-03")
+        container.status = Container.statuses[:deleted]
+        container.save!
+        expect(deployment.managed_containers).not_to include(container)
+      end
+
+      it "omits containers in different cluster" do
+        container = create(:container, hostname: "#{deployment.name}-04")
+        expect(deployment.managed_containers).not_to include(container)
+      end
+    end
   end
 end

@@ -17,6 +17,12 @@ class Deployment < ApplicationRecord
       where(cluster: cluster)
   end
 
+  def wanted_existing_containers
+    Container.exists.
+      where(hostname: container_names).
+      where(cluster: cluster)
+  end
+
   private
   def managed_containers_hostname_regexp
     "^#{Regexp.escape(name)}-[0-9]{2}$"
