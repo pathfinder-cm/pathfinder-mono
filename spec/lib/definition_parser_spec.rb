@@ -24,5 +24,13 @@ RSpec.describe DefinitionParser do
       output = ["text"]
       expect(parser.parse(input)).to eq(output)
     end
+
+    it "raises error if function name is unknown" do
+      input = "$pf-meta:unknown?value=text"
+
+      expect { parser.parse(input) }.to raise_error(
+        ArgumentError, "Unknown $pf-meta function name: unknown"
+      )
+    end
   end
 end
