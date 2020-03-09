@@ -7,6 +7,8 @@ class DefinitionParser
       handle_text(definition)
     when Hash
       definition.map { |key, value| [key, parse(value)] }.to_h
+    when Array
+      definition.map { |value| parse(value) }
     else
       definition
     end

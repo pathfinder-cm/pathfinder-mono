@@ -18,5 +18,11 @@ RSpec.describe DefinitionParser do
       }
       expect(parser.parse(input)).to eq(output)
     end
+
+    it "parses passthrough function in Array" do
+      input = ["$pf-meta:passthrough?value=text"]
+      output = ["text"]
+      expect(parser.parse(input)).to eq(output)
+    end
   end
 end
