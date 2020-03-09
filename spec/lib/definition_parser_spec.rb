@@ -8,5 +8,15 @@ RSpec.describe DefinitionParser do
       input = {}
       expect(parser.parse(input)).to eq(input)
     end
+
+    it "parses passthrough function in Hash" do
+      input = {
+        "text": "$pf-meta:passthrough?value=text"
+      }
+      output = {
+        "text": "text"
+      }
+      expect(parser.parse(input)).to eq(output)
+    end
   end
 end
