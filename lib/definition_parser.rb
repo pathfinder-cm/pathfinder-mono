@@ -21,6 +21,11 @@ class DefinitionParser
     def passthrough(value: )
       value
     end
+
+    def deployment_ip_addresses(deployment_name: )
+      containers = Deployment.find_by(name: deployment_name).wanted_existing_containers
+      containers.pluck(:ipaddress).compact
+    end
   end
 
   def parse_query_text(text)
