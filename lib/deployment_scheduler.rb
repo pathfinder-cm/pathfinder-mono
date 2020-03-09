@@ -1,4 +1,8 @@
 class DeploymentScheduler
+  def initialize(definition_parser = DefinitionParser.new)
+    @definition_parser = definition_parser
+  end
+
   def schedule
     Deployment.all.each do |deployment|
       process(deployment)
@@ -76,7 +80,7 @@ class DeploymentScheduler
   end
 
   def container_param(deployment)
-    deployment.definition.deep_symbolize_keys
+    @definition_parser.parse deployment.definition.deep_symbolize_keys
   end
 
   def calculate_disruption_quota(deployment)

@@ -186,5 +186,20 @@ RSpec.describe DeploymentScheduler do
         expect(@consul_2_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
       end
     end
+
+    context "$pf-meta script" do
+      before(:each) do
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 1)
+        @deployment.definition["bootstrappers"][0]["test"] = "$pf-meta:passthrough?value=text"
+        @deployment.save!
+        deployment_scheduler.schedule
+
+        @consul_1_box = Container.find_by(cluster: cluster, hostname: 'hasa-consul-01')
+      end
+
+      it "is being parsed" do
+        expect(@consul_1_box.bootstrappers[0]["test"]).to eq("text")
+      end
+    end
   end
 end
