@@ -3,6 +3,7 @@ FactoryBot.define do
     association :cluster
     sequence(:name) { |n| "deployment-#{n}" }
     count { 1 }
+    min_available_count { 1 }
 
     definition {
       {

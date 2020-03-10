@@ -79,6 +79,6 @@ class DeploymentsController < ApplicationController
     end
 
     def deployment_params
-      params.require(:deployments).permit(:cluster_name, :name, :count, :definition)
+      params.require(:deployments).permit(:cluster_name, :name, :count, :definition, :min_available_count)
     end
 end
