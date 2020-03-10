@@ -1,56 +1,48 @@
 class DefinitionParser
   KEYWORD = '$pf-meta:'
 
-  def parse(definition)
+  def parse(context, definition)
     case definition
     when String
-      handle_text(definition)
+      handle_text(context, definition)
     when Hash
-      definition.map { |key, value| [key, parse(value)] }.to_h
+      definition.map { |key, value| [key, parse(context, value)] }.to_h
     when Array
-      definition.map { |value| parse(value) }
+      definition.map { |value| parse(context, value) }
     else
       definition
     end
   end
 
   private
-  module MethodCatalog
-    extend self
-
-    def passthrough(value: )
-      value
-    end
-
-    def deployment_ip_addresses(deployment_name: )
-      containers = Deployment.find_by(name: deployment_name).wanted_existing_containers
-      containers.pluck(:ipaddress).compact
-    end
-  end
-
   def parse_query_text(text)
     return nil unless text.start_with? KEYWORD
     text[KEYWORD.length..-1]
   end
 
-  def handle_query_text(query)
-    handle_query_uri URI(query)
+  def handle_query_text(context, query)
+    handle_query_uri context, URI(query)
   end
 
-  def handle_query_uri(uri)
+  def handle_query_uri(context, uri)
     method_name = uri.path.to_sym
-    method_params = URI.decode_www_form(uri.query).to_h.symbolize_keys
+    method_params = URI.decode_www_form(uri.query.to_s).to_h.symbolize_keys
 
-    unless MethodCatalog.public_methods.include? method_name
+    unless context.public_methods.include? method_name
       raise ArgumentError, "Unknown $pf-meta function name: #{method_name}"
     end
-    MethodCatalog.public_send method_name, **method_params
+
+    if method_params.empty?
+      context.public_send method_name
+    else
+      context.public_send method_name, **method_params
+    end
   end
 
-  def handle_text(text)
+  def handle_text(context, text)
     query = parse_query_text(text)
     return text if query.nil?
 
-    handle_query_text(query)
+    handle_query_text(context, query)
   end
 end

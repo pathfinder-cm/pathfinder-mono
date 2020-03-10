@@ -201,5 +201,25 @@ RSpec.describe DeploymentScheduler do
         expect(@consul_1_box.bootstrappers[0]["test"]).to eq("text")
       end
     end
+
+    context "$pf-meta script: function container_id" do
+      before(:each) do
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 2)
+        @deployment.definition["bootstrappers"][0]["result"] = "$pf-meta:container_id"
+        @deployment.save!
+        deployment_scheduler.schedule
+
+        @consul_1_box = Container.find_by(cluster: cluster, hostname: 'hasa-consul-01')
+        @consul_2_box = Container.find_by(cluster: cluster, hostname: 'hasa-consul-02')
+      end
+
+      it "assigns consul-1 as 1" do
+        expect(@consul_1_box.bootstrappers[0]["result"]).to eq(1)
+      end
+
+      it "assigns consul-2 as 2" do
+        expect(@consul_2_box.bootstrappers[0]["result"]).to eq(2)
+      end
+    end
   end
 end

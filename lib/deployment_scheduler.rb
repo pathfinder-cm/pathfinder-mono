@@ -55,7 +55,7 @@ class DeploymentScheduler
 
   def create_container(deployment, hostname)
     Container.create_with_source(deployment.cluster_id, {
-      **container_param(deployment),
+      **container_param(deployment, hostname),
       "hostname": hostname,
     })
   end
@@ -66,7 +66,7 @@ class DeploymentScheduler
       Container.statuses[:bootstrap_error],
     ].include?(container.status)
 
-    container.apply_with_source(container_param(deployment))
+    container.apply_with_source(container_param(deployment, container.hostname))
     return false unless container.changed?
 
     container.status = Container.statuses[:provisioned]
@@ -79,8 +79,9 @@ class DeploymentScheduler
     true
   end
 
-  def container_param(deployment)
-    @definition_parser.parse deployment.definition.deep_symbolize_keys
+  def container_param(deployment, container_hostname)
+    context = DefinitionContext.new(deployment, container_hostname)
+    @definition_parser.parse(context, deployment.definition.deep_symbolize_keys)
   end
 
   def calculate_disruption_quota(deployment)
