@@ -221,5 +221,30 @@ RSpec.describe DeploymentScheduler do
         expect(@consul_2_box.bootstrappers[0]["result"]).to eq(2)
       end
     end
+
+    context "$pf-meta script: function deployment_host_sequences" do
+      before(:each) do
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 2)
+        @deployment.definition["bootstrappers"][0]["result"] =
+          "$pf-meta:deployment_host_sequences?host=zookeeper.service.consul"
+        @deployment.save!
+        deployment_scheduler.schedule
+
+        @consul_1_box = Container.find_by(cluster: cluster, hostname: 'hasa-consul-01')
+        @consul_2_box = Container.find_by(cluster: cluster, hostname: 'hasa-consul-02')
+      end
+
+      it "assigns consul-1" do
+        expect(@consul_1_box.bootstrappers[0]["result"]).to eq([
+          "0.0.0.0", "2.zookeeper.service.consul"
+        ])
+      end
+
+      it "assigns consul-2" do
+        expect(@consul_2_box.bootstrappers[0]["result"]).to eq([
+          "1.zookeeper.service.consul", "0.0.0.0"
+        ])
+      end
+    end
   end
 end
