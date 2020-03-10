@@ -246,5 +246,29 @@ RSpec.describe DeploymentScheduler do
         ])
       end
     end
+
+    context "error" do
+      before(:each) do
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 1)
+        @deployment.definition["bootstrappers"][0]["result"] = "$pf-meta:unknown"
+        @deployment.save!
+        deployment_scheduler.schedule
+
+        @deployment.reload
+      end
+
+      it "sets last_error field" do
+        expect(@deployment.last_error.presence).not_to eq(nil)
+      end
+
+      it "resets error on next schedule if error has been fixed" do
+        @deployment.definition["bootstrappers"][0]["result"] = "text"
+        @deployment.save!
+        deployment_scheduler.schedule
+
+        @deployment.reload
+        expect(@deployment.last_error.presence).to eq(nil)
+      end
+    end
   end
 end

@@ -5,7 +5,12 @@ class DeploymentScheduler
 
   def schedule
     Deployment.all.each do |deployment|
-      process(deployment)
+      begin
+        process(deployment)
+        deployment.update!(last_error: nil)
+      rescue Exception => e
+        deployment.update!(last_error: "#{e.class.name}: #{e.message}")
+      end
     end
   end
 
