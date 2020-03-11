@@ -32,6 +32,23 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
           post :bulk_apply, params: params, as: :json
         }.to change(Deployment, :count).by(2)
       end
+
+      it "permits min_available_count" do
+        params = {
+          deployments: [
+            {
+              cluster_name: cluster.name,
+              name: "heja-consul",
+              count: 3,
+              min_available_count: 2,
+              definition: {},
+            },
+          ]
+        }
+
+        post :bulk_apply, params: params, as: :json
+        expect(Deployment.find_by(name: "heja-consul").min_available_count).to eq(2)
+      end
     end
 
     context "deployment already exists" do
