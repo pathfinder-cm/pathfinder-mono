@@ -167,7 +167,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
     end
   end
 
-  describe "POST#update" do
+  describe "PUT#update" do
     before(:each) do
       @container = create(:container, cluster: cluster)
       remote = create(:remote)
@@ -188,7 +188,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       }
     end
     it "change container values" do
-      post :update, params: @params, as: :json
+      put :update, params: @params, as: :json
       @container.reload
       expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
     end

@@ -75,7 +75,7 @@ Rails.application.routes.draw do
               'containers#schedule_deletion'
             post ':hostname/reschedule' => 'containers#reschedule'
             post ':hostname/rebootstrap' => 'containers#rebootstrap'
-            post ':hostname/update' => 'containers#update'
+            put ':hostname/update' => 'containers#update'
           end
         end
 

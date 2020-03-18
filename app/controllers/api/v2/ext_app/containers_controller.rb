@@ -50,7 +50,7 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
   end
 
-  # POST /:hostname/update
+  # PUT /:hostname/update
   def update
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
     @container = @cluster.containers.exists.find_by(hostname: params[:hostname])
