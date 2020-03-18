@@ -185,6 +185,27 @@ RSpec.describe Container, type: :model do
       end
     end
 
+    describe '#update_source' do
+      let(:container) { create(:container) }
+
+      it 'shouldn\'t update source for nil value' do
+        source_update = container.update_source(nil)
+        expect(source_update).to eq(false)
+      end
+
+      it 'shouldn\'t update bootstrapper for empty value' do
+        source_update = container.update_source("")
+        expect(source_update).to eq(false)
+      end
+
+      it 'should update container bootstrapper' do
+        new_source = create(:source)
+        source_update = container.update_source(new_source)
+        expect(source_update).to eq(true)
+        expect(container.source).to eq(new_source)
+      end
+    end
+
     describe '#ready?' do
       before(:each) do
         Container.statuses.each do |_, status|

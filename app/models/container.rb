@@ -109,7 +109,7 @@ class Container < ApplicationRecord
   end
 
   def update_source(new_source)
-    if new_source.nil? || new_source.empty?
+    if new_source.nil? || new_source.blank?
       false
     else
       source = Source.find_or_create_by(
@@ -119,6 +119,7 @@ class Container < ApplicationRecord
         fingerprint: new_source[:fingerprint],
         alias: new_source[:alias]
       )
+      update_column(:source_id, source.id)
     end
   end
 
