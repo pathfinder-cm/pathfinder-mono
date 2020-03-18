@@ -1,5 +1,5 @@
 class DeploymentScheduler
-  def initialize(definition_parser = DefinitionParser.new)
+  def initialize(definition_parser = DeploymentDefinitionParser.new)
     @definition_parser = definition_parser
   end
 

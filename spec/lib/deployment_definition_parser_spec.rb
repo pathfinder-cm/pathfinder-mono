@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe DefinitionParser do
+RSpec.describe DeploymentDefinitionParser do
   let(:deployment) { create(:deployment) }
   let(:context) { DefinitionContext.new(deployment, "#{deployment.name}-01") }
-  let(:parser) { DefinitionParser.new }
+  let(:parser) { DeploymentDefinitionParser.new }
 
   describe "#parse" do
     it "returns same object of object with no special keyword" do

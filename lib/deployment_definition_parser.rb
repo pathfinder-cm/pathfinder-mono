@@ -1,4 +1,4 @@
-class DefinitionParser
+class DeploymentDefinitionParser
   KEYWORD = '$pf-meta:'
 
   def parse(context, definition)
