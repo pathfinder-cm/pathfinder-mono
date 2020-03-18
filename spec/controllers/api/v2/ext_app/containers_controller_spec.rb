@@ -188,7 +188,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       }
     end
     it "change container values" do
-      put :update, params: @params, as: :json
+      patch :update, params: @params, as: :json
       @container.reload
       expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
     end
