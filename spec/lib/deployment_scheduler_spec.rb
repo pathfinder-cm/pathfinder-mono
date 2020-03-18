@@ -71,7 +71,7 @@ RSpec.describe DeploymentScheduler do
         container.save!
 
         create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 0,
-                            min_available_count: 0)
+                            min_available_replicas: 0)
         deployment_scheduler.schedule
         container.reload
         expect(container.status).not_to eq(Container.statuses[:schedule_deletion])
@@ -82,7 +82,7 @@ RSpec.describe DeploymentScheduler do
         container.update!(status: Container.statuses[:bootstrapped])
 
         create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 0,
-                            min_available_count: 1)
+                            min_available_replicas: 1)
         deployment_scheduler.schedule
         container.reload
         expect(container.status).not_to eq(Container.statuses[:schedule_deletion])
@@ -92,7 +92,7 @@ RSpec.describe DeploymentScheduler do
     context "update operation" do
       before(:each) do
         @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', desired_num_replicas: 1,
-                                          min_available_count: 0)
+                                          min_available_replicas: 0)
         deployment_scheduler.schedule
 
         @consul_box = Container.find_by(cluster: cluster, hostname: 'haja-consul-01')
@@ -124,7 +124,7 @@ RSpec.describe DeploymentScheduler do
           before(:each) do
             @old_consul_box_status = @consul_box.status
             @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
-            @deployment.update!(min_available_count: 1)
+            @deployment.update!(min_available_replicas: 1)
 
             deployment_scheduler.schedule
             @consul_box.reload
@@ -169,7 +169,7 @@ RSpec.describe DeploymentScheduler do
     context "container disruption quota" do
       before(:each) do
         @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', desired_num_replicas: 2,
-                                          min_available_count: 1)
+                                          min_available_replicas: 1)
         deployment_scheduler.schedule
 
         @consul_1_box = Container.find_by(cluster: cluster, hostname: 'haja-consul-01')

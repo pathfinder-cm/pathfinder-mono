@@ -20,6 +20,6 @@
         tr.d-flex
           td.col-1.word-wrap= deployment.name
           td.col-1.word-wrap= deployment.desired_num_replicas
-          td.col-1.word-wrap= deployment.min_available_count
+          td.col-1.word-wrap= deployment.min_available_replicas
           td.col-8.word-wrap= deployment.definition
           td.col-1.word-wrap= link_to 'Edit', edit_deployment_path(deployment)

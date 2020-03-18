@@ -33,21 +33,21 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
         }.to change(Deployment, :count).by(2)
       end
 
-      it "permits min_available_count" do
+      it "permits min_available_replicas" do
         params = {
           deployments: [
             {
               cluster_name: cluster.name,
               name: "heja-consul",
               desired_num_replicas: 3,
-              min_available_count: 2,
+              min_available_replicas: 2,
               definition: {},
             },
           ]
         }
 
         post :bulk_apply, params: params, as: :json
-        expect(Deployment.find_by(name: "heja-consul").min_available_count).to eq(2)
+        expect(Deployment.find_by(name: "heja-consul").min_available_replicas).to eq(2)
       end
     end
 

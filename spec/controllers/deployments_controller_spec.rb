@@ -38,7 +38,7 @@ RSpec.describe DeploymentsController, type: :controller do
             cluster_name: @cluster.name,
             name: deployment_params[:name],
             desired_num_replicas: deployment_params[:desired_num_replicas],
-            min_available_count: 1,
+            min_available_replicas: 1,
             definition: "#{deployment_params[:definition].to_json}"
           }
         }
@@ -93,7 +93,7 @@ RSpec.describe DeploymentsController, type: :controller do
             cluster_name: @cluster.name,
             name: deployment_params[:name],
             desired_num_replicas: deployment_params[:desired_num_replicas],
-            min_available_count: 2,
+            min_available_replicas: 2,
             definition: "#{deployment_params[:definition].to_json}"
           }
         }

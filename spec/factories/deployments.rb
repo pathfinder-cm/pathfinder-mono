@@ -4,7 +4,7 @@ FactoryBot.define do
     sequence(:name) { |n| "deployment-#{n}" }
 
     desired_num_replicas { 1 }
-    min_available_count { 1 }
+    min_available_replicas { 1 }
 
     definition {
       {

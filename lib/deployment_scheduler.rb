@@ -91,6 +91,6 @@ class DeploymentScheduler
 
   def calculate_disruption_quota(deployment)
     available_count = deployment.managed_containers.count(&:ready?)
-    available_count - deployment.min_available_count
+    available_count - deployment.min_available_replicas
   end
 end
