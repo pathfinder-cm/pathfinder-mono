@@ -15,13 +15,13 @@ RSpec.describe Deployment, type: :model do
 
     describe "#container_names" do
       it "returns empty list if count is 0" do
-        deployment.count = 0
+        deployment.desired_num_replicas = 0
         expect(deployment.container_names).to eq []
       end
 
       it "returns list of container names" do
-        deployment.count = rand(1..99)
-        expect(deployment.container_names).to match_array (1..deployment.count).map{ |i| "#{deployment.name}-%02d" % i }
+        deployment.desired_num_replicas = rand(1..99)
+        expect(deployment.container_names).to match_array (1..deployment.desired_num_replicas).map{ |i| "#{deployment.name}-%02d" % i }
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe Deployment, type: :model do
           create(:container, cluster: cluster, hostname: "#{deployment.name}-02"),
         ]
         create(:container, cluster: cluster, hostname: "#{deployment.name}-03")
-        deployment.update!(count: 2)
+        deployment.update!(desired_num_replicas: 2)
 
         expect(deployment.wanted_existing_containers).to match_array(containers)
       end

@@ -19,7 +19,7 @@ class Api::V2::ExtApp::DeploymentsController < Api::V2::ExtApp::BaseController
   def bulk_apply_params
     params.require(:deployments)
     params.permit(deployments: [
-      :cluster_name, :name, :count, :min_available_count, definition: {}
+      :cluster_name, :name, :desired_num_replicas, :min_available_count, definition: {}
     ])
   end
 end

@@ -30,14 +30,14 @@ RSpec.describe DeploymentsController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
-      before(:each) do 
+      before(:each) do
         deployment_params = attributes_for(:deployment, cluster: @cluster)
         @params = {
           deployments:
           {
             cluster_name: @cluster.name,
             name: deployment_params[:name],
-            count: deployment_params[:count],
+            desired_num_replicas: deployment_params[:desired_num_replicas],
             min_available_count: 1,
             definition: "#{deployment_params[:definition].to_json}"
           }
@@ -57,7 +57,7 @@ RSpec.describe DeploymentsController, type: :controller do
     end
 
     context "with invalid params" do
-      before(:each) do 
+      before(:each) do
         @params = {
           deployments:
           {
@@ -85,14 +85,14 @@ RSpec.describe DeploymentsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      before(:each) do 
+      before(:each) do
         deployment_params = attributes_for(:deployment, cluster: @cluster)
         @params = {
           deployments:
           {
             cluster_name: @cluster.name,
             name: deployment_params[:name],
-            count: deployment_params[:count],
+            desired_num_replicas: deployment_params[:desired_num_replicas],
             min_available_count: 2,
             definition: "#{deployment_params[:definition].to_json}"
           }
@@ -115,7 +115,7 @@ RSpec.describe DeploymentsController, type: :controller do
     end
 
     context "with invalid params" do
-      before(:each) do 
+      before(:each) do
         deployment_params = attributes_for(:deployment, cluster: @cluster)
         @params = {
           deployments:

@@ -41,7 +41,7 @@ RSpec.describe DefinitionParser do
       let(:cluster) { create(:cluster) }
 
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 3)
+        @deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 3)
         create(:container, cluster: cluster, hostname: 'hitsu-consul-01', ipaddress: nil)
         create(:container, cluster: cluster, hostname: 'hitsu-consul-04', ipaddress: '10.0.0.4')
         create(:container, cluster: cluster, hostname: 'hitsu-consul-03', ipaddress: '10.0.0.3')

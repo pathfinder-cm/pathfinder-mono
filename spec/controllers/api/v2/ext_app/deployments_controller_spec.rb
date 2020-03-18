@@ -16,13 +16,13 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
             {
               cluster_name: cluster.name,
               name: "hitsu-consul",
-              count: 1,
+              desired_num_replicas: 1,
               definition: {},
             },
             {
               cluster_name: cluster.name,
               name: "hitsu-elasticsearch",
-              count: 5,
+              desired_num_replicas: 5,
               definition: {},
             }
           ]
@@ -39,7 +39,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
             {
               cluster_name: cluster.name,
               name: "heja-consul",
-              count: 3,
+              desired_num_replicas: 3,
               min_available_count: 2,
               definition: {},
             },
@@ -54,7 +54,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
     context "deployment already exists" do
       before :each do
         @deployment_1 = create(
-          :deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
+          :deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 1)
         @deployment_2 = create(
           :deployment, cluster: cluster, name: 'hitsu-elasticsearch', definition: {
             resource: {
@@ -67,7 +67,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
             {
               cluster_name: cluster.name,
               name: "hitsu-consul",
-              count: 5,
+              desired_num_replicas: 5,
             },
             {
               cluster_name: cluster.name,
@@ -86,7 +86,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
       end
 
       it "updates the first deployment" do
-        expect(@deployment_1.count).to eq(@params[:deployments][0][:count])
+        expect(@deployment_1.desired_num_replicas).to eq(@params[:deployments][0][:desired_num_replicas])
       end
 
       it "updates the second deployment" do
@@ -99,7 +99,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
 
   describe "#GET containers" do
     it "returns an empty list if container doesn't exists" do
-      deployment = create(:deployment, cluster: cluster, name: 'hitsu-redis', count: 0)
+      deployment = create(:deployment, cluster: cluster, name: 'hitsu-redis', desired_num_replicas: 0)
       params = {
         name: deployment.name
       }
@@ -111,7 +111,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
 
     it "returns a list of containers created by the deployment" do
 
-      deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
+      deployment = create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 1)
       container_1 = create(:container, hostname: "#{deployment.name}-01", cluster: cluster)
       container_2 = create(:container, hostname: "#{deployment.name}-02", cluster: cluster)
       params = {

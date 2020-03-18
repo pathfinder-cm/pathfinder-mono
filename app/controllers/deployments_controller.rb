@@ -33,7 +33,7 @@ class DeploymentsController < ApplicationController
         render :new
         return
     end
-    
+
     @deployment.assign_attributes(deployment_create_params)
     respond_to do |format|
       if @deployment.save
@@ -79,6 +79,6 @@ class DeploymentsController < ApplicationController
     end
 
     def deployment_params
-      params.require(:deployments).permit(:cluster_name, :name, :count, :definition, :min_available_count)
+      params.require(:deployments).permit(:cluster_name, :name, :desired_num_replicas, :definition, :min_available_count)
     end
 end

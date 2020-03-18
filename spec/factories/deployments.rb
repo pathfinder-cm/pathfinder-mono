@@ -2,7 +2,8 @@ FactoryBot.define do
   factory :deployment do
     association :cluster
     sequence(:name) { |n| "deployment-#{n}" }
-    count { 1 }
+
+    desired_num_replicas { 1 }
     min_available_count { 1 }
 
     definition {

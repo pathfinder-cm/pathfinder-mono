@@ -21,12 +21,12 @@
         - if defined?(deployments.cluster.name)
           = form.collection_select :cluster_name, Cluster.all, :name, :name, {:selected=>deployments.cluster.name}, id: :deployment_cluster_name, class: 'form-control'
         - else
-          = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control' 
+          = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control'
     .dl.row
       dt.col-sm-2
-        = form.label :count
+        = form.label :desired_num_replicas
       dd.col-sm-1
-        = form.text_field :count, id: :deployment_count, class: 'form-control'
+        = form.text_field :desired_num_replicas, id: :deployment_desired_num_replicas, class: 'form-control'
     .dl.row
       dt.col-sm-2
         = form.label :min_available_count
@@ -44,4 +44,3 @@
       - else
         = link_to 'Back to Deployments', deployments_path, class: 'text-light', style: 'text-decoration:none'
     = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
-  

@@ -13,7 +13,7 @@ class ::Api::V2::ExtApp::DeploymentSerializer < ::Api::V2::BaseSerializer
   def serialize(deployment)
     {
       name: deployment.name,
-      count: deployment.count,
+      desired_num_replicas: deployment.desired_num_replicas,
       definition: deployment.definition,
       containers: deployment.managed_containers.map{|container| ::Api::V2::ExtApp::ContainerSerializer.new(container).to_h[:data]}
     }

@@ -7,7 +7,7 @@ RSpec.describe DeploymentScheduler do
   describe "#schedule" do
     it "processes all deployments" do
       deployments = (1..3).map do
-        create(:deployment, cluster: cluster, count: 3)
+        create(:deployment, cluster: cluster, desired_num_replicas: 3)
       end
 
       deployment_scheduler.schedule
@@ -20,7 +20,7 @@ RSpec.describe DeploymentScheduler do
     context "create operation" do
       context "no existing container" do
         before(:each) do
-          @deployment = create(:deployment, name: 'hitsu-consul', count: 3)
+          @deployment = create(:deployment, name: 'hitsu-consul', desired_num_replicas: 3)
           deployment_scheduler.schedule
         end
 
@@ -42,7 +42,7 @@ RSpec.describe DeploymentScheduler do
           container.status = Container.statuses[:deleted]
           container.save!
 
-          create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 2)
+          create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 2)
           deployment_scheduler.schedule
         end
 
@@ -58,7 +58,7 @@ RSpec.describe DeploymentScheduler do
         create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
         create(:container, cluster: cluster, hostname: 'hitsu-consul-02')
 
-        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 1)
+        create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 1)
         deployment_scheduler.schedule
         expect(
           Container.where(status: Container.statuses[:schedule_deletion]).pluck(:hostname)
@@ -70,7 +70,7 @@ RSpec.describe DeploymentScheduler do
         container.status = Container.statuses[:deleted]
         container.save!
 
-        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0,
+        create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 0,
                             min_available_count: 0)
         deployment_scheduler.schedule
         container.reload
@@ -81,7 +81,7 @@ RSpec.describe DeploymentScheduler do
         container = create(:container, cluster: cluster, hostname: 'hitsu-consul-01')
         container.update!(status: Container.statuses[:bootstrapped])
 
-        create(:deployment, cluster: cluster, name: 'hitsu-consul', count: 0,
+        create(:deployment, cluster: cluster, name: 'hitsu-consul', desired_num_replicas: 0,
                             min_available_count: 1)
         deployment_scheduler.schedule
         container.reload
@@ -91,7 +91,7 @@ RSpec.describe DeploymentScheduler do
 
     context "update operation" do
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', count: 1,
+        @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', desired_num_replicas: 1,
                                           min_available_count: 0)
         deployment_scheduler.schedule
 
@@ -168,7 +168,7 @@ RSpec.describe DeploymentScheduler do
 
     context "container disruption quota" do
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', count: 2,
+        @deployment = create(:deployment, cluster: cluster, name: 'haja-consul', desired_num_replicas: 2,
                                           min_available_count: 1)
         deployment_scheduler.schedule
 
@@ -189,7 +189,7 @@ RSpec.describe DeploymentScheduler do
 
     context "$pf-meta script" do
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 1)
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', desired_num_replicas: 1)
         @deployment.definition["bootstrappers"][0]["test"] = "$pf-meta:passthrough?value=text"
         @deployment.save!
         deployment_scheduler.schedule
@@ -204,7 +204,7 @@ RSpec.describe DeploymentScheduler do
 
     context "$pf-meta script: function container_id" do
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 2)
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', desired_num_replicas: 2)
         @deployment.definition["bootstrappers"][0]["result"] = "$pf-meta:container_id"
         @deployment.save!
         deployment_scheduler.schedule
@@ -224,7 +224,7 @@ RSpec.describe DeploymentScheduler do
 
     context "$pf-meta script: function deployment_host_sequences" do
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 2)
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', desired_num_replicas: 2)
         @deployment.definition["bootstrappers"][0]["result"] =
           "$pf-meta:deployment_host_sequences?host=zookeeper.service.consul"
         @deployment.save!
@@ -249,7 +249,7 @@ RSpec.describe DeploymentScheduler do
 
     context "error" do
       before(:each) do
-        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', count: 1)
+        @deployment = create(:deployment, cluster: cluster, name: 'hasa-consul', desired_num_replicas: 1)
         @deployment.definition["bootstrappers"][0]["result"] = "$pf-meta:unknown"
         @deployment.save!
         deployment_scheduler.schedule

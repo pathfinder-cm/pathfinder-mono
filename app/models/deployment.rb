@@ -8,7 +8,7 @@ class Deployment < ApplicationRecord
   belongs_to :cluster
 
   def container_names
-    (0..count-1).map{ |i| "#{name}-%02d" % (i+1) }
+    (0..desired_num_replicas-1).map{ |i| "#{name}-%02d" % (i+1) }
   end
 
   def managed_containers
