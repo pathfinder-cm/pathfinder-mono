@@ -169,6 +169,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
 
   describe "PUT#update" do
     before(:each) do
+      Timecop.freeze
       @container = create(:container, cluster: cluster)
       remote = create(:remote)
       source = create(:source, remote: remote)
