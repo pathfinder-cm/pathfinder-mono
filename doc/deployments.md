@@ -122,11 +122,13 @@ To achieve the goal of the deployment: easy scale up or scale down, the deployme
 - For containers that available in **wanted containers** and **real containers**, render deployment definition (template of a container) to container attributes and re-bootstrap if the new attributes are different from the current container attributes.
 
 ### How rolling update works?
+
 We did it by limiting delete and re-bootstrap operations for **bootstrapped** containers only.
 
 If the minimum available replica is 2 and we have 3 **bootstrapped** containers, then we can only do single operation of delete or re-bootstrap for **bootstrapped** containers. The operations which aren't allowed will be eventually performed as the container finishes bootstrapping and becomes available.
 
 ### How we handle containers which need IP addresses of Consul containers?
+
 We implemented the Pathfinder script. In the update operation of the deployment scheduler, **deployment definition** (template of a container) is being rendered to be **new container attributes** and containers will be re-bootstrapped if the **new attributes** are different from the **current container attributes.**
 
 We add more processing in the specified rendering process by processing the JSON string started with `$pf-meta:`. An example scenario for this will be:
