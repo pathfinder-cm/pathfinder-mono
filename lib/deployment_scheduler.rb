@@ -10,7 +10,7 @@ class DeploymentScheduler
         deployment.update!(last_error: nil)
       rescue Exception => e
         deployment.update!(last_error: "#{e.class.name}: #{e.message}")
-        Rails.logger.warn "Exception: #{e}"
+        Rails.logger.warn "#{e.class.name}: #{e.message}}"
       end
     end
   end
