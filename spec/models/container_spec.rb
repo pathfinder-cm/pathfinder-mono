@@ -104,7 +104,7 @@ RSpec.describe Container, type: :model do
       end
     end
 
-    describe '#apply_with_source' do
+    describe '#apply_params_with_source' do
       let(:container) { create(:container) }
       let(:remote) { create(:remote) }
       let(:source) { create(:source, remote: remote) }
@@ -124,7 +124,7 @@ RSpec.describe Container, type: :model do
       end
 
       it 'update container based on params' do
-        container.apply_with_source(@valid_params)
+        container.apply_params_with_source(@valid_params)
         expect(container.bootstrappers).to eq @valid_params[:bootstrappers]
       end
 

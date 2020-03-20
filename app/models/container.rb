@@ -57,7 +57,7 @@ class Container < ApplicationRecord
   #
   # Setup additional methods
   #
-  def apply_with_source(params)
+  def apply_params_with_source(params)
     errors.add(:source, "must be present.") unless params[:source].present?
 
     remote_name = params.dig(:source, :remote, :name)
@@ -79,7 +79,7 @@ class Container < ApplicationRecord
     container.cluster_id = cluster_id
     container.hostname = params[:hostname]
 
-    container.apply_with_source(params)
+    container.apply_params_with_source(params)
     container.save
     container
   end

@@ -16,15 +16,15 @@ class DeploymentScheduler
 
   private
   def process(deployment)
-    wanted_hostnames = Set.new(deployment.container_names)
+    desired_replica_hostnames = Set.new(deployment.container_names)
 
-    process_existing_containers(deployment, wanted_hostnames) do |processed_container|
-      wanted_hostnames.delete(processed_container.hostname)
+    process_existing_containers(deployment, desired_replica_hostnames) do |processed_container|
+      desired_replica_hostnames.delete(processed_container.hostname)
     end
-    process_new_containers(deployment, wanted_hostnames)
+    process_new_containers(deployment, desired_replica_hostnames)
   end
 
-  def process_existing_containers(deployment, wanted_hostnames)
+  def process_existing_containers(deployment, desired_replica_hostnames)
     disruption_quota = calculate_disruption_quota(deployment)
 
     deployment.managed_containers.each do |container|
@@ -34,7 +34,7 @@ class DeploymentScheduler
         disruption_quota_in_effect = true
       end
 
-      result = process_container(deployment, wanted_hostnames, container) do
+      result = process_container(deployment, desired_replica_hostnames, container) do
         yield container
       end
       if result and disruption_quota_in_effect
@@ -43,14 +43,14 @@ class DeploymentScheduler
     end
   end
 
-  def process_new_containers(deployment, wanted_hostnames)
-    wanted_hostnames.each do |hostname|
+  def process_new_containers(deployment, desired_replica_hostnames)
+    desired_replica_hostnames.each do |hostname|
       create_container(deployment, hostname)
     end
   end
 
-  def process_container(deployment, wanted_hostnames, container)
-    if wanted_hostnames.include?(container.hostname) then
+  def process_container(deployment, desired_replica_hostnames, container)
+    if desired_replica_hostnames.include?(container.hostname) then
       yield container
       update_container(deployment, container)
     else
@@ -71,7 +71,7 @@ class DeploymentScheduler
       Container.statuses[:bootstrap_error],
     ].include?(container.status)
 
-    container.apply_with_source(container_param(deployment, container.hostname))
+    container.apply_params_with_source(container_param(deployment, container.hostname))
     return false unless container.changed?
 
     container.status = Container.statuses[:provisioned]
