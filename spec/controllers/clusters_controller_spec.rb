@@ -40,6 +40,22 @@ RSpec.describe ClustersController, type: :controller do
     end
   end
 
+  describe "GET #show_deployments" do
+    it "returns a success response" do
+      cluster = Cluster.create! valid_attributes
+      get :show_deployments, params: {id: cluster.to_param}, session: valid_session
+      expect(response).to be_successful
+    end
+  end
+
+  describe "GET #show_containers" do
+    it "returns a success response" do
+      cluster = Cluster.create! valid_attributes
+      get :show_containers, params: {id: cluster.to_param}, session: valid_session
+      expect(response).to be_successful
+    end
+  end
+
   describe "GET #new" do
     it "returns a success response" do
       get :new, params: {}, session: valid_session

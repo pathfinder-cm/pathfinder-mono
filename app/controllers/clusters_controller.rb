@@ -1,6 +1,6 @@
 class ClustersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_cluster, only: [:show, :edit, :update, :destroy]
+  before_action :set_cluster, only: [:show, :edit, :update, :destroy, :show_deployments, :show_containers]
 
   # GET /clusters
   def index
@@ -10,7 +10,13 @@ class ClustersController < ApplicationController
   # GET /clusters/1
   def show
     @nodes = @cluster.nodes.order(hostname: :asc)
+  end
+
+  def show_deployments
     @deployments = @cluster.deployments.order(name: :asc)
+  end
+
+  def show_containers
     @containers = @cluster.containers.exists
   end
 
