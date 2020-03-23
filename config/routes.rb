@@ -12,8 +12,8 @@ Rails.application.routes.draw do
   resources :clusters, except: :destroy,
     defaults: { format: :html } do
       member do
-        get :show_deployments
-        get :show_containers
+        get 'deployments' => 'clusters#show_deployments'
+        get 'containers' => 'clusters#show_containers'
       end
     end
   resources :nodes, only: :show

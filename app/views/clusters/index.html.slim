@@ -18,10 +18,10 @@
           td.col-9= link_to cluster.name, cluster
           td.col-1.word-wrap
             .btn.btn-success.btn-sm
-              = link_to 'Deployments', show_deployments_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
+              = link_to 'Deployments', deployments_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
           td.col-1.word-wrap
             .btn.btn-success.btn-sm
-              = link_to 'Containers', show_containers_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
+              = link_to 'Containers', containers_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
           td.col-1.word-wrap
             .btn.btn-warning.btn-sm.edit-attributes
               = link_to 'Edit', edit_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
