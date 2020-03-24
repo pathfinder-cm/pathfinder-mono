@@ -10,18 +10,16 @@
   table.table.table-hover
     thead
       tr.d-flex
-        th.col-11 Name
-        th.col-1 Actions
+        th.col-9 Name
+        th.col-3 Actions
     tbody
       - @clusters.each do |cluster|
         tr.d-flex
           td.col-9= link_to cluster.name, cluster
-          td.col-1.word-wrap
-            .btn.btn-success.btn-sm
+          td.col-3.word-wrap.p-2
+            .btn.btn-success.btn-sm.m-1
               = link_to 'Deployments', deployments_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
-          td.col-1.word-wrap
-            .btn.btn-success.btn-sm
+            .btn.btn-success.btn-sm.m-1
               = link_to 'Containers', containers_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
-          td.col-1.word-wrap
-            .btn.btn-warning.btn-sm.edit-attributes
+            .btn.btn-warning.btn-sm.edit-attributes.m-1
               = link_to 'Edit', edit_cluster_path(cluster), class: 'text-light', style: 'text-decoration:none'
