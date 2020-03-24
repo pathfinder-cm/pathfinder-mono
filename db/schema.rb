@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_18_081418) do
+ActiveRecord::Schema.define(version: 2020_03_24_043624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,7 +47,8 @@ ActiveRecord::Schema.define(version: 2020_03_18_081418) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "min_available_replicas", default: 1, null: false
-    t.string "last_error"
+    t.string "last_error_msg"
+    t.datetime "last_error_at"
     t.index ["cluster_id", "name"], name: "index_deployments_on_cluster_id_and_name", unique: true
     t.index ["cluster_id"], name: "index_deployments_on_cluster_id"
   end

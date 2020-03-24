@@ -261,13 +261,26 @@ RSpec.describe DeploymentScheduler do
         expect(@deployment.last_error_msg.presence).not_to eq(nil)
       end
 
-      it "resets error on next schedule if error has been fixed" do
-        @deployment.definition["bootstrappers"][0]["result"] = "text"
-        @deployment.save!
-        deployment_scheduler.schedule
+      it "sets last_error_at field" do
+        expect(@deployment.last_error_at.presence).not_to eq(nil)
+      end
 
-        @deployment.reload
-        expect(@deployment.last_error_msg.presence).to eq(nil)
+      context "has been fixed" do
+        before(:each) do
+          @deployment.definition["bootstrappers"][0]["result"] = "text"
+          @deployment.save!
+          deployment_scheduler.schedule
+
+          @deployment.reload
+        end
+
+        it "resets last_error_msg field" do
+          expect(@deployment.last_error_msg.presence).to eq(nil)
+        end
+
+        it "resets last_error_at field" do
+          expect(@deployment.last_error_at.presence).to eq(nil)
+        end
       end
     end
   end
