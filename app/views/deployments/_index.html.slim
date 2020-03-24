@@ -23,5 +23,11 @@
           td.col-1.word-wrap= deployment.desired_num_replicas
           td.col-1.word-wrap= deployment.min_available_replicas
           td.col-6.word-wrap= deployment.definition
-          td.col-2.word-wrap= deployment.last_error_msg.nil? ? "-" : "#{deployment.last_error_msg} (#{deployment.last_error_at})"
+          td.col-2.word-wrap
+          - if deployment.last_error_msg.nil?
+            &minus;
+          - else
+            div= deployment.last_error_msg
+            div
+              i= "(#{deployment.last_error_at})"
           td.col-1.word-wrap= link_to 'Edit', edit_deployment_path(deployment)
