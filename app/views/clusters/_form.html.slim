@@ -8,14 +8,14 @@
         - cluster.errors.full_messages.each do |message|
           li
             = message
-  .card-body    
+  .card-body
     .dl.row
-      dt.col-sm-2 
+      dt.col-sm-2
         = form.label :name
       dd.col-sm-10
         = form.text_field :name, id: :cluster_name, class: 'form-control'
     .dl.row
-      dt.col-sm-2 
+      dt.col-sm-2
         = form.label :password
       dd.col-sm-10
         = form.password_field :password, id: :cluster_password, class: 'form-control'
@@ -28,4 +28,3 @@
     .btn.btn-primary.btn-sm.float-right
       = link_to 'Back to Cluster', clusters_path, class: 'text-light', style: 'text-decoration:none'
     = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
-    
