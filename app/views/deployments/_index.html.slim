@@ -28,6 +28,8 @@
               | &minus;
             - else
               div= deployment.last_error_msg
-              div
+              div.pt-2
+                | Last error at:
+                br
                 i= deployment.last_error_at
           td.col-1.word-wrap= link_to 'Edit', edit_deployment_path(deployment)
