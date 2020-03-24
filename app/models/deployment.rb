@@ -11,6 +11,7 @@ class Deployment < ApplicationRecord
     (0..desired_num_replicas-1).map{ |i| "#{name}-%02d" % (i+1) }
   end
 
+  # will be deprecated in the near future
   def managed_containers
     Container.exists.
       where("hostname ~* ?", managed_containers_hostname_regexp).

@@ -50,6 +50,7 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
   end
 
+  # will be deprecated in the near future
   # PATCH /:hostname/update
   def update
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
