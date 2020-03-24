@@ -257,8 +257,8 @@ RSpec.describe DeploymentScheduler do
         @deployment.reload
       end
 
-      it "sets last_error field" do
-        expect(@deployment.last_error.presence).not_to eq(nil)
+      it "sets last_error_msg field" do
+        expect(@deployment.last_error_msg.presence).not_to eq(nil)
       end
 
       it "resets error on next schedule if error has been fixed" do
@@ -267,7 +267,7 @@ RSpec.describe DeploymentScheduler do
         deployment_scheduler.schedule
 
         @deployment.reload
-        expect(@deployment.last_error.presence).to eq(nil)
+        expect(@deployment.last_error_msg.presence).to eq(nil)
       end
     end
   end

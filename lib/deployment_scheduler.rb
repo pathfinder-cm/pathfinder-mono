@@ -7,9 +7,9 @@ class DeploymentScheduler
     Deployment.all.each do |deployment|
       begin
         process(deployment)
-        deployment.update!(last_error: nil)
+        deployment.update!(last_error_msg: nil)
       rescue Exception => e
-        deployment.update!(last_error: "#{e.class.name}: #{e.message}")
+        deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}")
         Rails.logger.warn "#{e.class.name}: #{e.message}}"
       end
     end
