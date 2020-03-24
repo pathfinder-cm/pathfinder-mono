@@ -17,8 +17,8 @@ Now you can either open `http://192.168.33.33:8080` or do `vagrant ssh` and type
 ## Development Setup
 
 Clone this repository and install all deployment requirements on your machine:
-1. Docker.
-2. docker-compose.
+1. [Docker](https://docker.com)
+2. [docker-compose](https://docs.docker.com/compose)
 
 Build the Docker development image. It must also be rebuilt for changes in `Gemfile` or` Gemfile.lock`.
 ```
