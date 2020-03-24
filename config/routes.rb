@@ -82,7 +82,7 @@ Rails.application.routes.draw do
         resources :deployments, only: [] do
           collection do
             get ':name/containers' => 'deployments#index_containers'
-            post 'bulk_apply' => 'deployments#bulk_apply'
+            post 'batch' => 'deployments#batch'
           end
         end
       end

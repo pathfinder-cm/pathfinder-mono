@@ -1,5 +1,5 @@
 class Api::V2::ExtApp::DeploymentsController < Api::V2::ExtApp::BaseController
-  def bulk_apply
+  def batch
     ActiveRecord::Base.transaction do
       bulk_apply_params[:deployments].each do |deployment_params|
         cluster = Cluster.find_by!(name: deployment_params.delete(:cluster_name))

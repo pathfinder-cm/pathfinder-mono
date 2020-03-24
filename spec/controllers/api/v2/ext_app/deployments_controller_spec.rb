@@ -8,7 +8,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
     request.headers['X-Auth-Token'] = 'abc'
   end
 
-  describe "POST #bulk_apply" do
+  describe "POST #batch" do
     context "new deployment" do
       it "creates new deployment" do
         params = {
@@ -29,7 +29,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
         }
 
         expect {
-          post :bulk_apply, params: params, as: :json
+          post :batch, params: params, as: :json
         }.to change(Deployment, :count).by(2)
       end
 
@@ -46,7 +46,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
           ]
         }
 
-        post :bulk_apply, params: params, as: :json
+        post :batch, params: params, as: :json
         expect(Deployment.find_by(name: "heja-consul").min_available_replicas).to eq(2)
       end
     end
@@ -80,7 +80,7 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
             }
           ]
         }
-        post :bulk_apply, params: @params, as: :json
+        post :batch, params: @params, as: :json
         @deployment_1.reload
         @deployment_2.reload
       end
