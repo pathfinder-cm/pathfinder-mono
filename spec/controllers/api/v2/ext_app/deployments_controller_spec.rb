@@ -106,8 +106,9 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
       }
       get :index_containers, params: params, as: :json
       response_hash = JSON.parse(response.body)
-      resp = JSON.parse(::Api::V2::ExtApp::DeploymentSerializer.new(deployment).to_h.to_json)
-      expect(response_hash).to eq resp
+      resp = {}
+      resp['containers'] = deployment.managed_containers.map{|container| ::Api::V2::ExtApp::ContainerSerializer.new(container).to_h[:data]}
+      expect(response_hash).to eq JSON.parse(resp.to_json)
     end
 
     it "returns a list of containers created by the deployment" do
@@ -121,8 +122,9 @@ RSpec.describe Api::V2::ExtApp::DeploymentsController, type: :controller do
       }
       get :index_containers, params: params, as: :json
       response_hash = JSON.parse(response.body)
-      resp = JSON.parse(::Api::V2::ExtApp::DeploymentSerializer.new(deployment).to_h.to_json)
-      expect(response_hash).to eq resp
+      resp = {}
+      resp['containers'] = deployment.managed_containers.map{|container| ::Api::V2::ExtApp::ContainerSerializer.new(container).to_h[:data]}
+      expect(response_hash).to eq JSON.parse(resp.to_json)
     end
   end
 end

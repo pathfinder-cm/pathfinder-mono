@@ -13,7 +13,10 @@ class Api::V2::ExtApp::DeploymentsController < Api::V2::ExtApp::BaseController
   def index_containers
     cluster = Cluster.find_by!(name: params[:cluster_name])
     deployment = cluster.deployments.find_by!(name: params[:name])
-    render json: ::Api::V2::ExtApp::DeploymentSerializer.new(deployment).to_h
+    payload = {}
+    payload[:containers] = deployment.managed_containers.map{|container| ::Api::V2::ExtApp::ContainerSerializer.new(container).to_h[:data]}
+
+    render json: payload
   end
 
   private
