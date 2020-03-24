@@ -13,7 +13,8 @@
         th.col-1 Name
         th.col-1 Desired Num. Replicas
         th.col-1 Min. Available Replicas
-        th.col-8 Definition
+        th.col-6 Definition
+        th.col-2 Last Error
         th.col-1 Actions
     tbody
       - @deployments.each do |deployment|
@@ -21,5 +22,6 @@
           td.col-1.word-wrap= deployment.name
           td.col-1.word-wrap= deployment.desired_num_replicas
           td.col-1.word-wrap= deployment.min_available_replicas
-          td.col-8.word-wrap= deployment.definition
+          td.col-6.word-wrap= deployment.definition
+          td.col-2.word-wrap= deployment.last_error_msg.nil? ? "-" : "#{deployment.last_error_msg} (#{deployment.last_error_at})"
           td.col-1.word-wrap= link_to 'Edit', edit_deployment_path(deployment)
