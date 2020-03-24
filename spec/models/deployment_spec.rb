@@ -49,7 +49,7 @@ RSpec.describe Deployment, type: :model do
       end
     end
 
-    describe "#wanted_existing_containers" do
+    describe "#desired_replicas" do
       let(:cluster) { deployment.cluster }
 
       it "omits out-of-count container" do
@@ -60,7 +60,7 @@ RSpec.describe Deployment, type: :model do
         create(:container, cluster: cluster, hostname: "#{deployment.name}-03")
         deployment.update!(desired_num_replicas: 2)
 
-        expect(deployment.wanted_existing_containers).to match_array(containers)
+        expect(deployment.desired_replicas).to match_array(containers)
       end
 
       it "omits deleted containers" do

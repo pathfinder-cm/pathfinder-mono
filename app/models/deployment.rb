@@ -18,7 +18,7 @@ class Deployment < ApplicationRecord
       where(cluster: cluster)
   end
 
-  def wanted_existing_containers
+  def desired_replicas
     Container.exists.
       where(hostname: container_names).
       where(cluster: cluster)

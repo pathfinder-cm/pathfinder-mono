@@ -9,7 +9,7 @@ class DefinitionContext
   end
 
   def deployment_ip_addresses(deployment_name: )
-    containers = Deployment.find_by(name: deployment_name).wanted_existing_containers
+    containers = Deployment.find_by(name: deployment_name).desired_replicas
     containers.pluck(:ipaddress).compact
   end
 

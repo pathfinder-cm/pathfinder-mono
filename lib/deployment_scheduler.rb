@@ -19,13 +19,13 @@ class DeploymentScheduler
   def process(deployment)
     desired_replica_hostnames = Set.new(deployment.container_names)
 
-    process_existing_containers(deployment, desired_replica_hostnames) do |processed_container|
+    process_available_replicas(deployment, desired_replica_hostnames) do |processed_container|
       desired_replica_hostnames.delete(processed_container.hostname)
     end
     process_new_containers(deployment, desired_replica_hostnames)
   end
 
-  def process_existing_containers(deployment, desired_replica_hostnames)
+  def process_available_replicas(deployment, desired_replica_hostnames)
     disruption_quota = calculate_disruption_quota(deployment)
 
     deployment.managed_containers.each do |container|
