@@ -9,7 +9,13 @@ Rails.application.routes.draw do
 
   resources :users
   resources :ext_apps, except: :destroy
-  resources :clusters, except: :destroy
+  resources :clusters, except: :destroy,
+    defaults: { format: :html } do
+      member do
+        get 'deployments' => 'clusters#show_deployments'
+        get 'containers' => 'clusters#show_containers'
+      end
+    end
   resources :nodes, only: :show
   resources :containers, only: [:new, :create] do
     member do

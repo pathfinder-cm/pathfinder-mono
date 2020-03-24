@@ -4,11 +4,6 @@ class DeploymentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_deployment, only: [:edit, :update]
 
-  # GET /deployments
-  def index
-    @deployments = Deployment.all
-  end
-
   # GET /deployments/new
   def new
     if params[:cluster_id]
