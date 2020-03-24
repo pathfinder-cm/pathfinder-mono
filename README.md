@@ -30,7 +30,7 @@ Start the server in background. The server will listen on `localhost:3000` so ma
 docker-compose up -d
 ```
 
-Prepare the development database. The server can't be accessed before the migration is run.
+Prepare the database. The server cannot be accessed before setting up the database.
 ```
 docker-compose exec web bundle exec rails db:setup
 ```
