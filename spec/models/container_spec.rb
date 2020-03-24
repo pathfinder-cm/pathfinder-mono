@@ -11,8 +11,8 @@ RSpec.describe Container, type: :model do
 
     describe "validate uniqueness of hostname" do
       before(:each) do
-        @c1 = create(:container, 
-          cluster_id: container.cluster_id, 
+        @c1 = create(:container,
+          cluster_id: container.cluster_id,
           hostname: container.hostname
         )
       end
@@ -104,6 +104,38 @@ RSpec.describe Container, type: :model do
       end
     end
 
+    describe '#apply_params_with_source' do
+      let(:container) { create(:container) }
+      let(:remote) { create(:remote) }
+      let(:source) { create(:source, remote: remote) }
+
+      before(:each) do
+        container_params = attributes_for(:container)
+        @valid_params = {
+          source: {
+            source_type: source.source_type,
+            mode: source.mode,
+            remote: { name: remote.name },
+            fingerprint: source.fingerprint,
+            alias: source.alias
+          },
+          bootstrappers: container_params[:bootstrappers]
+        }
+      end
+
+      it 'update container based on params' do
+        container.apply_params_with_source(@valid_params)
+        expect(container.bootstrappers).to eq @valid_params[:bootstrappers]
+      end
+
+      it "doesn't update hostname" do
+        previous_hostname = container.hostname
+        @valid_params[:hostname] = "#{previous_hostname}-update"
+
+        expect(container.hostname).to eq(previous_hostname)
+      end
+    end
+
     describe '#duplicate!' do
       it 'should be able to duplicate a container with only duplicable attributes set' do
         container = create(:container)
@@ -134,7 +166,7 @@ RSpec.describe Container, type: :model do
 
     describe '#update_bootstrappers' do
       let(:container) { create(:container) }
-      
+
       it 'shouldn\'t update bootstrapper for nil value' do
         bootstrappers_update = container.update_bootstrappers(nil)
         expect(bootstrappers_update).to eq(false)
@@ -152,8 +184,42 @@ RSpec.describe Container, type: :model do
         expect(container.bootstrappers).to eq(bootstrappers_params)
       end
     end
+
+    describe '#update_source' do
+      let(:container) { create(:container) }
+
+      it 'shouldn\'t update source for nil value' do
+        source_update = container.update_source(nil)
+        expect(source_update).to eq(false)
+      end
+
+      it 'shouldn\'t update bootstrapper for empty value' do
+        source_update = container.update_source("")
+        expect(source_update).to eq(false)
+      end
+
+      it 'should update container bootstrapper' do
+        new_source = create(:source)
+        source_update = container.update_source(new_source)
+        expect(source_update).to eq(true)
+        expect(container.source).to eq(new_source)
+      end
+    end
+
+    describe '#ready?' do
+      before(:each) do
+        Container.statuses.each do |_, status|
+          container = create(:container)
+          container.update!(status: status)
+        end
+      end
+
+      it "returns true only if container is in bootstrapped state" do
+        containers = Container.all.select { |container| container.ready? }
+        expect(containers.all? { |container|
+          container.status == Container.statuses[:bootstrapped]
+        }).to be true
+      end
+    end
   end
 end
-
-
-

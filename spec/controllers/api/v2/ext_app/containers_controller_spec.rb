@@ -166,4 +166,37 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
     end
   end
+
+  describe "PUT#update" do
+    before(:each) do
+      Timecop.freeze
+      @container = create(:container, cluster: cluster)
+      remote = create(:remote)
+      source = create(:source, remote: remote)
+      @params = {
+        cluster_name: cluster.name,
+        hostname: @container.hostname,
+        bootstrappers: [
+          { 'bootstrap_type' => 'chef-solo' }
+        ],
+        source: {
+          source_type: source.source_type,
+          mode: source.mode,
+          remote: { name: remote.name },
+          fingerprint: source.fingerprint,
+          alias: source.alias
+        }
+      }
+    end
+    
+    after do
+      Timecop.return
+    end
+    
+    it "change container values" do
+      patch :update, params: @params, as: :json
+      @container.reload
+      expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
+    end
+  end
 end

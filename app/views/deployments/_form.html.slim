@@ -1,0 +1,46 @@
+= form_with(model: deployments, local: true, scope: 'deployments') do |form|
+  - if deployments.errors.any?
+    #error_explanation
+      strong
+        = pluralize(deployments.errors.count, "error")
+        |  prohibited this deployment from being saved:
+      ul
+        - deployments.errors.full_messages.each do |message|
+          li
+            = message
+  .card-body
+    .dl.row
+      dt.col-sm-2
+        = form.label :name
+      dd.col-sm-10
+        = form.text_field :name, id: :deployment_name, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :cluster_name
+      dd.col-sm-10
+        - if defined?(deployments.cluster.name)
+          = form.collection_select :cluster_name, Cluster.all, :name, :name, {:selected=>deployments.cluster.name}, id: :deployment_cluster_name, class: 'form-control'
+        - else
+          = form.collection_select :cluster_name, Cluster.all, :name, :name, {include_blank: true}, id: :deployment_cluster_name, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :desired_num_replicas
+      dd.col-sm-1
+        = form.text_field :desired_num_replicas, id: :deployment_desired_num_replicas, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :min_available_replicas
+      dd.col-sm-1
+        = form.text_field :min_available_replicas, id: :deployment_min_available_replicas, class: 'form-control'
+    .dl.row
+      dt.col-sm-2
+        = form.label :definition
+      dd.col-sm-10
+        = form.text_area :definition, id: :deployment_definition, class: 'form-control', cols: 15, rows: 15, value: @definition
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      - if defined?(deployments.cluster.id)
+        = link_to 'Back to Cluster', cluster_path(deployments.cluster), class: 'text-light', style: 'text-decoration:none'
+      - else
+        = link_to 'Back to Deployments', deployments_path, class: 'text-light', style: 'text-decoration:none'
+    = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'

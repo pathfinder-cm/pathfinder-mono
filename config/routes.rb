@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   end
   resources :sources, except: :destroy
   resources :remotes, except: :destroy
+  resources :deployments, except: :destroy
 
   namespace :api, defaults: {format: 'json'} do
     namespace :v1 do
@@ -74,6 +75,14 @@ Rails.application.routes.draw do
               'containers#schedule_deletion'
             post ':hostname/reschedule' => 'containers#reschedule'
             post ':hostname/rebootstrap' => 'containers#rebootstrap'
+            patch ':hostname/update' => 'containers#update'
+          end
+        end
+
+        resources :deployments, only: [] do
+          collection do
+            get ':name/containers' => 'deployments#index_containers'
+            post 'batch' => 'deployments#batch'
           end
         end
       end

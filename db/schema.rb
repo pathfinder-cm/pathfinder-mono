@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_09_160500) do
+ActiveRecord::Schema.define(version: 2020_03_24_043624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,20 @@ ActiveRecord::Schema.define(version: 2019_09_09_160500) do
     t.integer "source_id"
     t.jsonb "bootstrappers", default: [], null: false
     t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
+  end
+
+  create_table "deployments", force: :cascade do |t|
+    t.bigint "cluster_id", null: false
+    t.string "name", null: false
+    t.integer "desired_num_replicas", default: 1, null: false
+    t.jsonb "definition", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "min_available_replicas", default: 1, null: false
+    t.string "last_error_msg"
+    t.datetime "last_error_at"
+    t.index ["cluster_id", "name"], name: "index_deployments_on_cluster_id_and_name", unique: true
+    t.index ["cluster_id"], name: "index_deployments_on_cluster_id"
   end
 
   create_table "ext_apps", force: :cascade do |t|

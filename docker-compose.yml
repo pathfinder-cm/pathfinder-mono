@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        - RAILS_ENV=development
+    environment:
+      - DEV_DB_HOST=db
+      - DEV_DB_PORT=5432
+      - DEV_DB_NAME=pathfinder
+      - DEV_DB_USER=pathfinder
+      - DEV_DB_PASS=pathfinder
+      - DEV_DB_POOL=5
+      - SECRET_KEY_BASE=supersecret
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+
+  scheduler:
+    build:
+      context: .
+      args:
+        - RAILS_ENV=development
+    command: ["rails", "scheduler:start"]
+    environment:
+      - DEV_DB_HOST=db
+      - DEV_DB_PORT=5432
+      - DEV_DB_NAME=pathfinder
+      - DEV_DB_USER=pathfinder
+      - DEV_DB_PASS=pathfinder
+      - DEV_DB_POOL=5
+      - SECRET_KEY_BASE=supersecret
+      - SCHEDULER_MEMORY_THRESHOLD=50
+      - SCHEDULER_TYPE=MEMORY
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=pathfinder
+      - POSTGRES_DB=pathfinder
+      - POSTGRES_PASSWORD=pathfinder

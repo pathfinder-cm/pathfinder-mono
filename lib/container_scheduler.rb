@@ -2,20 +2,17 @@ class ContainerScheduler
   def initialize
   end
 
-  def start
-    loop do
-      if ENV['SCHEDULER_TYPE'] == 'MEMORY'
-        p 'Scheduling container based on node memory'
-      else
-        p 'Scheduling container based on node container numbers'
-      end
-
-      counter = 0
-      Cluster.all.each { |cluster| counter += process_cluster(cluster) }
-
-      p "#{counter} container(s) scheduled."
-      sleep(5.seconds)
+  def schedule
+    if ENV['SCHEDULER_TYPE'] == 'MEMORY'
+      p 'Scheduling container based on node memory'
+    else
+      p 'Scheduling container based on node container numbers'
     end
+
+    counter = 0
+    Cluster.all.each { |cluster| counter += process_cluster(cluster) }
+
+    p "#{counter} container(s) scheduled."
   end
 
   def process_cluster(cluster)
@@ -30,7 +27,7 @@ class ContainerScheduler
       end
 
       unless node.nil?
-        schedule_container!(container, node) 
+        schedule_container!(container, node)
         counter += 1
       end
     end

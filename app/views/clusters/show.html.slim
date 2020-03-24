@@ -23,4 +23,9 @@
   br
   br
 
+  = render 'deployments/index', cluster: @cluster, deployments: @deployments
+
+  br
+  br
+
   = render 'containers/index', cluster: @cluster, containers: @containers

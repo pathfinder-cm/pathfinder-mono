@@ -39,10 +39,10 @@ class Container < ApplicationRecord
   #
   # Setup scopes
   #
-  scope :pending, -> { 
+  scope :pending, -> {
     where(status: 'PENDING').order(last_status_update_at: :asc)
   }
-  scope :exists, -> { 
+  scope :exists, -> {
     where.not(status: 'DELETED').order(hostname: :asc)
   }
 
@@ -57,12 +57,9 @@ class Container < ApplicationRecord
   #
   # Setup additional methods
   #
-  def self.create_with_source(cluster_id, params)
-    container = Container.new
-    unless params[:source].present?
-      container.errors.add(:source, "must be present.")
-      return container
-    end
+  def apply_params_with_source(params)
+    errors.add(:source, "must be present.") unless params[:source].present?
+
     remote_name = params.dig(:source, :remote, :name)
     remote = Remote.find_by(name: remote_name) if remote_name.present?
     source = Source.find_or_create_by(
@@ -72,10 +69,17 @@ class Container < ApplicationRecord
       fingerprint: params.dig(:source, :fingerprint),
       alias: params.dig(:source, :alias)
     )
+
+    self.source = source
+    self.bootstrappers = params[:bootstrappers]
+  end
+
+  def self.create_with_source(cluster_id, params)
+    container = Container.new
     container.cluster_id = cluster_id
     container.hostname = params[:hostname]
-    container.source = source
-    container.bootstrappers = params[:bootstrappers]
+
+    container.apply_params_with_source(params)
     container.save
     container
   end
@@ -104,6 +108,21 @@ class Container < ApplicationRecord
     end
   end
 
+  def update_source(new_source)
+    if new_source.nil? || new_source.blank?
+      false
+    else
+      source = Source.find_or_create_by(
+        source_type: new_source[:source_type],
+        mode: new_source[:mode],
+        remote_id: new_source[:remote_id],
+        fingerprint: new_source[:fingerprint],
+        alias: new_source[:alias]
+      )
+      update_column(:source_id, source.id)
+    end
+  end
+
   def update_status(status)
     status = status.downcase.to_sym
     if Container.statuses.key?(status)
@@ -120,6 +139,10 @@ class Container < ApplicationRecord
 
   def allow_reschedule?
     %w(PROVISIONED PROVISION_ERROR BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
+  end
+
+  def ready?
+    status == self.class.statuses[:bootstrapped]
   end
 
   def unique_hostname_unless_deleted

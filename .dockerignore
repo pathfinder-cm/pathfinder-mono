@@ -1,0 +1,14 @@
+*
+
+!app
+!bin
+!config
+!config.ru
+!db
+!lib
+!public
+!Rakefile
+
+!Gemfile*
+!package.json
+!yarn.lock
