@@ -2,8 +2,13 @@ class Deployment < ApplicationRecord
   validates :name,
     presence: true,
     uniqueness: { case_sensitive: false },
-    format: { with: NAME_FORMAT },
+    format: { with: HOSTNAME_FORMAT },
     length: { minimum: 1, maximum: 255 }
+
+  validates :desired_num_replicas,
+    numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99 }
+  validates :min_available_replicas,
+    numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99 }
 
   belongs_to :cluster
 
