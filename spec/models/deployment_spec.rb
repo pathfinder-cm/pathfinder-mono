@@ -12,6 +12,8 @@ RSpec.describe Deployment, type: :model do
 
     it { should validate_numericality_of(:desired_num_replicas).is_greater_than_or_equal_to(0) }
     it { should validate_numericality_of(:desired_num_replicas).is_less_than_or_equal_to(99) }
+    it { should validate_numericality_of(:min_available_replicas).is_greater_than_or_equal_to(0) }
+    it { should validate_numericality_of(:min_available_replicas).is_less_than_or_equal_to(99) }
   end
 
   describe "methods" do
