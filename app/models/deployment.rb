@@ -5,6 +5,9 @@ class Deployment < ApplicationRecord
     format: { with: HOSTNAME_FORMAT },
     length: { minimum: 1, maximum: 255 }
 
+  validates :desired_num_replicas,
+    numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99 }
+
   belongs_to :cluster
 
   def container_names

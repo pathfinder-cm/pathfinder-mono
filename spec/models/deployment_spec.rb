@@ -9,6 +9,9 @@ RSpec.describe Deployment, type: :model do
     it { should_not allow_value('IDENT_NAME').for(:name) }
     it { should_not allow_value('ident name').for(:name) }
     it { should_not allow_value(' ident name').for(:name) }
+
+    it { should validate_numericality_of(:desired_num_replicas).is_greater_than_or_equal_to(0) }
+    it { should validate_numericality_of(:desired_num_replicas).is_less_than_or_equal_to(99) }
   end
 
   describe "methods" do
