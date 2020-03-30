@@ -108,21 +108,6 @@ class Container < ApplicationRecord
     end
   end
 
-  def update_source(new_source)
-    if new_source.nil? || new_source.blank?
-      false
-    else
-      source = Source.find_or_create_by(
-        source_type: new_source[:source_type],
-        mode: new_source[:mode],
-        remote_id: new_source[:remote_id],
-        fingerprint: new_source[:fingerprint],
-        alias: new_source[:alias]
-      )
-      update_column(:source_id, source.id)
-    end
-  end
-
   def update_status(status)
     status = status.downcase.to_sym
     if Container.statuses.key?(status)
