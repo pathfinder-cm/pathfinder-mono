@@ -170,21 +170,22 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
   describe "PUT#update" do
     before(:each) do
       Timecop.freeze
-      @container = create(:container, cluster: cluster)
       remote = create(:remote)
       source = create(:source, remote: remote)
+      @container = create(:container, cluster: cluster, source: source)
+      
+      @new_container_params = attributes_for(:container)
+      @new_source_params = build(:source, remote: remote)
       @params = {
         cluster_name: cluster.name,
         hostname: @container.hostname,
-        bootstrappers: [
-          { 'bootstrap_type' => 'chef-solo' }
-        ],
+        bootstrappers: @new_container_params[:bootstrappers],
         source: {
-          source_type: source.source_type,
-          mode: source.mode,
-          remote: { name: remote.name },
-          fingerprint: source.fingerprint,
-          alias: source.alias
+          source_type: @new_source_params[:source_type],
+          mode: @new_source_params[:mode],
+          remote: @new_source_params[:remote],
+          fingerprint: @new_source_params[:fingerprint],
+          alias: @new_source_params[:alias]
         }
       }
     end
@@ -193,10 +194,24 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       Timecop.return
     end
     
-    it "change container values" do
+    it "returns the correct values" do
       patch :update, params: @params, as: :json
       @container.reload
       expect(response.body).to eq ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h.to_json
+    end
+
+    it "change the bootstrappers value" do
+      patch :update, params: @params, as: :json
+      @container.reload
+      body_json = JSON.parse(response.body)
+      expect(body_json["data"]["bootstrappers"]).to eq(@new_container_params[:bootstrappers])
+    end
+
+    it "change the source value" do
+      patch :update, params: @params, as: :json
+      @container.reload
+      body_json = JSON.parse(response.body)
+      expect(body_json["data"]["source"]["alias"]).to eq(@new_source_params.alias)
     end
   end
 end

@@ -55,8 +55,9 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
   def update
     @cluster = ::Cluster.find_by!(name: params[:cluster_name])
     @container = @cluster.containers.exists.find_by(hostname: params[:hostname])
-    @container.update_bootstrappers(params[:bootstrappers])
-    @container.update_source(params[:source])
+    @container.apply_params_with_source(params)
+    @container.save!
+    @container.reload
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
   end
   
