@@ -4,13 +4,15 @@ class DeploymentScheduler
   end
 
   def schedule
-    Deployment.all.each do |deployment|
+    Deployment.find_each do |deployment|
       begin
         process(deployment)
-        deployment.update!(last_error_msg: nil, last_error_at: nil)
+        if deployment.last_error_msg != nil or deployment.last_error_at != nil
+          deployment.update!(last_error_msg: nil, last_error_at: nil)
+        end
       rescue Exception => e
         deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}", last_error_at: Time.now)
-        Rails.logger.warn "#{e.class.name}: #{e.message}}"
+        Rails.logger.warn "#{e.class.name}: #{e.message}"
       end
     end
   end
