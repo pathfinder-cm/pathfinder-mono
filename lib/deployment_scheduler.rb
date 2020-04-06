@@ -4,6 +4,8 @@ class DeploymentScheduler
   end
 
   def schedule
+    deployment_count = 0
+
     Deployment.find_each do |deployment|
       begin
         process(deployment)
@@ -12,9 +14,13 @@ class DeploymentScheduler
         end
       rescue Exception => e
         deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}", last_error_at: Time.now)
-        Rails.logger.warn "#{e.class.name}: #{e.message}"
+        p "#{deployment.name}: Error: #{e.class.name}: #{e.message}"
       end
+
+      deployment_count += 1
     end
+
+    p "#{deployment_count} deployment(s) has been reconciled."
   end
 
   private
@@ -33,7 +39,10 @@ class DeploymentScheduler
     deployment.managed_containers.each do |container|
       disruption_quota_in_effect = false
       if container.ready?
-        next unless disruption_quota > 0
+        unless disruption_quota > 0
+          p "#{deployment.name}: Unable to update #{container.name}: No disruption quota left"
+          next
+        end
         disruption_quota_in_effect = true
       end
 
