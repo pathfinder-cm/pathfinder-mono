@@ -35,6 +35,8 @@ services:
       - SECRET_KEY_BASE=supersecret
       - SCHEDULER_MEMORY_THRESHOLD=50
       - SCHEDULER_TYPE=MEMORY
+    volumes:
+      - .:/app
 
   db:
     image: postgres:12-alpine
