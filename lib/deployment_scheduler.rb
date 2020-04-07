@@ -6,21 +6,23 @@ class DeploymentScheduler
   def schedule
     deployment_count = 0
 
-    Deployment.find_each do |deployment|
-      begin
-        process(deployment)
-        if deployment.last_error_msg != nil or deployment.last_error_at != nil
-          deployment.update!(last_error_msg: nil, last_error_at: nil)
+    elapsed_time = Benchmark.realtime do
+      Deployment.find_each do |deployment|
+        begin
+          process(deployment)
+          if deployment.last_error_msg != nil or deployment.last_error_at != nil
+            deployment.update!(last_error_msg: nil, last_error_at: nil)
+          end
+        rescue Exception => e
+          deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}", last_error_at: Time.now)
+          p "#{deployment.name}: Error: #{e.class.name}: #{e.message}"
         end
-      rescue Exception => e
-        deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}", last_error_at: Time.now)
-        p "#{deployment.name}: Error: #{e.class.name}: #{e.message}"
-      end
 
-      deployment_count += 1
+        deployment_count += 1
+      end
     end
 
-    p "#{deployment_count} deployment(s) has been reconciled."
+    p "#{deployment_count} deployment(s) has been reconciled in #{'%.4f' % elapsed_time}s."
   end
 
   private
