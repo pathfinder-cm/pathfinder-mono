@@ -40,7 +40,7 @@ class DeploymentScheduler
       disruption_quota_in_effect = false
       if container.ready?
         unless disruption_quota > 0
-          p "#{deployment.name}: Unable to update #{container.name}: No disruption quota left"
+          p "#{deployment.name}: Unable to update #{container.hostname}: No disruption quota left"
           next
         end
         disruption_quota_in_effect = true
