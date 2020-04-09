@@ -33,5 +33,15 @@ RSpec.describe ContainerScheduler do
         expect(container_2.status).to eq(Container.statuses[:bootstrapped])
       end
     end
+
+    describe "container_3 (pending, another cluster with no node)" do
+      it "isn't allocated" do
+        expect(container_3.node).to eq(nil)
+      end
+
+      it "is still in PENDING state" do
+        expect(container_3.status).to eq(Container.statuses[:pending])
+      end
+    end
   end
 end

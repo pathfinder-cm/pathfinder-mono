@@ -26,6 +26,6 @@ class ContainerScheduler
   end
 
   def find_best_node(container)
-    Node.first
+    Node.where(cluster: container.cluster).first
   end
 end
