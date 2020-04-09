@@ -27,5 +27,11 @@ RSpec.describe ContainerScheduler do
         expect(container_1.status).to eq(Container.statuses[:scheduled])
       end
     end
+
+    describe "container_2 (bootstrapped)" do
+      it "is still in BOOTSTRAPPED state" do
+        expect(container_2.status).to eq(Container.statuses[:bootstrapped])
+      end
+    end
   end
 end

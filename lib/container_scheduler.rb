@@ -7,7 +7,7 @@ class ContainerScheduler
 
   def schedule
     n_containers = 0
-    Container.all.find_each do |container|
+    Container.pending.find_each do |container|
       schedule_container(container)
       n_containers += 1
     end
