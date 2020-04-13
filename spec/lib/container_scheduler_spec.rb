@@ -44,4 +44,24 @@ RSpec.describe ContainerScheduler do
       end
     end
   end
+
+  context "limits" do
+    let(:cluster) { create(:cluster) }
+
+    let!(:container_1) { create(:container, cluster: cluster) }
+    let!(:container_2) { create(:container, cluster: cluster) }
+    let(:containers) { Container.where(id: [container_1.id, container_2.id]) }
+
+    let(:node_1) { create(:node, cluster: cluster) }
+    let(:node_2) { create(:node, cluster: cluster) }
+
+    it "adheres container count limit" do
+      3.times { create(:container, cluster: cluster, node: node_1).update_status(Container.statuses[:scheduled]) }
+      2.times { create(:container, cluster: cluster, node: node_2).update_status(Container.statuses[:scheduled]) }
+
+      ENV['SCHEDULER_CONTAINER_COUNT_LIMIT'] = "2"
+      ContainerScheduler.new.schedule
+      expect(containers.pluck(:node_id).compact).to eq([node_2.id])
+    end
+  end
 end

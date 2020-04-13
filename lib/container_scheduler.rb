@@ -1,10 +1,4 @@
 class ContainerScheduler
-  def initialize
-    @weight_stateful = ENV['SCHEDULER_STATEFUL_WEIGHT'] || 0
-    @weight_mem_free_mb = ENV['SCHEDULER_MEM_FREE_MB_WEIGHT'] || 0
-    @weight_mem_free_ratio = ENV['SCHEDULER_MEM_FREE_RATIO_WEIGHT'] || 0
-  end
-
   def schedule
     n_containers = 0
     Container.pending.find_each do |container|
@@ -26,6 +20,13 @@ class ContainerScheduler
   end
 
   def find_best_node(container)
-    Node.where(cluster: container.cluster).first
+    limit_n_containers = ENV['SCHEDULER_CONTAINER_COUNT_LIMIT'].to_i
+
+    Node.
+      where(cluster: container.cluster).
+      joins("LEFT OUTER JOIN containers ON nodes.id = containers.node_id AND containers.status NOT IN ('SCHEDULE_DELETION', 'DELETED')").
+      having("COUNT(containers) <= ?", limit_n_containers).
+      group("nodes.id").
+      first
   end
 end
