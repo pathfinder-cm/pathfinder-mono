@@ -16,6 +16,11 @@ class Container < ApplicationRecord
     deleted: 'DELETED',
   }
 
+  enum container_type: {
+    stateful: 'STATEFUL',
+    stateless: 'STATELESS',
+  }
+
   # Setup validations for your model
   # e.g.
   # validates_presence_of :name
@@ -72,6 +77,7 @@ class Container < ApplicationRecord
 
     self.source = source
     self.bootstrappers = params[:bootstrappers]
+    self.container_type = params[:container_type].upcase if params[:container_type].present?
   end
 
   def self.create_with_source(cluster_id, params)
@@ -97,6 +103,7 @@ class Container < ApplicationRecord
       source: self.source,
       image_alias: self.image_alias,
       bootstrappers: self.bootstrappers,
+      container_type: self.container_type,
     )
   end
 

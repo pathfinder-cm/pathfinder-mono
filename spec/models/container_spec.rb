@@ -119,11 +119,12 @@ RSpec.describe Container, type: :model do
             fingerprint: source.fingerprint,
             alias: source.alias
           },
-          bootstrappers: container_params[:bootstrappers]
+          bootstrappers: container_params[:bootstrappers],
+          container_type: container_params[:container_type],
         }
       end
 
-      it 'update container based on params' do
+      it 'update bootstrappers based on params' do
         container.apply_params_with_source(@valid_params)
         expect(container.bootstrappers).to eq @valid_params[:bootstrappers]
       end
@@ -132,6 +133,7 @@ RSpec.describe Container, type: :model do
         previous_hostname = container.hostname
         @valid_params[:hostname] = "#{previous_hostname}-update"
 
+        container.apply_params_with_source(@valid_params)
         expect(container.hostname).to eq(previous_hostname)
       end
     end
@@ -145,6 +147,7 @@ RSpec.describe Container, type: :model do
         expect(duplicate_container.source).to eq container.source
         expect(duplicate_container.image_alias).to eq container.image_alias
         expect(duplicate_container.bootstrappers).to eq container.bootstrappers
+        expect(duplicate_container.container_type).to eq container.container_type
       end
     end
 
