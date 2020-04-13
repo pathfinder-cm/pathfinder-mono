@@ -1,4 +1,9 @@
 class ContainerScheduler
+  def initialize(limit_mem_threshold: nil, limit_n_containers: nil)
+    @limit_mem_threshold = limit_mem_threshold
+    @limit_n_containers = limit_n_containers
+  end
+
   def schedule
     n_containers = 0
     Container.pending.find_each do |container|
@@ -20,13 +25,19 @@ class ContainerScheduler
   end
 
   def find_best_node(container)
-    limit_n_containers = ENV['SCHEDULER_CONTAINER_COUNT_LIMIT'].to_i
-
-    Node.
+    nodes = Node.
       where(cluster: container.cluster).
       joins("LEFT OUTER JOIN containers ON nodes.id = containers.node_id AND containers.status NOT IN ('SCHEDULE_DELETION', 'DELETED')").
-      having("COUNT(containers) <= ?", limit_n_containers).
-      group("nodes.id").
-      first
+      group("nodes.id")
+
+    nodes = nodes.where(
+      "ceil(CASE WHEN (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) IS NULL " \
+      "THEN 1 " \
+      "ELSE (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) END * 100) <= ?",
+      @limit_mem_threshold
+    ) unless @limit_mem_threshold.nil?
+    nodes = nodes.having("COUNT(containers) <= ?", @limit_n_containers) unless @limit_n_containers.nil?
+
+    nodes.first
   end
 end
