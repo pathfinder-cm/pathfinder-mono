@@ -106,17 +106,34 @@ RSpec.describe DeploymentScheduler do
         context "changed containers" do
           before(:each) do
             @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
-
-            deployment_scheduler.schedule
-            @consul_box.reload
           end
 
-          it "changes the attribute" do
-            expect(@consul_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
+          context "apply_dirty = false" do
+            before(:each) do
+              deployment_scheduler.schedule
+              @consul_box.reload
+            end
+
+            it "changes the attribute" do
+              expect(@consul_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
+            end
+
+            it "changes container status" do
+              expect(@consul_box.status).to eq(Container.statuses[:provisioned])
+            end
           end
 
-          it "changes container status" do
-            expect(@consul_box.status).to eq(Container.statuses[:provisioned])
+          context "apply_dirty = true" do
+            before(:each) do
+              @old_consul_box_status = @consul_box.status
+
+              DeploymentScheduler.new(apply_dirty: true).schedule
+              @consul_box.reload
+            end
+
+            it "doesn't changes container status" do
+              expect(@consul_box.status).to eq(@old_consul_box_status)
+            end
           end
         end
 

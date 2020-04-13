@@ -10,4 +10,9 @@ namespace :scheduler do
       sleep(5.second)
     end
   end
+
+  task :apply_dirty => :environment do
+    deployment_scheduler = DeploymentScheduler.new(apply_dirty: true)
+    deployment_scheduler.schedule
+  end
 end

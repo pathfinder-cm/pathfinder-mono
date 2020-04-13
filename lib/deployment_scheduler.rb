@@ -89,7 +89,7 @@ class DeploymentScheduler
     container.apply_params_with_source(container_param(deployment, container.hostname))
     return false unless container.changed?
 
-    container.status = Container.statuses[:provisioned]
+    container.status = Container.statuses[:provisioned] unless @apply_dirty
     container.save!
     true
   end
