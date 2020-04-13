@@ -16,16 +16,16 @@ class ContainerScheduler
   end
 
   def schedule_container(container)
-    node = find_best_node(container)
-    return if node.nil?
+    node_id = find_best_node_id(container)
+    return if node_id.nil?
 
     ActiveRecord::Base.transaction do
-      container.update_attribute(:node_id, node.id)
+      container.update_attribute(:node_id, node_id)
       container.update_status(Container.statuses[:scheduled])
     end
   end
 
-  def find_best_node(container)
+  def find_best_node_id(container)
     nodes = Node.
       where(cluster: container.cluster).
       joins("LEFT OUTER JOIN containers ON nodes.id = containers.node_id AND containers.status NOT IN ('SCHEDULE_DELETION', 'DELETED')").
@@ -42,6 +42,8 @@ class ContainerScheduler
       "COUNT(containers) FILTER (WHERE container_type = 'STATEFUL') <= ?", @limit_n_stateful_containers
     ) unless @limit_n_stateful_containers.nil?
 
-    nodes.first
+    node_ids = nodes.pluck(:id)
+    p "Selecting a node from #{node_ids.length} candidate node(s)"
+    node_ids.sample
   end
 end
