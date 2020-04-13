@@ -1,7 +1,8 @@
 class ContainerScheduler
-  def initialize(limit_mem_threshold: nil, limit_n_containers: nil)
+  def initialize(limit_mem_threshold: nil, limit_n_containers: nil, limit_n_stateful_containers: nil)
     @limit_mem_threshold = limit_mem_threshold
     @limit_n_containers = limit_n_containers
+    @limit_n_stateful_containers = limit_n_stateful_containers
   end
 
   def schedule
@@ -37,6 +38,9 @@ class ContainerScheduler
       @limit_mem_threshold
     ) unless @limit_mem_threshold.nil?
     nodes = nodes.having("COUNT(containers) <= ?", @limit_n_containers) unless @limit_n_containers.nil?
+    nodes = nodes.having(
+      "COUNT(containers) FILTER (WHERE container_type = 'STATEFUL') <= ?", @limit_n_stateful_containers
+    ) unless @limit_n_stateful_containers.nil?
 
     nodes.first
   end

@@ -56,14 +56,31 @@ RSpec.describe ContainerScheduler do
 
     describe "count limit" do
       before(:each) do
-        3.times { create(:container, cluster: cluster, node: node_1).update_status(Container.statuses[:scheduled]) }
-        2.times { create(:container, cluster: cluster, node: node_2).update_status(Container.statuses[:scheduled]) }
-
-        ContainerScheduler.new(limit_n_containers: 2).schedule
+        3.times do
+          create(:container, cluster: cluster, node: node_1, container_type: Container.container_types[:stateless]).
+            update_status(Container.statuses[:scheduled])
+        end
+        2.times do
+          create(:container, cluster: cluster, node: node_2, container_type: Container.container_types[:stateless]).
+            update_status(Container.statuses[:scheduled])
+        end
       end
 
       it "adheres limit" do
+        ContainerScheduler.new(limit_n_containers: 2).schedule
         expect(containers.pluck(:node_id).compact).to eq([node_2.id])
+      end
+
+      describe "stateful limit" do
+        before(:each) do
+          2.times { create(:container, cluster: cluster, node: node_1).update_status(Container.statuses[:scheduled]) }
+          3.times { create(:container, cluster: cluster, node: node_2).update_status(Container.statuses[:scheduled]) }
+        end
+
+        it "adheres limit" do
+          ContainerScheduler.new(limit_n_stateful_containers: 2).schedule
+          expect(containers.pluck(:node_id).compact).to eq([node_1.id])
+        end
       end
     end
 
