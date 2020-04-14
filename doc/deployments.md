@@ -143,3 +143,17 @@ By using this method, eventually, every container will be bootstrapped using the
 We leverages the usage of this Pathfinder script for other things, like:
 - Zookeeper which needs **my_id** information,
 - **zookeeper_hosts** which'll be configured, e.g.: `["0.0.0.0", "2.zookeeper.service.consul", "3.zookeeper.service.consul"]`.
+
+## Dirty-Apply Deploymeent without Updating Real Containers
+
+Deployment can be applied to containers without updating the real container state. This is only needed for unusual purposes, e.g.:
+- You don't want to disrupt containers even the deployment is changed.
+- You don't care about consistencies between the container metadata and the container itself.
+- You sure that changes in deployment will disrupt containers, but it won't make meaningful changes, so you prefer not to disrupt containers.
+
+Make sure that the deployment scheduler is on idle state and turn it off, then:
+```
+rake schduler:apply_dirty
+```
+
+The command will run a deployment scheduler cycle with disabled container disruption quota and without rebootstrapping the containers.
