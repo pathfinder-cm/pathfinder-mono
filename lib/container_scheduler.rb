@@ -12,7 +12,7 @@ class ContainerScheduler
       n_containers += 1
     end
 
-    p "#{n_containers} container(s) scheduled."
+    Rails.logger.info "#{n_containers} container(s) scheduled."
   end
 
   def schedule_container(container)
@@ -43,7 +43,7 @@ class ContainerScheduler
     ) unless @limit_n_stateful_containers.nil?
 
     node_ids = nodes.pluck(:id)
-    p "Selecting a node from #{node_ids.length} candidate node(s)"
+    Rails.logger.info "Selecting a node from #{node_ids.length} candidate node(s)"
     node_ids.sample
   end
 end
