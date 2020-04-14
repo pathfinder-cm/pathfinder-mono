@@ -1,22 +1,19 @@
-.row.justify-content-center
-  .col-sm-6
-    .card
-      .h5.card-header Node Details
-      .card-body
-        dl.row
-          dt.col-sm-3 Hostname:
-          dd.col-sm-9
-            = @node.hostname
-
-          dt.col-sm-3 IP Address:
-          dd.col-sm-9
-            = @node.ipaddress
-
-      .card-footer.text-right
-        .btn.btn-primary.btn-sm.float-right
-          = link_to 'Back to Cluster', cluster_path(@node.cluster), class: 'text-light', style: 'text-decoration:none'
-br
-br
+.card
+  h5.card-header
+    | Node Details
+  .card-body
+    dl.row
+      dt.col-sm-3 Hostname:
+      dd.col-sm-9
+        = @node.hostname
+      dt.col-sm-3 IP Address:
+      dd.col-sm-9
+        = @node.ipaddress
+  .card-footer.text-right
+    .btn.btn-primary.btn-sm.float-right
+      = link_to 'Back to Cluster', cluster_path(@node.cluster), class: 'text-light', style: 'text-decoration:none'
 
 #results
+  br
+  br
   = render 'containers/index', cluster: @node.cluster, containers: @node.containers.exists
