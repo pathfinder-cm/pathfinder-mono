@@ -17,3 +17,6 @@
           = link_to 'Back to Cluster', cluster_path(@node.cluster), class: 'text-light', style: 'text-decoration:none'
 br
 br
+
+#results
+  = render 'containers/index', cluster: @node.cluster, containers: @node.containers.exists
