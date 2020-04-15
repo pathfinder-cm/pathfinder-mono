@@ -9,6 +9,8 @@ h4.mb-3 Nodes
     tbody
       - nodes.each do |node|
         tr.d-flex
-          td.col-8= link_to node.hostname, node
+          td.col-8
+            = link_to node.hostname, node
+            span.badge.badge-pathfinder
+              = node.containers.exists.count
           td.col-4= node.ipaddress
-
