@@ -144,7 +144,7 @@ We leverages the usage of this Pathfinder script for other things, like:
 - Zookeeper which needs **my_id** information,
 - **zookeeper_hosts** which'll be configured, e.g.: `["0.0.0.0", "2.zookeeper.service.consul", "3.zookeeper.service.consul"]`.
 
-## Dirty-Apply Deploymeent without Updating Real Containers
+## Dirty-Apply Deployment without Updating Real Containers
 
 Deployment can be applied to containers without updating the real container state. This is only needed for unusual purposes, e.g.:
 - You don't want to disrupt containers even the deployment is changed.
