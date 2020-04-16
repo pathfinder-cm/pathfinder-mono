@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_24_043624) do
+ActiveRecord::Schema.define(version: 2020_04_15_032858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2020_03_24_043624) do
     t.datetime "updated_at", null: false
     t.integer "source_id"
     t.jsonb "bootstrappers", default: [], null: false
+    t.string "container_type", default: "STATEFUL", null: false
     t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
   end
 
@@ -76,6 +77,14 @@ ActiveRecord::Schema.define(version: 2020_03_24_043624) do
     t.bigint "mem_free_mb"
     t.bigint "mem_used_mb"
     t.bigint "mem_total_mb"
+    t.decimal "load_capacity"
+    t.decimal "load_avg_1m"
+    t.decimal "load_avg_5m"
+    t.decimal "load_avg_15m"
+    t.bigint "disk_root_used_mb"
+    t.bigint "disk_root_total_mb"
+    t.bigint "disk_zfs_used_mb"
+    t.bigint "disk_zfs_total_mb"
     t.index ["hashed_authentication_token"], name: "index_nodes_on_hashed_authentication_token"
     t.index ["hostname"], name: "index_nodes_on_hostname", unique: true
   end
