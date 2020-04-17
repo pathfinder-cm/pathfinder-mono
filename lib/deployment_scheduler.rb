@@ -4,15 +4,25 @@ class DeploymentScheduler
   end
 
   def schedule
-    Deployment.all.each do |deployment|
-      begin
-        process(deployment)
-        deployment.update!(last_error_msg: nil, last_error_at: nil)
-      rescue Exception => e
-        deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}", last_error_at: Time.now)
-        Rails.logger.warn "#{e.class.name}: #{e.message}}"
+    deployment_count = 0
+
+    elapsed_time = Benchmark.realtime do
+      Deployment.find_each do |deployment|
+        begin
+          process(deployment)
+          if deployment.last_error_msg != nil or deployment.last_error_at != nil
+            deployment.update!(last_error_msg: nil, last_error_at: nil)
+          end
+        rescue Exception => e
+          deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}", last_error_at: Time.now)
+          Rails.logger.warn "#{deployment.name}: Error: #{e.class.name}: #{e.message}"
+        end
+
+        deployment_count += 1
       end
     end
+
+    Rails.logger.info "#{deployment_count} deployment(s) has been reconciled in #{'%.4f' % elapsed_time}s."
   end
 
   private
@@ -31,7 +41,10 @@ class DeploymentScheduler
     deployment.managed_containers.each do |container|
       disruption_quota_in_effect = false
       if container.ready?
-        next unless disruption_quota > 0
+        unless disruption_quota > 0
+          Rails.logger.info "#{deployment.name}: Unable to update #{container.hostname}: No disruption quota left"
+          next
+        end
         disruption_quota_in_effect = true
       end
 
