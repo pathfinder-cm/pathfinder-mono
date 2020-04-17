@@ -34,5 +34,18 @@ RSpec.describe ::Api::V1::Node::NodesController do
       post :store_metrics, params: params, as: :json
       expect(response.body).to eq ::Api::V1::Node::NodeSerializer.new(@node.reload).to_h.to_json
     end
+
+    it 'still works even some metrics is missing' do
+      params = {
+        cluster_name: @cluster.name,
+        memory: {
+          used: 10,
+          total: 30
+        },
+      }
+
+      post :store_metrics, params: params, as: :json
+      expect(response.body).to eq ::Api::V1::Node::NodeSerializer.new(@node.reload).to_h.to_json
+    end
   end
 end
