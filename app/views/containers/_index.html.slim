@@ -22,7 +22,10 @@
     tbody
       - containers.each do |container|
         tr.d-flex
-          td.col-1.word-wrap= container.hostname
+          td.col-1.word-wrap
+            div= container.hostname
+            div
+              i= "(#{container.container_type.downcase})"
           td.col-1.word-wrap= container.ipaddress
           td.col-4.word-wrap= container.bootstrappers
           td.col-1.word-wrap= container.source&.source_type
