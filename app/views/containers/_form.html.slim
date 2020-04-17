@@ -14,6 +14,10 @@
         = form.label :hostname
       dd.col-sm-10
         = form.text_field :hostname, id: :container_hostname, class: 'form-control'
+      dt.col-sm-2
+        = form.label :container_type
+      dd.col-sm-10
+        = form.select :container_type, Container.container_types.to_a, id: :container_type, class: 'form-control'
     = form.fields_for :source do |source_form|
       .dl.row
         dt.col-sm-2
@@ -45,4 +49,3 @@
       = link_to 'Back to Cluster', cluster_path(container.cluster), class: 'text-light', style: 'text-decoration:none'
     = form.hidden_field :cluster_id, id: :container_cluster_id
     = form.submit 'Save', class: 'btn btn-success btn-sm mr-2'
-  
