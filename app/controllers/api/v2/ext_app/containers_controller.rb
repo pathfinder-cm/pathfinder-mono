@@ -60,11 +60,12 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
     @container.reload
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
   end
-  
+
   private
     def container_params
       params.require(:container).permit(
         :hostname,
+        :container_type,
         {source: [
           :source_type,
           :mode,

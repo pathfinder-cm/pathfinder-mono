@@ -31,6 +31,7 @@ RSpec.describe ContainersController, type: :controller do
           container: {
             cluster_id: @cluster.id,
             hostname: container_params[:hostname],
+            container_type: container_params[:container_type],
             source: {
               source_type: source.source_type,
               mode: source.mode,

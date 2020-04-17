@@ -50,6 +50,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
           cluster_name: cluster.name,
           container: {
             hostname: container_params[:hostname],
+            container_type: container_params[:container_type],
             source: {
               source_type: source.source_type,
               mode: source.mode,
@@ -173,7 +174,7 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       remote = create(:remote)
       source = create(:source, remote: remote)
       @container = create(:container, cluster: cluster, source: source)
-      
+
       @new_container_params = attributes_for(:container)
       @new_source_params = build(:source, remote: remote)
       @params = {
@@ -189,11 +190,11 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
         }
       }
     end
-    
+
     after do
       Timecop.return
     end
-    
+
     it "returns the correct values" do
       patch :update, params: @params, as: :json
       @container.reload

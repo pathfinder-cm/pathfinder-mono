@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_15_032858) do
+ActiveRecord::Schema.define(version: 2020_04_17_040343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2020_04_15_032858) do
     t.datetime "updated_at", null: false
     t.integer "source_id"
     t.jsonb "bootstrappers", default: [], null: false
-    t.string "container_type", default: "STATEFUL", null: false
+    t.string "container_type", null: false
     t.index ["cluster_id", "hostname"], name: "index_containers_on_cluster_id_and_hostname"
   end
 

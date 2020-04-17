@@ -53,6 +53,7 @@ class ContainersController < ApplicationController
       params.require(:container).permit(
         :cluster_id,
         :hostname,
+        :container_type,
         {source: [
           :source_type,
           :mode,

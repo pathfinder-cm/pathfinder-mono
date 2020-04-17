@@ -56,7 +56,8 @@ RSpec.describe Container, type: :model do
         container_params = attributes_for(:container)
         valid_params = {
           hostname: container_params[:hostname],
-          source: source_params.merge({ remote: { name: @remote.name } })
+          source: source_params.merge({ remote: { name: @remote.name } }),
+          container_type: container_params[:container_type],
         }
         container = Container.create_with_source!(@cluster.id, valid_params)
         source = Source.last
@@ -72,6 +73,7 @@ RSpec.describe Container, type: :model do
         container_params = attributes_for(:container)
         valid_params = {
           hostname: container_params[:hostname],
+          container_type: container_params[:container_type],
           source: {
             source_type: source.source_type,
             mode: source.mode,
@@ -96,7 +98,8 @@ RSpec.describe Container, type: :model do
             fingerprint: source.fingerprint,
             alias: source.alias
           },
-          bootstrappers: container_params[:bootstrappers]
+          bootstrappers: container_params[:bootstrappers],
+          container_type: container_params[:container_type],
         }
         container = Container.create_with_source!(@cluster.id, valid_params)
         expect(container.hostname).to eq valid_params[:hostname]
