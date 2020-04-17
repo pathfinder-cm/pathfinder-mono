@@ -15,14 +15,14 @@ class DeploymentScheduler
           end
         rescue Exception => e
           deployment.update!(last_error_msg: "#{e.class.name}: #{e.message}", last_error_at: Time.now)
-          p "#{deployment.name}: Error: #{e.class.name}: #{e.message}"
+          Rails.logger.warn "#{deployment.name}: Error: #{e.class.name}: #{e.message}"
         end
 
         deployment_count += 1
       end
     end
 
-    p "#{deployment_count} deployment(s) has been reconciled in #{'%.4f' % elapsed_time}s."
+    Rails.logger.info "#{deployment_count} deployment(s) has been reconciled in #{'%.4f' % elapsed_time}s."
   end
 
   private
@@ -42,7 +42,7 @@ class DeploymentScheduler
       disruption_quota_in_effect = false
       if container.ready?
         unless disruption_quota > 0
-          p "#{deployment.name}: Unable to update #{container.hostname}: No disruption quota left"
+          Rails.logger.info "#{deployment.name}: Unable to update #{container.hostname}: No disruption quota left"
           next
         end
         disruption_quota_in_effect = true
