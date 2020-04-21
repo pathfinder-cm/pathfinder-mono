@@ -1,56 +1,99 @@
 require 'rails_helper'
 
 RSpec.describe ContainerScheduler do
-  describe "#process_cluster" do
+  let(:scheduler) { ContainerScheduler.new }
+  let(:cluster) { create(:cluster) }
+
+  before(:each) do
+    @container_1 = create(:container, cluster: cluster)
+    @container_2 = create(:container, cluster: cluster)
+  end
+
+  context "validation" do
     before(:each) do
-      @cluster = create(:cluster)
+      @node = create(:node, cluster: cluster)
+      @container_2.update_status(Container.statuses[:bootstrapped])
+      @container_3 = create(:container)
+      scheduler.schedule
+
+      @container_1.reload
+      @container_2.reload
+      @container_3.reload
     end
 
-    context "Scheduler based on Memory" do
-      before(:each) do
-        ENV['SCHEDULER_TYPE'] = 'MEMORY'
-        @node_1 = create(:node, cluster: @cluster, mem_used_mb: 10, mem_total_mb: 100)
-        @node_2 = create(:node, cluster: @cluster, mem_used_mb: 90, mem_total_mb: 100)
-        @node_3 = create(:node, cluster: @cluster, mem_used_mb: 5, mem_total_mb: 100)
+    describe "container_1 (pending)" do
+      it "is allocated to node" do
+        expect(@container_1.node).to eq(@node)
       end
 
-      it "should properly schedule containers to correct node" do
-        c1 = create(:container, cluster: @cluster)
-        c2 = create(:container, cluster: @cluster)
-        c3 = create(:container, cluster: @cluster)
-        ContainerScheduler.new.process_cluster(@cluster)
-        c1.reload
-        c2.reload
-        c3.reload
-        expect(c1.node).to eq @node_3
-        expect(c2.node).to eq @node_1
-        expect(c3.node).to eq @node_3
+      it "has SCHEDULED status" do
+        expect(@container_1.status).to eq(Container.statuses[:scheduled])
       end
     end
 
-    context "Scheduler based on Container Number" do
-      before(:each) do
-        ENV['SCHEDULER_TYPE'] = 'CONTAINER_NUM'
-        @node_1 = create(:node, cluster: @cluster)
-        @node_2 = create(:node, cluster: @cluster)
-        container = create(:container, cluster: @cluster, node: @node_2)
-        container.update_status("SCHEDULED")
-        container = create(:container, cluster: @cluster, node: @node_2)
-        container.update_status("SCHEDULED")
-        @node_3 = create(:node, cluster: @cluster)
+    describe "container_2 (bootstrapped)" do
+      it "is still in BOOTSTRAPPED state" do
+        expect(@container_2.status).to eq(Container.statuses[:bootstrapped])
+      end
+    end
+
+    describe "container_3 (pending, another cluster with no node)" do
+      it "isn't allocated" do
+        expect(@container_3.node).to eq(nil)
       end
 
-      it "should properly schedule containers to correct node" do
-        c1 = create(:container, cluster: @cluster)
-        c2 = create(:container, cluster: @cluster)
-        c3 = create(:container, cluster: @cluster)
-        ContainerScheduler.new.process_cluster(@cluster)
-        c1.reload
-        c2.reload
-        c3.reload
-        expect(c1.node).to eq @node_1
-        expect(c2.node).to eq @node_3
-        expect(c3.node).to eq @node_1
+      it "is still in PENDING state" do
+        expect(@container_3.status).to eq(Container.statuses[:pending])
+      end
+    end
+  end
+
+  context "limits" do
+    let(:containers) { Container.where(id: [@container_1.id, @container_2.id]) }
+
+    let(:node_1) { create(:node, cluster: cluster) }
+    let(:node_2) { create(:node, cluster: cluster) }
+
+    describe "count limit" do
+      before(:each) do
+        3.times do
+          create(:container, cluster: cluster, node: node_1, container_type: Container.container_types[:stateless]).
+            update_status(Container.statuses[:scheduled])
+        end
+        2.times do
+          create(:container, cluster: cluster, node: node_2, container_type: Container.container_types[:stateless]).
+            update_status(Container.statuses[:scheduled])
+        end
+      end
+
+      it "adheres limit" do
+        ContainerScheduler.new(limit_n_containers: 2).schedule
+        expect(containers.pluck(:node_id).compact).to eq([node_2.id])
+      end
+
+      describe "stateful limit" do
+        before(:each) do
+          2.times { create(:container, cluster: cluster, node: node_1).update_status(Container.statuses[:scheduled]) }
+          3.times { create(:container, cluster: cluster, node: node_2).update_status(Container.statuses[:scheduled]) }
+        end
+
+        it "adheres limit" do
+          ContainerScheduler.new(limit_n_stateful_containers: 2).schedule
+          expect(containers.pluck(:node_id).compact).to eq([node_1.id])
+        end
+      end
+    end
+
+    describe "memory limit" do
+      before(:each) do
+        node_1.update!(mem_used_mb: 71, mem_total_mb: 100)
+        node_2.update!(mem_used_mb: 70, mem_total_mb: 100)
+
+        ContainerScheduler.new(limit_mem_threshold: 70).schedule
+      end
+
+      it "adheres limit" do
+        expect(containers.pluck(:node_id).compact).to eq([node_2.id, node_2.id])
       end
     end
   end

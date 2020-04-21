@@ -8,5 +8,6 @@ FactoryBot.define do
     bootstrappers { [
       { 'bootstrap_type' => 'none' }
     ] }
+    container_type Container.container_types[:stateful]
   end
 end

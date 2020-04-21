@@ -36,12 +36,7 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
       hostname: params[:hostname]
     )
     @container.update_status('SCHEDULE_DELETION')
-    @new_container = Container.new(
-      cluster_id: @container.cluster_id,
-      hostname: @container.hostname,
-      image_alias: @container.image_alias,
-    )
-    @new_container.save!
+    @new_container = @container.duplicate
     render json: ::Api::V1::ExtApp::ContainerSerializer.new(@new_container).to_h
   end
 
@@ -51,6 +46,7 @@ class ::Api::V1::ExtApp::ContainersController < ::Api::V1::ExtApp::BaseControlle
       params.require(:container).permit(
         :hostname,
         :image_alias,
+        :container_type,
       )
     end
 end

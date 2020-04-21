@@ -1,6 +1,7 @@
 class DeploymentScheduler
-  def initialize(definition_parser = DeploymentDefinitionParser.new)
+  def initialize(definition_parser: DeploymentDefinitionParser.new, apply_dirty: false)
     @definition_parser = definition_parser
+    @apply_dirty = apply_dirty
   end
 
   def schedule
@@ -40,7 +41,7 @@ class DeploymentScheduler
 
     deployment.managed_containers.each do |container|
       disruption_quota_in_effect = false
-      if container.ready?
+      if container.ready? and not @apply_dirty
         unless disruption_quota > 0
           Rails.logger.info "#{deployment.name}: Unable to update #{container.hostname}: No disruption quota left"
           next
@@ -88,7 +89,7 @@ class DeploymentScheduler
     container.apply_params_with_source(container_param(deployment, container.hostname))
     return false unless container.changed?
 
-    container.status = Container.statuses[:provisioned]
+    container.status = Container.statuses[:provisioned] unless @apply_dirty
     container.save!
     true
   end

@@ -1,76 +1,62 @@
 class ContainerScheduler
-  def initialize
+  def initialize(limit_mem_threshold: nil, limit_n_containers: nil, limit_n_stateful_containers: nil)
+    @limit_mem_threshold = limit_mem_threshold
+    @limit_n_containers = limit_n_containers
+    @limit_n_stateful_containers = limit_n_stateful_containers
   end
 
   def schedule
-    if ENV['SCHEDULER_TYPE'] == 'MEMORY'
-      p 'Scheduling container based on node memory'
-    else
-      p 'Scheduling container based on node container numbers'
+    n_containers = 0
+    Container.pending.find_each do |container|
+      schedule_container(container)
+      n_containers += 1
     end
 
-    counter = 0
-    Cluster.all.each { |cluster| counter += process_cluster(cluster) }
-
-    p "#{counter} container(s) scheduled."
-  end
-
-  def process_cluster(cluster)
-    pending_containers = cluster.containers.pending
-
-    counter = 0
-    pending_containers.each do |container|
-      if ENV['SCHEDULER_TYPE'] == 'MEMORY'
-        node = find_based_on_memory(cluster)
-      else
-        node = find_based_on_container_num(cluster)
-      end
-
-      unless node.nil?
-        schedule_container!(container, node)
-        counter += 1
-      end
-    end
-
-    return counter
-  end
-
-  def schedule_container!(container, node)
-    ActiveRecord::Base.transaction do
-      p "Schedule container #{container.hostname} in #{node.hostname}"
-      container.update_attribute(:node_id, node.id)
-      container.update_status('SCHEDULED')
-    end
+    Rails.logger.info "#{n_containers} container(s) scheduled."
   end
 
   private
-    def find_based_on_container_num(cluster)
-      Node.
-        select('nodes.id, nodes.hostname, COUNT(containers) AS containers_count').
-        joins('LEFT OUTER JOIN containers ON nodes.id = containers.node_id AND containers.status IN (\'SCHEDULED\', \'PROVISIONED\')').
-        where('nodes.cluster_id = ?', cluster.id).
-        group('nodes.id, nodes.hostname').
-        order('containers_count ASC').
-        first
-    end
+  def schedule_container(container)
+    node_id = find_best_node_id(container)
+    return if node_id.nil?
 
-    def find_based_on_memory(cluster)
-      memory_threshold = ENV['SCHEDULER_MEMORY_THRESHOLD'] || 50
-      Node.
-        select('nodes.id'\
-          ', nodes.hostname'\
-          ', COUNT(containers) AS containers_count'\
-          ', ceil((nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) * 100) AS mem_used_percentage').
-        joins('LEFT OUTER JOIN containers'\
-          ' ON nodes.id = containers.node_id'\
-          ' AND containers.status IN (\'SCHEDULED\', \'PROVISIONED\')').
-        where('nodes.cluster_id = ?'\
-          ' AND ceil(CASE WHEN (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) IS NULL'\
-          ' THEN 1'\
-          ' ELSE (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) END * 100) <= ?',
-          cluster.id, memory_threshold).
-        group('nodes.id, nodes.hostname').
-        order('containers_count ASC, mem_used_percentage ASC').
-        first
+    ActiveRecord::Base.transaction do
+      container.update_attribute(:node_id, node_id)
+      container.update_status(Container.statuses[:scheduled])
     end
+  end
+
+  def find_best_node_id(container)
+    nodes = Node.
+      where(cluster: container.cluster).
+      joins("LEFT OUTER JOIN containers ON nodes.id = containers.node_id AND containers.status NOT IN ('SCHEDULE_DELETION', 'DELETED')").
+      group("nodes.id")
+
+    nodes = limit_by_mem_threshold(nodes, @limit_mem_threshold) unless @limit_mem_threshold.nil?
+    nodes = limit_by_n_containers(nodes, @limit_n_containers) unless @limit_n_containers.nil?
+    nodes = limit_by_n_stateful_containers(nodes, @limit_n_stateful_containers) unless @limit_n_stateful_containers.nil?
+
+    node_ids = nodes.pluck(:id)
+    Rails.logger.info "Selecting a node from #{node_ids.length} candidate node(s)"
+    node_ids.sample
+  end
+
+  def limit_by_mem_threshold(nodes, mem_threshold)
+    nodes.where(
+      "ceil(CASE WHEN (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) IS NULL " \
+      "THEN 1 " \
+      "ELSE (nodes.mem_used_mb::decimal/nodes.mem_total_mb::decimal) END * 100) <= ?",
+      mem_threshold
+    )
+  end
+
+  def limit_by_n_containers(nodes, n_containers)
+    nodes.having("COUNT(containers) <= ?", n_containers)
+  end
+
+  def limit_by_n_stateful_containers(nodes, n_stateful_containers)
+    nodes.having(
+      "COUNT(containers) FILTER (WHERE container_type = 'STATEFUL') <= ?", n_stateful_containers
+    )
+  end
 end

@@ -106,32 +106,58 @@ RSpec.describe DeploymentScheduler do
         context "changed containers" do
           before(:each) do
             @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
-
-            deployment_scheduler.schedule
-            @consul_box.reload
           end
 
-          it "changes the attribute" do
-            expect(@consul_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
+          context "apply_dirty = false" do
+            before(:each) do
+              deployment_scheduler.schedule
+              @consul_box.reload
+            end
+
+            it "changes the attribute" do
+              expect(@consul_box.bootstrappers).to eq(@deployment.definition['bootstrappers'])
+            end
+
+            it "changes container status" do
+              expect(@consul_box.status).to eq(Container.statuses[:provisioned])
+            end
           end
 
-          it "changes container status" do
-            expect(@consul_box.status).to eq(Container.statuses[:provisioned])
+          context "apply_dirty = true" do
+            before(:each) do
+              @old_consul_box_status = @consul_box.status
+
+              DeploymentScheduler.new(apply_dirty: true).schedule
+              @consul_box.reload
+            end
+
+            it "doesn't changes container status" do
+              expect(@consul_box.status).to eq(@old_consul_box_status)
+            end
           end
         end
 
         context "changed containers with hit of container disruption quota" do
           before(:each) do
             @old_consul_box_status = @consul_box.status
+            @old_consul_box_bootstrappers = @consul_box.bootstrappers
+
             @consul_box.update!(bootstrappers: [{ 'bootstrap_type' => 'none' }])
             @deployment.update!(min_available_replicas: 1)
-
-            deployment_scheduler.schedule
-            @consul_box.reload
           end
 
           it "doesn't change status of the container" do
+            deployment_scheduler.schedule
+            @consul_box.reload
+
             expect(@consul_box.status).to eq(@old_consul_box_status)
+          end
+
+          it "updates container without adhering disruption quota if apply_dirty = true" do
+            DeploymentScheduler.new(apply_dirty: true).schedule
+            @consul_box.reload
+
+            expect(@consul_box.bootstrappers).to eq(@old_consul_box_bootstrappers)
           end
         end
 
