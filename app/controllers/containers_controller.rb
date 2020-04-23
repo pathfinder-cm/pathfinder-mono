@@ -54,13 +54,15 @@ class ContainersController < ApplicationController
         :cluster_id,
         :hostname,
         :container_type,
-        {source: [
-          :source_type,
-          :mode,
-          :remote_id,
-          :fingerprint,
-          :alias
-        ]}
+        {
+          source: [
+            :source_type,
+            :mode,
+            :remote_id,
+            :fingerprint,
+            :alias
+          ]
+        }
       )
     end
 end
