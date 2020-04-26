@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_17_040343) do
+ActiveRecord::Schema.define(version: 2020_04_26_165114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 2020_04_17_040343) do
     t.bigint "disk_root_total_mb"
     t.bigint "disk_zfs_used_mb"
     t.bigint "disk_zfs_total_mb"
+    t.boolean "schedulable", default: true, null: false
     t.index ["hashed_authentication_token"], name: "index_nodes_on_hashed_authentication_token"
     t.index ["hostname"], name: "index_nodes_on_hostname", unique: true
   end
