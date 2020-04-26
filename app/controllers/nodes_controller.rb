@@ -8,7 +8,8 @@ class NodesController < ApplicationController
 
   # POST /nodes/1/cordon
   def cordon
-    Node.find(params[:id]).cordon!
+    should_cordon = !params[:unset]
+    Node.find(params[:id]).cordon! should_cordon
   end
 
   private

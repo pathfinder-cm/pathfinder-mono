@@ -32,5 +32,14 @@ RSpec.describe NodesController, type: :controller do
 
       expect(Node.schedulables).not_to include(node)
     end
+
+    context "unset = true" do
+      it "uncordons the node" do
+        node = create(:node, schedulable: false)
+        post :cordon, params: { id: node.id, unset: true }, session: valid_session
+
+        expect(Node.schedulables).to include(node)
+      end
+    end
   end
 end
