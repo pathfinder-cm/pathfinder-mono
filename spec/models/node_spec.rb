@@ -50,6 +50,15 @@ RSpec.describe Node, type: :model do
 
         expect(Node.schedulables).not_to include(node)
       end
+
+      context "value = false" do
+        it "should uncordon the node" do
+          node = create(:node)
+          node.cordon! false
+
+          expect(Node.schedulables).to include(node)
+        end
+      end
     end
   end
 end

@@ -47,8 +47,8 @@ class Node < ApplicationRecord
     return nil
   end
 
-  def cordon!
-    update!(schedulable: false)
+  def cordon!(value = true)
+    update!(schedulable: !value)
   end
 
   private
