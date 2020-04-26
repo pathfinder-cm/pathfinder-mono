@@ -9,7 +9,11 @@ class NodesController < ApplicationController
   # POST /nodes/1/cordon
   def cordon
     should_cordon = !params[:unset]
-    Node.find(params[:id]).cordon! should_cordon
+
+    node = Node.find(params[:id])
+    node.cordon! should_cordon
+
+    redirect_back fallback_location: node
   end
 
   private

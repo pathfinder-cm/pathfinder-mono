@@ -5,7 +5,8 @@ h4.mb-3 Nodes
     thead
       tr.d-flex
         th.col-8 Hostname
-        th.col-4 IP Address
+        th.col-2 IP Address
+        th.col-2 Action
     tbody
       - nodes.each do |node|
         tr.d-flex
@@ -15,4 +16,11 @@ h4.mb-3 Nodes
               i &nbsp;(cordoned)
             span.badge.badge-pathfinder
               = node.containers.exists.count
-          td.col-4= node.ipaddress
+
+          td.col-2= node.ipaddress
+
+          td.col-2
+            - if node.schedulable
+              = button_to "Cordon", cordon_node_path(node), method: :post, class: "btn btn-sm btn-warning"
+            - else
+              = button_to "Uncordon", cordon_node_path(node), params: { unset: true }, method: :post, class: "btn btn-sm btn-success"
