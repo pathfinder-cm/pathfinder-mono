@@ -26,6 +26,7 @@ class Node < ApplicationRecord
   #
   # Setup scopes
   #
+  scope :schedulables, -> { where(schedulable: true) }
 
   #
   # Setup for additional gem-related configuration

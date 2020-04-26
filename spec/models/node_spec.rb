@@ -17,6 +17,14 @@ RSpec.describe Node, type: :model do
   end
 
   describe "scopes" do
+    describe "schedulables" do
+      it "returns schedulable nodes only" do
+        node_1 = create(:node)
+        node_2 = create(:node, schedulable: false)
+
+        expect(Node.schedulables).to eq [node_1]
+      end
+    end
   end
 
   describe "gems" do
