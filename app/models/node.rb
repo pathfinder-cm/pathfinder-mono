@@ -47,6 +47,10 @@ class Node < ApplicationRecord
     return nil
   end
 
+  def cordon!
+    update!(schedulable: false)
+  end
+
   private
     def hash_authentication_token
       if self.authentication_token.present?

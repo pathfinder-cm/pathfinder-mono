@@ -42,5 +42,14 @@ RSpec.describe Node, type: :model do
         expect(current_token).not_to eq node.hashed_authentication_token
       end
     end
+
+    describe "#cordon" do
+      it "should cordon the node" do
+        node = create(:node)
+        node.cordon!
+
+        expect(Node.schedulables).not_to include(node)
+      end
+    end
   end
 end
