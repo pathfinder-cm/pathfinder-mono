@@ -27,7 +27,7 @@ class ContainerScheduler
   end
 
   def find_best_node_id(container)
-    nodes = Node.
+    nodes = Node.schedulables.
       where(cluster: container.cluster).
       joins("LEFT OUTER JOIN containers ON nodes.id = containers.node_id AND containers.status NOT IN ('SCHEDULE_DELETION', 'DELETED')").
       group("nodes.id")
