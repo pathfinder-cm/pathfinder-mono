@@ -6,6 +6,11 @@ class NodesController < ApplicationController
   def show
   end
 
+  # POST /nodes/1/cordon
+  def cordon
+    Node.find(params[:id]).cordon!
+  end
+
   private
     def set_node
       @node = Node.find(params[:id])

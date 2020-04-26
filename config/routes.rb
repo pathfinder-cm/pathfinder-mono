@@ -16,7 +16,11 @@ Rails.application.routes.draw do
         get 'containers' => 'clusters#show_containers'
       end
     end
-  resources :nodes, only: :show
+  resources :nodes, only: :show do
+    member do
+      post 'cordon' => 'nodes#cordon'
+    end
+  end
   resources :containers, only: [:new, :create] do
     member do
       post 'schedule_deletion' => 'containers#schedule_deletion'
