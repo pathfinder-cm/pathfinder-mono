@@ -17,6 +17,14 @@ RSpec.describe Node, type: :model do
   end
 
   describe "scopes" do
+    describe "schedulables" do
+      it "returns schedulable nodes only" do
+        node_1 = create(:node)
+        node_2 = create(:node, schedulable: false)
+
+        expect(Node.schedulables).to eq [node_1]
+      end
+    end
   end
 
   describe "gems" do
@@ -32,6 +40,24 @@ RSpec.describe Node, type: :model do
         current_token = node.hashed_authentication_token
         node.refresh_authentication_token
         expect(current_token).not_to eq node.hashed_authentication_token
+      end
+    end
+
+    describe "#cordon" do
+      it "should cordon the node" do
+        node = create(:node)
+        node.cordon!
+
+        expect(Node.schedulables).not_to include(node)
+      end
+
+      context "value = false" do
+        it "should uncordon the node" do
+          node = create(:node)
+          node.cordon! false
+
+          expect(Node.schedulables).to include(node)
+        end
       end
     end
   end

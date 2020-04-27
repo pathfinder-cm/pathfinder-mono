@@ -97,4 +97,18 @@ RSpec.describe ContainerScheduler do
       end
     end
   end
+
+  context "cordoned" do
+    before(:each) do
+      @cordoned_node = create(:node, cluster: cluster, schedulable: false)
+      @container_1 = create(:container, cluster: cluster)
+      scheduler.schedule
+
+      @container_1.reload
+    end
+
+    it "isn't allocated to cordoned node" do
+      expect(@container_1.node).not_to eq(@cordoned_node)
+    end
+  end
 end

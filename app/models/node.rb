@@ -26,6 +26,7 @@ class Node < ApplicationRecord
   #
   # Setup scopes
   #
+  scope :schedulables, -> { where(schedulable: true) }
 
   #
   # Setup for additional gem-related configuration
@@ -44,6 +45,10 @@ class Node < ApplicationRecord
     self.authentication_token = authentication_token
     return authentication_token if save
     return nil
+  end
+
+  def cordon!(value = true)
+    update!(schedulable: !value)
   end
 
   private

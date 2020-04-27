@@ -4,7 +4,7 @@ RSpec.describe NodesController, type: :controller do
 
   let(:valid_attributes) {
     cluster = create(:cluster)
-    attributes_for(:node, cluster_id: cluster.id) 
+    attributes_for(:node, cluster_id: cluster.id)
   }
   let(:invalid_attributes) {
     { hostname: "" }
@@ -22,6 +22,24 @@ RSpec.describe NodesController, type: :controller do
       node = Node.create! valid_attributes
       get :show, params: {id: node.to_param}, session: valid_session
       expect(response).to be_successful
+    end
+  end
+
+  describe "POST #cordon" do
+    it "cordons the node" do
+      node = create(:node)
+      post :cordon, params: { id: node.id }, session: valid_session
+
+      expect(Node.schedulables).not_to include(node)
+    end
+
+    context "unset = true" do
+      it "uncordons the node" do
+        node = create(:node, schedulable: false)
+        post :cordon, params: { id: node.id, unset: true }, session: valid_session
+
+        expect(Node.schedulables).to include(node)
+      end
     end
   end
 end

@@ -6,6 +6,17 @@ class NodesController < ApplicationController
   def show
   end
 
+  # POST /nodes/1/cordon
+  def cordon
+    should_cordon = true
+    should_cordon = false if params[:unset].present?
+
+    node = Node.find(params[:id])
+    node.cordon! should_cordon
+
+    redirect_back fallback_location: node
+  end
+
   private
     def set_node
       @node = Node.find(params[:id])

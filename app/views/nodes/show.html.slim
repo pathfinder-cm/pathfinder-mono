@@ -6,6 +6,8 @@
       dt.col-sm-3 Hostname:
       dd.col-sm-9
         = @node.hostname
+        - if not @node.schedulable
+          i &nbsp;(cordoned)
       dt.col-sm-3 IP Address:
       dd.col-sm-9
         = @node.ipaddress
