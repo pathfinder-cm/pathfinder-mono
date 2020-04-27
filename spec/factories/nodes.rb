@@ -3,5 +3,7 @@ FactoryBot.define do
     association :cluster
     sequence(:hostname) {|n| "cluster-#{n}" }
     sequence(:ipaddress) {|n| "10.0.0.#{n}" }
+
+    schedulable { true }
   end
 end
