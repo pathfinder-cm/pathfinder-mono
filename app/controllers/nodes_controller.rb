@@ -8,7 +8,8 @@ class NodesController < ApplicationController
 
   # POST /nodes/1/cordon
   def cordon
-    should_cordon = !params[:unset]
+    should_cordon = true
+    should_cordon = false if params[:unset].present?
 
     node = Node.find(params[:id])
     node.cordon! should_cordon
