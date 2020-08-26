@@ -15,6 +15,7 @@ class Container < ApplicationRecord
     schedule_deletion: 'SCHEDULE_DELETION',
     schedule_relocation: 'SCHEDULE_RELOCATION',
     relocate_started: 'RELOCATE_STARTED',
+    relocate_error: 'RELOCATE_ERROR',
     deleted: 'DELETED',
   }
 

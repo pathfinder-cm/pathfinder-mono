@@ -108,6 +108,7 @@ Rails.application.routes.draw do
             post 'mark_bootstrap_started' => 'containers#mark_bootstrap_started'
             post 'mark_bootstrapped' => 'containers#mark_bootstrapped'
             post 'mark_relocate_started' => 'containers#mark_relocate_started'
+            post 'mark_relocate_error' => 'containers#mark_relocate_error'
             post 'mark_bootstrap_error' => 'containers#mark_bootstrap_error'
             post 'mark_deleted' => 'containers#mark_deleted'
           end
