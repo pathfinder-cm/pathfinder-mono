@@ -13,6 +13,8 @@ class Container < ApplicationRecord
     bootstrapped: 'BOOTSTRAPPED',
     bootstrap_error: 'BOOTSTRAP_ERROR',
     schedule_deletion: 'SCHEDULE_DELETION',
+    schedule_relocation: 'SCHEDULE_RELOCATION',
+    relocate_started: 'RELOCATE_STARTED',
     deleted: 'DELETED',
   }
 
