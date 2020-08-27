@@ -96,12 +96,12 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
 
   # POST /mark_relocate_error
   # Mark container as relocate_error
-  def mark_relocate_started
+  def mark_relocate_error
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
       status: 'SCHEDULE_STARTED'
     )
-   @container.update_status('RELOCATE_ERROR')
+    @container.update_status('RELOCATE_ERROR')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
   end
 
