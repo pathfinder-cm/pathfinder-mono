@@ -6,6 +6,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
       where(status: [
         ::Container.statuses[:scheduled],
         ::Container.statuses[:schedule_deletion],
+        ::Container.statuses[:schedule_relocation],
       ]).
       order(Arel.sql 'CASE WHEN status = \'SCHEDULE_DELETION\' THEN 1 WHEN status = \'SCHEDULED\' THEN 2 END').
       order('last_status_update_at ASC')
