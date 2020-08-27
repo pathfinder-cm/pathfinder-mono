@@ -430,5 +430,36 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       end
     end
 
+    describe 'should fail if container move to same node' do
+      before(:each) do
+        @node1 = create(:node, hostname: "node-01")
+        @container = create(:container, cluster: cluster, node_id: @node1.id)
+        @container.update(status: "BOOTSTRAPPED")
+        @params = {
+          cluster_name: cluster.name,
+          hostname: @container.hostname,
+          node_hostname: "node-01"
+        }
+      end
+
+      it "should not change status" do
+        post :schedule_relocation, params: @params, as: :json
+        @container.reload
+        expect(@container.status).to eq 'BOOTSTRAPPED'
+      end
+
+      it "should not change node_id" do
+        post :schedule_relocation, params: @params, as: :json
+        @container.reload
+        expect(@container.node_id).to eq @node1.id
+      end
+
+      it "should return invalid response" do
+        post :schedule_relocation, params: @params, as: :json
+        @container.reload
+        expect(response.status).to eq 400
+      end
+    end
+
   end
 end
