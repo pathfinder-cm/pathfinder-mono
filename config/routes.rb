@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   end
   resources :containers, only: [:new, :create] do
     member do
+      get 'relocate' => 'containers#relocate'
       post 'schedule_deletion' => 'containers#schedule_deletion'
       post 'reschedule' => 'containers#reschedule'
       post 'schedule_relocation' => 'containers#schedule_relocation'

@@ -48,6 +48,12 @@ class ContainersController < ApplicationController
     end
   end
 
+  # GET /relocate
+  def relocate
+    @container = Container.find(params[:id])
+    @nodes = Node.where.not(id: @container.node_id)
+  end
+
   # POST /schedule_relocation
   def schedule_relocation
     @container = Container.find(params[:id])
