@@ -136,6 +136,10 @@ class Container < ApplicationRecord
     %w(PROVISIONED PROVISION_ERROR BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
   end
 
+  def allow_relocation?
+    %w(BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
+  end
+
   def ready?
     status == self.class.statuses[:bootstrapped]
   end

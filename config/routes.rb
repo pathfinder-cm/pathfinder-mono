@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     member do
       post 'schedule_deletion' => 'containers#schedule_deletion'
       post 'reschedule' => 'containers#reschedule'
+      post 'schedule_relocation' => 'containers#schedule_relocation'
     end
   end
   resources :sources, except: :destroy

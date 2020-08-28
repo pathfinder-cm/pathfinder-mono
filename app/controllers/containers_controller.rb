@@ -48,6 +48,22 @@ class ContainersController < ApplicationController
     end
   end
 
+  # POST /schedule_relocation
+  def schedule_relocation
+    @container = Container.find(params[:id])
+    node = Node.find(params[:node_id])
+    @container.update_status('SCHEDULE_RELOCATION')
+    @container.update(node_id: node.id)
+
+    respond_to do |format|
+      if @container.errors.none?
+        format.html { redirect_to node_path(@container.node), notice: 'Container was relocated.' }
+      else
+        format.html { redirect_to node_path(@container.node), notice: 'Error when relocate container.' }
+      end
+    end
+  end
+
   private
     def container_params
       params.require(:container).permit(
