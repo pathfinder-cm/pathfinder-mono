@@ -15,7 +15,9 @@ RSpec.describe ::Api::V2::Node::ContainersController do
       c2.update_status(:scheduled)
       c3 = create(:container, node: @node)
       c3.update_status(:schedule_deletion)
-      @containers = [c3, c1, c2]
+      c4 = create(:container, node: @node)
+      c4.update_status(:schedule_relocation)
+      @containers = [c3, c1, c2, c4]
       create(:container, node: @node)
     end
 
@@ -51,26 +53,38 @@ RSpec.describe ::Api::V2::Node::ContainersController do
 
   describe 'responds with mark_provisioned' do
     before(:each) do
-      @container = create(:container, node: @node)
-      @container.update_status('SCHEDULED')
-      @params = {
-        cluster_name: @cluster.name,
-        node_hostname: @container.node.hostname,
-        hostname: @container.hostname
-      }
+      c1 = create(:container, node: @node)
+      c1.update_status('SCHEDULED')
+      c2 = create(:container, node: @node)
+      c2.update_status('RELOCATE_STARTED')
+      @containers = [c1, c2]
     end
 
     it "mark object as provisioned in the database" do
-      post :mark_provisioned, params: @params, as: :json
-      @container.reload
-      expect(@container.status).to eq 'PROVISIONED'
+      @containers.each do |c|
+        params = {
+          cluster_name: @cluster.name,
+          node_hostname: c.node.hostname,
+          hostname: c.hostname
+        }
+        post :mark_provisioned, params: params, as: :json
+        c.reload
+        expect(c.status).to eq 'PROVISIONED'
+      end
     end
 
     it "returns appropriate response" do
       Timecop.freeze do
-        post :mark_provisioned, params: @params, as: :json
-        @container.reload
-        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+        @containers.each do |c|
+          params = {
+            cluster_name: @cluster.name,
+            node_hostname: c.node.hostname,
+            hostname: c.hostname
+          }
+          post :mark_provisioned, params: params, as: :json
+          c.reload
+          expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(c).to_h.to_json
+        end
       end
     end
   end
@@ -199,6 +213,58 @@ RSpec.describe ::Api::V2::Node::ContainersController do
     it "returns appropriate response" do
       Timecop.freeze do
         post :mark_deleted, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
+    end
+  end
+
+  describe 'responds with mark_relocate_started' do
+    before(:each) do
+      @container = create(:container, node: @node)
+      @container.update_status('SCHEDULE_RELOCATION')
+      @params = {
+        cluster_name: @cluster.name,
+        node_hostname: @container.node.hostname,
+        hostname: @container.hostname
+      }
+    end
+
+    it "mark object from schedule_relocation to relocate_started in the database" do
+      post :mark_relocate_started, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'RELOCATE_STARTED'
+    end
+
+    it "returns appropriate response" do
+      Timecop.freeze do
+        post :mark_relocate_started, params: @params, as: :json
+        @container.reload
+        expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
+      end
+    end
+  end
+
+  describe 'responds with mark_relocate_error' do
+    before(:each) do
+      @container = create(:container, node: @node)
+      @container.update_status('RELOCATE_STARTED')
+      @params = {
+        cluster_name: @cluster.name,
+        node_hostname: @container.node.hostname,
+        hostname: @container.hostname
+      }
+    end
+
+    it "mark object from relocate_started to relocate_error in the database" do
+      post :mark_relocate_error, params: @params, as: :json
+      @container.reload
+      expect(@container.status).to eq 'RELOCATE_ERROR'
+    end
+
+    it "returns appropriate response" do
+      Timecop.freeze do
+        post :mark_relocate_error, params: @params, as: :json
         @container.reload
         expect(response.body).to eq ::Api::V2::Node::ContainerSerializer.new(@container).to_h.to_json
       end

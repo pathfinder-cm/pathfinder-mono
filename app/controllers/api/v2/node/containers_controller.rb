@@ -66,7 +66,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
   def mark_bootstrapped
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
-      status: ['BOOTSTRAP_STARTED', 'RELOCATE_STARTED']
+      status: 'BOOTSTRAP_STARTED'
     )
     @container.update_status('BOOTSTRAPPED')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
@@ -99,7 +99,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
   def mark_relocate_error
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
-      status: 'SCHEDULE_STARTED'
+      status: 'RELOCATE_STARTED'
     )
     @container.update_status('RELOCATE_ERROR')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
