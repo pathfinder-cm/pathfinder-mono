@@ -124,6 +124,7 @@ RSpec.describe ContainersController, type: :controller do
         @container.reload
         expect(@container.status).to eq "SCHEDULE_RELOCATION"
         expect(@container.node_id).to eq @node.id
+        expect(response).to redirect_to(@node)
       end
 
       it "redirects list of containers on destination node" do

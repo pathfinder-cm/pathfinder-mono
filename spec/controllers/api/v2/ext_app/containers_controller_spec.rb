@@ -426,11 +426,11 @@ RSpec.describe ::Api::V2::ExtApp::ContainersController do
       it "should return invalid response" do
         post :schedule_relocation, params: @params, as: :json
         @container.reload
-        expect(response.status).to eq 404
+        expect(response.status).to eq 400
       end
     end
 
-    describe 'should fail if container move to same node' do
+    describe 'should fail if container relocate to same node' do
       before(:each) do
         @node1 = create(:node, hostname: "node-01")
         @container = create(:container, cluster: cluster, node_id: @node1.id)
