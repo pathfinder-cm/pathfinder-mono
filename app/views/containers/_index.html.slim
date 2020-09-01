@@ -35,6 +35,8 @@
           td.col-1.word-wrap= container.status
           td.col-1.word-wrap
             - if container.allow_reschedule?
-              = button_to "Reschedule", reschedule_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
+              = button_to "Reschedule", reschedule_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger mt-1"
             - if container.allow_deletion?
-              = button_to "Schedule Deletion", schedule_deletion_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger"
+              = button_to "Schedule Deletion", schedule_deletion_container_path(container), data: { confirm: "Are you sure?" }, method: :post, class: "btn btn-sm btn-danger mt-1"
+            - if container.allow_relocation?
+              = link_to "Relocate", relocate_container_path(container), class: "btn btn-sm btn-danger mt-1"

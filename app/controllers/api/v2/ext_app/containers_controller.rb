@@ -50,6 +50,20 @@ class ::Api::V2::ExtApp::ContainersController < ::Api::V2::ExtApp::BaseControlle
     render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
   end
 
+  # POST /schedule_relocation
+  def schedule_relocation
+    @cluster = ::Cluster.find_by!(name: params[:cluster_name])
+    node = ::Node.find_by!(hostname: params[:node_hostname]) 
+    @container = @cluster.containers.exists.find_by!(hostname: params[:hostname])
+    begin
+      @container.relocate!(node.id)
+    rescue StandardError => e
+      render json: { success: false, errors: e.message, code: 400 }, status: :bad_request
+      return
+    end
+    render json: ::Api::V2::ExtApp::ContainerSerializer.new(@container).to_h
+  end
+
   # will be deprecated in the near future
   # PATCH /:hostname/update
   def update

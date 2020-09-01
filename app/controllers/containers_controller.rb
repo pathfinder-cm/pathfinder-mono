@@ -48,6 +48,31 @@ class ContainersController < ApplicationController
     end
   end
 
+  # GET /relocate
+  def relocate
+    @container = Container.find(params[:id])
+    @nodes = Node.where.not(id: @container.node_id)
+  end
+
+  # POST /schedule_relocation
+  def schedule_relocation
+    @container = Container.find(params[:id])
+    error_msg = nil
+    begin
+      @container.relocate!(params[:node_id])
+    rescue StandardError => e
+      error_msg = e.message
+    end
+
+    respond_to do |format|
+      if error_msg.nil?
+        format.html { redirect_to node_path(@container.node), notice: 'Container was relocated.' }
+      else
+        format.html { redirect_to node_path(@container.node), notice: "Error when relocate container: #{error_msg}" }
+      end
+    end
+  end
+
   private
     def container_params
       params.require(:container).permit(

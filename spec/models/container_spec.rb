@@ -206,5 +206,35 @@ RSpec.describe Container, type: :model do
         }).to be true
       end
     end
+
+    describe '#relocate?' do
+      before(:each) do
+        @node = create(:node)
+        @dst_node = create(:node)
+        @container = create(:container, node_id: @node.id)
+        @container.update_status("BOOTSTRAPPED")
+      end
+
+      it "should mark as schedule_relocation and updated node_id" do
+        @container.relocate!(@dst_node.id)
+        @container.reload
+        expect(@container.status).to eq("SCHEDULE_RELOCATION")
+        expect(@container.node_id).to eq(@dst_node.id)
+      end
+
+      it "should fail if relocate container to same node" do
+        expect{@container.relocate!(@node.id)}.to raise_error(StandardError, "Can't relocate container to same node")
+      end
+
+      it "should fail if relocate container if the container not in allow_relocation states" do
+        list_status = %w{PENDING PROVISIONED PROVISION_ERROR RELOCATE_STARTED SCHEDULE_RELOCATION BOOTSTRAP_STARTED}
+        list_status.each do |status|
+          @container.update_status(status)
+          @container.reload
+          expect{@container.relocate!(@dst_node.id)}.to raise_error(StandardError, "Container can't relocated when in #{status} state")
+        end
+      end
+
+    end
   end
 end

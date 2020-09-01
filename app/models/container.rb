@@ -13,6 +13,9 @@ class Container < ApplicationRecord
     bootstrapped: 'BOOTSTRAPPED',
     bootstrap_error: 'BOOTSTRAP_ERROR',
     schedule_deletion: 'SCHEDULE_DELETION',
+    schedule_relocation: 'SCHEDULE_RELOCATION',
+    relocate_started: 'RELOCATE_STARTED',
+    relocate_error: 'RELOCATE_ERROR',
     deleted: 'DELETED',
   }
 
@@ -125,12 +128,25 @@ class Container < ApplicationRecord
     end
   end
 
+  def relocate!(node_id)
+    raise StandardError.new "Can't relocate container to same node" if self.node_id == node_id
+    raise StandardError.new "Container can't relocated when in #{self.status} state" if !self.allow_relocation?
+
+    node = Node.find(node_id)
+
+    self.update(status: "SCHEDULE_RELOCATION", node_id: node.id)
+  end
+
   def allow_deletion?
     %w(PENDING SCHEDULED PROVISIONED PROVISION_ERROR BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
   end
 
   def allow_reschedule?
     %w(PROVISIONED PROVISION_ERROR BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
+  end
+
+  def allow_relocation?
+    %w(BOOTSTRAPPED BOOTSTRAP_ERROR).include? self.status
   end
 
   def ready?

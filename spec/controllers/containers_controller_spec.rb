@@ -110,4 +110,27 @@ RSpec.describe ContainersController, type: :controller do
       end
     end
   end
+
+  describe "POST #schedule_relocation" do
+    before(:each) do
+      @container = create(:container, cluster: @cluster)
+      @container.update_status("BOOTSTRAPPED")
+      @node = create(:node, hostname: "node-01")
+    end
+
+    context "with valid params" do
+      it "schedule_relocation container" do
+        post :schedule_relocation, params: {id: @container.id, node_id: @node.id}, session: valid_session
+        @container.reload
+        expect(@container.status).to eq "SCHEDULE_RELOCATION"
+        expect(@container.node_id).to eq @node.id
+        expect(response).to redirect_to(@node)
+      end
+
+      it "redirects list of containers on destination node" do
+        post :schedule_relocation, params: {id: @container.id, node_id: @node.id}, session: valid_session
+        expect(response).to redirect_to(@node)
+      end
+    end
+  end
 end

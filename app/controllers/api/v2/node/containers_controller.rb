@@ -6,6 +6,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
       where(status: [
         ::Container.statuses[:scheduled],
         ::Container.statuses[:schedule_deletion],
+        ::Container.statuses[:schedule_relocation],
       ]).
       order(Arel.sql 'CASE WHEN status = \'SCHEDULE_DELETION\' THEN 1 WHEN status = \'SCHEDULED\' THEN 2 END').
       order('last_status_update_at ASC')
@@ -32,7 +33,7 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
   def mark_provisioned
     @container = current_node.containers.exists.find_by(
       hostname: params[:hostname],
-      status: 'SCHEDULED'
+      status: ['SCHEDULED', 'RELOCATE_STARTED']
     )
     @container.update_status('PROVISIONED')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
@@ -81,6 +82,29 @@ class ::Api::V2::Node::ContainersController < ::Api::V2::Node::BaseController
     @container.update_status('BOOTSTRAP_ERROR')
     render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
   end
+
+  # POST /mark_relocate_started
+  # Mark container as relocate_started
+  def mark_relocate_started
+    @container = current_node.containers.exists.find_by(
+      hostname: params[:hostname],
+      status: 'SCHEDULE_RELOCATION'
+    )
+   @container.update_status('RELOCATE_STARTED')
+    render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
+  end
+
+  # POST /mark_relocate_error
+  # Mark container as relocate_error
+  def mark_relocate_error
+    @container = current_node.containers.exists.find_by(
+      hostname: params[:hostname],
+      status: 'RELOCATE_STARTED'
+    )
+    @container.update_status('RELOCATE_ERROR')
+    render json: ::Api::V2::Node::ContainerSerializer.new(@container).to_h
+  end
+
 
   # POST /mark_deleted
   # Mark container as deleted

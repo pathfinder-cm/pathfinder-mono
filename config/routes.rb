@@ -23,8 +23,10 @@ Rails.application.routes.draw do
   end
   resources :containers, only: [:new, :create] do
     member do
+      get 'relocate' => 'containers#relocate'
       post 'schedule_deletion' => 'containers#schedule_deletion'
       post 'reschedule' => 'containers#reschedule'
+      post 'schedule_relocation' => 'containers#schedule_relocation'
     end
   end
   resources :sources, except: :destroy
@@ -85,6 +87,7 @@ Rails.application.routes.draw do
               'containers#schedule_deletion'
             post ':hostname/reschedule' => 'containers#reschedule'
             post ':hostname/rebootstrap' => 'containers#rebootstrap'
+            post ':hostname/schedule_relocation' => 'containers#schedule_relocation'
             patch ':hostname/update' => 'containers#update'
           end
         end
@@ -107,6 +110,8 @@ Rails.application.routes.draw do
             post 'mark_provision_error' => 'containers#mark_provision_error'
             post 'mark_bootstrap_started' => 'containers#mark_bootstrap_started'
             post 'mark_bootstrapped' => 'containers#mark_bootstrapped'
+            post 'mark_relocate_started' => 'containers#mark_relocate_started'
+            post 'mark_relocate_error' => 'containers#mark_relocate_error'
             post 'mark_bootstrap_error' => 'containers#mark_bootstrap_error'
             post 'mark_deleted' => 'containers#mark_deleted'
           end

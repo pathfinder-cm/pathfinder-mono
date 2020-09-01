@@ -1,0 +1,20 @@
+.row.justify-content-center
+  .col-md-12
+    .card
+      .h5.card-header Relocate container
+      = form_tag schedule_relocation_container_path(@container.id), method: :post do |form|
+        .card-body
+          .dl.row
+            dt.col-sm-2 Hostname
+            dd.col-sm-10
+              = text_field_tag 'hostname', @container.hostname, disabled: true
+            dt.col-sm-2 Target Node
+            dd.col-sm-10
+              = select_tag 'node_id', options_from_collection_for_select(@nodes, :id, :hostname), { class: 'form-control' }
+                small.form-text.text-muted
+                  | Please choose your target node
+
+        .card-footer.text-right
+          .btn.btn-primary.btn-sm.float-right
+            = link_to 'Back to Container page', node_path(@container.node_id), class: 'text-light', style: 'text-decoration:none'
+          = submit_tag 'Submit', class: 'btn btn-success btn-sm mr-2'
