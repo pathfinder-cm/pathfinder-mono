@@ -51,7 +51,7 @@ class ContainersController < ApplicationController
   # GET /relocate
   def relocate
     @container = Container.find(params[:id])
-    @nodes = Node.where.not(id: @container.node_id, cluster_id: @container.cluster_id)
+    @nodes = Node.where("id != #{@container.node_id} AND cluster_id = #{@container.cluster_id}")
   end
 
   # POST /schedule_relocation
