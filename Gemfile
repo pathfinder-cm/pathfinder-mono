@@ -15,7 +15,7 @@ gem 'dotenv-rails'
 gem 'gouge', :github => 'starqle/gouge', require: false
 gem 'nokogiri', '~> 1.10.8'
 gem 'pg', '~> 1.0', platform: :ruby
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 4.3'
 gem 'rubyzip', '~> 1.3.0'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '~> 4.1.18'
